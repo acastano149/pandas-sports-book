@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>20&nbsp; Simulación de Partidos: Predicción y Aleatoriedad – Pandas para Tidyversers: Edición Sports Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./19_pitch_control.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f2c6d6e2b784ddc5de38779acc06f37d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_visualizacion_avanzada.html">Análisis avanzado en fútbol</a></li><li class="breadcrumb-item"><a href="./20_simulacion_partidos.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Simulación de Partidos: Predicción y Aleatoriedad</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Pandas para Tidyversers: Edición Sports Science</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bienvenido</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción: De Tibbles a DataFrames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_flujo_trabajo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El Flujo de Trabajo Profesional: Method Chaining</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Manipulación de Datos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_verbos_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Verbos Básicos I: Selección, Filtrado y Ordenación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_verbos_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Verbos Básicos II: Transformación de Datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_agregacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Agregación y Window Functions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Transformación y Combinación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_reshaping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Reshaping: Transformar la Forma de los Datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_joins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Joins: Combinando Múltiples Tablas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Visualización y Producción</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_visualizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualización de Datos con Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Manejo de Datos Faltantes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_rendimiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendimiento y Optimización</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Análisis avanzado en fútbol</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_visualizacion_avanzada.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualización Avanzada para Fútbol</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_estadisticas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estadísticas Aplicadas al Deporte: Guía Completa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_apis_datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">APIs y Fuentes de Datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Machine Learning: Clustering y xG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15_streamlit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Web Apps con Streamlit: Tu Primer Dashboard</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_scouting_radar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Scouting Estadístico: Radar Plots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17_expected_threat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Valoración de Acciones: Expected Threat (xT)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18_passing_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Redes de Pases: Passing Networks</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_pitch_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Pitch Control: Control del Espacio con Voronoi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_simulacion_partidos.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Simulación de Partidos: Predicción y Aleatoriedad</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#la-aleatoriedad-en-el-fútbol" id="toc-la-aleatoriedad-en-el-fútbol" class="nav-link active" data-scroll-target="#la-aleatoriedad-en-el-fútbol"><span class="header-section-number">20.1</span> 1. La Aleatoriedad en el Fútbol</a></li>
+  <li><a href="#modelo-de-poisson-para-goles" id="toc-modelo-de-poisson-para-goles" class="nav-link" data-scroll-target="#modelo-de-poisson-para-goles"><span class="header-section-number">20.2</span> 2. Modelo de Poisson para Goles</a>
+  <ul class="collapse">
+  <li><a href="#visualizar-la-distribución-de-poisson" id="toc-visualizar-la-distribución-de-poisson" class="nav-link" data-scroll-target="#visualizar-la-distribución-de-poisson"><span class="header-section-number">20.2.1</span> 2.1 Visualizar la Distribución de Poisson</a></li>
+  <li><a href="#calcular-goles-esperados-de-un-partido" id="toc-calcular-goles-esperados-de-un-partido" class="nav-link" data-scroll-target="#calcular-goles-esperados-de-un-partido"><span class="header-section-number">20.2.2</span> 2.2 Calcular Goles Esperados de un Partido</a></li>
+  </ul></li>
+  <li><a href="#simular-un-partido" id="toc-simular-un-partido" class="nav-link" data-scroll-target="#simular-un-partido"><span class="header-section-number">20.3</span> 3. Simular un Partido</a>
+  <ul class="collapse">
+  <li><a href="#generar-un-resultado-aleatorio" id="toc-generar-un-resultado-aleatorio" class="nav-link" data-scroll-target="#generar-un-resultado-aleatorio"><span class="header-section-number">20.3.1</span> 3.1 Generar un Resultado Aleatorio</a></li>
+  <li><a href="#simular-muchas-veces-monte-carlo" id="toc-simular-muchas-veces-monte-carlo" class="nav-link" data-scroll-target="#simular-muchas-veces-monte-carlo"><span class="header-section-number">20.3.2</span> 3.2 Simular Muchas Veces (Monte Carlo)</a></li>
+  <li><a href="#matriz-de-probabilidad-de-resultados" id="toc-matriz-de-probabilidad-de-resultados" class="nav-link" data-scroll-target="#matriz-de-probabilidad-de-resultados"><span class="header-section-number">20.3.3</span> 3.3 Matriz de Probabilidad de Resultados</a></li>
+  </ul></li>
+  <li><a href="#simular-una-liga-completa" id="toc-simular-una-liga-completa" class="nav-link" data-scroll-target="#simular-una-liga-completa"><span class="header-section-number">20.4</span> 4. Simular una Liga Completa</a>
+  <ul class="collapse">
+  <li><a href="#generar-calendario" id="toc-generar-calendario" class="nav-link" data-scroll-target="#generar-calendario"><span class="header-section-number">20.4.1</span> 4.1 Generar Calendario</a></li>
+  <li><a href="#simular-una-temporada" id="toc-simular-una-temporada" class="nav-link" data-scroll-target="#simular-una-temporada"><span class="header-section-number">20.4.2</span> 4.2 Simular una Temporada</a></li>
+  <li><a href="#simular-múltiples-temporadas" id="toc-simular-múltiples-temporadas" class="nav-link" data-scroll-target="#simular-múltiples-temporadas"><span class="header-section-number">20.4.3</span> 4.3 Simular Múltiples Temporadas</a></li>
+  </ul></li>
+  <li><a href="#distribución-de-puntos-y-variabilidad" id="toc-distribución-de-puntos-y-variabilidad" class="nav-link" data-scroll-target="#distribución-de-puntos-y-variabilidad"><span class="header-section-number">20.5</span> 5. Distribución de Puntos y Variabilidad</a>
+  <ul class="collapse">
+  <li><a href="#histograma-de-puntos-del-campeón" id="toc-histograma-de-puntos-del-campeón" class="nav-link" data-scroll-target="#histograma-de-puntos-del-campeón"><span class="header-section-number">20.5.1</span> 5.1 Histograma de Puntos del Campeón</a></li>
+  <li><a href="#comparar-variabilidad-entre-equipos" id="toc-comparar-variabilidad-entre-equipos" class="nav-link" data-scroll-target="#comparar-variabilidad-entre-equipos"><span class="header-section-number">20.5.2</span> 5.2 Comparar Variabilidad entre Equipos</a></li>
+  </ul></li>
+  <li><a href="#mini-proyecto-tu-simulador-de-liga" id="toc-mini-proyecto-tu-simulador-de-liga" class="nav-link" data-scroll-target="#mini-proyecto-tu-simulador-de-liga"><span class="header-section-number">20.6</span> 🏆 Mini-Proyecto: Tu Simulador de Liga</a>
+  <ul class="collapse">
+  <li><a href="#pregunta-1-probabilidad-de-descenso" id="toc-pregunta-1-probabilidad-de-descenso" class="nav-link" data-scroll-target="#pregunta-1-probabilidad-de-descenso"><span class="header-section-number">20.6.1</span> Pregunta 1: Probabilidad de Descenso</a></li>
+  <li><a href="#pregunta-2-ajustar-parámetros" id="toc-pregunta-2-ajustar-parámetros" class="nav-link" data-scroll-target="#pregunta-2-ajustar-parámetros"><span class="header-section-number">20.6.2</span> Pregunta 2: Ajustar Parámetros</a></li>
+  <li><a href="#pregunta-3-partido-clave" id="toc-pregunta-3-partido-clave" class="nav-link" data-scroll-target="#pregunta-3-partido-clave"><span class="header-section-number">20.6.3</span> Pregunta 3: Partido Clave</a></li>
+  </ul></li>
+  <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">20.7</span> Resumen</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_visualizacion_avanzada.html">Análisis avanzado en fútbol</a></li><li class="breadcrumb-item"><a href="./20_simulacion_partidos.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Simulación de Partidos: Predicción y Aleatoriedad</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Simulación de Partidos: Predicción y Aleatoriedad</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Este capítulo explora cómo simular resultados de partidos de fútbol usando distribuciones de probabilidad. Entenderemos el papel fundamental de la <strong>aleatoriedad</strong> en el fútbol y cómo las simulaciones nos ayudan a predecir resultados.</p>
+<section id="la-aleatoriedad-en-el-fútbol" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="la-aleatoriedad-en-el-fútbol"><span class="header-section-number">20.1</span> 1. La Aleatoriedad en el Fútbol</h2>
+<p>El fútbol es uno de los deportes con mayor variabilidad en resultados. Un equipo “mejor” no siempre gana.</p>
+<blockquote class="blockquote">
+<p>[!IMPORTANT] En una liga de 38 partidos, un equipo con 60% de probabilidad de ganar cada partido puede terminar desde campeón hasta fuera de Champions.</p>
+</blockquote>
+<div>
+<div id="pyodide-1" class="exercise-cell">
+
+</div>
+<script type="pyodide-1-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiaW1wb3J0IHBhbmRhcyBhcyBwZFxuaW1wb3J0IG51bXB5IGFzIG5wXG5pbXBvcnQgbWF0cGxvdGxpYi5weXBsb3QgYXMgcGx0XG5mcm9tIHNjaXB5IGltcG9ydCBzdGF0c1xuZnJvbSBzY2lweS5zdGF0cyBpbXBvcnQgcG9pc3NvblxuXG5ucC5yYW5kb20uc2VlZCg0MilcblxuIyA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuIyBEQVRPUyBERSBFUVVJUE9TIFBBUkEgU0lNVUxBQ0nDk05cbiMgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cblxuIyBQYXLDoW1ldHJvcyBkZSBhdGFxdWUgeSBkZWZlbnNhIChiYXNhZG9zIGVuIGRhdG9zIGhpc3TDs3JpY29zIHNpbXVsYWRvcylcbmVxdWlwb3MgPSBwZC5EYXRhRnJhbWUoe1xuICAgICdFcXVpcG8nOiBbJ0JhcmNlbG9uYScsICdSZWFsIE1hZHJpZCcsICdBdGzDqXRpY28nLCAnU2V2aWxsYScsICdWYWxlbmNpYScsIFxuICAgICAgICAgICAgICAgJ1ZpbGxhcnJlYWwnLCAnQXRobGV0aWMnLCAnUmVhbCBTb2NpZWRhZCcsICdCZXRpcycsICdDZWx0YSddLFxuICAgICdBdGFxdWUnOiBbMi4xLCAyLjAsIDEuNSwgMS40LCAxLjMsIDEuMywgMS4yLCAxLjQsIDEuMywgMS4xXSwgICAgICAjIEdvbGVzIGVzcGVyYWRvcyBwb3IgcGFydGlkb1xuICAgICdEZWZlbnNhJzogWzAuOCwgMC45LCAwLjcsIDEuMSwgMS4yLCAxLjEsIDEuMCwgMS4xLCAxLjMsIDEuNF0sICAgICAjIEdvbGVzIGNvbmNlZGlkb3MgZXNwZXJhZG9zXG4gICAgJ0Zvcm1hX0xvY2FsJzogWzEuMywgMS4yNSwgMS4zNSwgMS4yLCAxLjE1LCAxLjEsIDEuMjUsIDEuMTUsIDEuMiwgMS4xXSAgIyBNdWx0aXBsaWNhZG9yIGRlIGxvY2Fsw61hXG59KVxuXG5wcmludChcIuKchSBEYXRvcyBkZSBlcXVpcG9zIGNhcmdhZG9zXCIpXG5wcmludChlcXVpcG9zLnRvX3N0cmluZyhpbmRleD1GYWxzZSkpIn0=
+</script>
+</div>
+<hr>
+</section>
+<section id="modelo-de-poisson-para-goles" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="modelo-de-poisson-para-goles"><span class="header-section-number">20.2</span> 2. Modelo de Poisson para Goles</h2>
+<p>Los goles de un equipo siguen aproximadamente una <strong>distribución de Poisson</strong>. Esto significa que si un equipo marca en promedio λ goles, la probabilidad de marcar exactamente k goles es:</p>
+<p><span class="math display">\[P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}\]</span></p>
+<section id="visualizar-la-distribución-de-poisson" class="level3" data-number="20.2.1">
+<h3 data-number="20.2.1" class="anchored" data-anchor-id="visualizar-la-distribución-de-poisson"><span class="header-section-number">20.2.1</span> 2.1 Visualizar la Distribución de Poisson</h3>
+<div>
+<div id="pyodide-2" class="exercise-cell">
+
+</div>
+<script type="pyodide-2-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFamVtcGxvOiBFcXVpcG8gcXVlIG1hcmNhIGVuIHByb21lZGlvIDEuNSBnb2xlc1xubGFtYmRhX2dvbGVzID0gMS41XG5cbiMgUHJvYmFiaWxpZGFkZXMgcGFyYSAwLCAxLCAyLCAuLi4gZ29sZXNcbmdvbGVzX3Bvc2libGVzID0gbnAuYXJhbmdlKDAsIDgpXG5wcm9iYWJpbGlkYWRlcyA9IHBvaXNzb24ucG1mKGdvbGVzX3Bvc2libGVzLCBsYW1iZGFfZ29sZXMpXG5cbmZpZywgYXggPSBwbHQuc3VicGxvdHMoZmlnc2l6ZT0oMTAsIDUpKVxuYmFycyA9IGF4LmJhcihnb2xlc19wb3NpYmxlcywgcHJvYmFiaWxpZGFkZXMgKiAxMDAsIGNvbG9yPSdzdGVlbGJsdWUnLCBlZGdlY29sb3I9J3doaXRlJylcblxuIyBBw7FhZGlyIHZhbG9yZXNcbmZvciBiYXIsIHByb2IgaW4gemlwKGJhcnMsIHByb2JhYmlsaWRhZGVzKTpcbiAgICBheC50ZXh0KGJhci5nZXRfeCgpICsgYmFyLmdldF93aWR0aCgpLzIsIGJhci5nZXRfaGVpZ2h0KCkgKyAwLjUsIFxuICAgICAgICAgICAgZid7cHJvYioxMDA6LjFmfSUnLCBoYT0nY2VudGVyJywgZm9udHNpemU9MTApXG5cbmF4LnNldF94bGFiZWwoJ07Dum1lcm8gZGUgR29sZXMnKVxuYXguc2V0X3lsYWJlbCgnUHJvYmFiaWxpZGFkICglKScpXG5heC5zZXRfdGl0bGUoZidEaXN0cmlidWNpw7NuIGRlIFBvaXNzb24gKM67ID0ge2xhbWJkYV9nb2xlc30gZ29sZXMgZXNwZXJhZG9zKScpXG5heC5zZXRfeHRpY2tzKGdvbGVzX3Bvc2libGVzKVxucGx0LnRpZ2h0X2xheW91dCgpXG5wbHQuc2hvdygpXG5cbiMgRXN0YWTDrXN0aWNhc1xucHJpbnQoZlwi8J+TiiBFc3RhZMOtc3RpY2FzIHBhcmEgzrsgPSB7bGFtYmRhX2dvbGVzfTpcIilcbnByaW50KGZcIiAgIFAoMCBnb2xlcykgPSB7cG9pc3Nvbi5wbWYoMCwgbGFtYmRhX2dvbGVzKSoxMDA6LjFmfSVcIilcbnByaW50KGZcIiAgIFAoMSBnb2wpICAgPSB7cG9pc3Nvbi5wbWYoMSwgbGFtYmRhX2dvbGVzKSoxMDA6LjFmfSVcIilcbnByaW50KGZcIiAgIFAoMiBnb2xlcykgPSB7cG9pc3Nvbi5wbWYoMiwgbGFtYmRhX2dvbGVzKSoxMDA6LjFmfSVcIilcbnByaW50KGZcIiAgIFAoMysgZ29sZXMpID0geygxIC0gcG9pc3Nvbi5jZGYoMiwgbGFtYmRhX2dvbGVzKSkqMTAwOi4xZn0lXCIpIn0=
+</script>
+</div>
+</section>
+<section id="calcular-goles-esperados-de-un-partido" class="level3" data-number="20.2.2">
+<h3 data-number="20.2.2" class="anchored" data-anchor-id="calcular-goles-esperados-de-un-partido"><span class="header-section-number">20.2.2</span> 2.2 Calcular Goles Esperados de un Partido</h3>
+<div>
+<div id="pyodide-3" class="exercise-cell">
+
+</div>
+<script type="pyodide-3-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIGNhbGN1bGFyX2dvbGVzX2VzcGVyYWRvcyhlcXVpcG9fbG9jYWwsIGVxdWlwb192aXNpdGFudGUsIGVxdWlwb3NfZGYsIGxpZ2FfbWVkaWE9MS4zKTpcbiAgICBcIlwiXCJcbiAgICBDYWxjdWxhIGxvcyBnb2xlcyBlc3BlcmFkb3MgcGFyYSBhbWJvcyBlcXVpcG9zIGVuIHVuIHBhcnRpZG8uXG4gICAgVXNhIGVsIG1vZGVsbyBEaXhvbi1Db2xlcyBzaW1wbGlmaWNhZG8uXG4gICAgXCJcIlwiXG4gICAgbG9jYWwgPSBlcXVpcG9zX2RmW2VxdWlwb3NfZGZbJ0VxdWlwbyddID09IGVxdWlwb19sb2NhbF0uaWxvY1swXVxuICAgIHZpc2l0YW50ZSA9IGVxdWlwb3NfZGZbZXF1aXBvc19kZlsnRXF1aXBvJ10gPT0gZXF1aXBvX3Zpc2l0YW50ZV0uaWxvY1swXVxuICAgIFxuICAgICMgR29sZXMgZXNwZXJhZG9zID0gQXRhcXVlIHByb3BpbyAqIERlZmVuc2Egcml2YWwgKiBGYWN0b3IgbG9jYWzDrWEgLyBNZWRpYSBsaWdhXG4gICAgZ29sZXNfbG9jYWwgPSBsb2NhbFsnQXRhcXVlJ10gKiB2aXNpdGFudGVbJ0RlZmVuc2EnXSAqIGxvY2FsWydGb3JtYV9Mb2NhbCddIC8gbGlnYV9tZWRpYVxuICAgIGdvbGVzX3Zpc2l0YW50ZSA9IHZpc2l0YW50ZVsnQXRhcXVlJ10gKiBsb2NhbFsnRGVmZW5zYSddIC8gbGlnYV9tZWRpYVxuICAgIFxuICAgIHJldHVybiBnb2xlc19sb2NhbCwgZ29sZXNfdmlzaXRhbnRlXG5cbiMgRWplbXBsbzogQmFyY2Vsb25hIHZzIFJlYWwgTWFkcmlkXG5nb2xlc19iYXJjYSwgZ29sZXNfbWFkcmlkID0gY2FsY3VsYXJfZ29sZXNfZXNwZXJhZG9zKCdCYXJjZWxvbmEnLCAnUmVhbCBNYWRyaWQnLCBlcXVpcG9zKVxuXG5wcmludChcIuKavSBCYXJjZWxvbmEgdnMgUmVhbCBNYWRyaWQ6XCIpXG5wcmludChmXCIgICBHb2xlcyBlc3BlcmFkb3MgQmFyY2Vsb25hOiB7Z29sZXNfYmFyY2E6LjJmfVwiKVxucHJpbnQoZlwiICAgR29sZXMgZXNwZXJhZG9zIFJlYWwgTWFkcmlkOiB7Z29sZXNfbWFkcmlkOi4yZn1cIikifQ==
+</script>
+</div>
+<hr>
+</section>
+</section>
+<section id="simular-un-partido" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="simular-un-partido"><span class="header-section-number">20.3</span> 3. Simular un Partido</h2>
+<section id="generar-un-resultado-aleatorio" class="level3" data-number="20.3.1">
+<h3 data-number="20.3.1" class="anchored" data-anchor-id="generar-un-resultado-aleatorio"><span class="header-section-number">20.3.1</span> 3.1 Generar un Resultado Aleatorio</h3>
+<div>
+<div id="pyodide-4" class="exercise-cell">
+
+</div>
+<script type="pyodide-4-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIHNpbXVsYXJfcGFydGlkbyhnb2xlc19lc3BlcmFkb3NfbG9jYWwsIGdvbGVzX2VzcGVyYWRvc192aXNpdGFudGUpOlxuICAgIFwiXCJcIlNpbXVsYSB1biBwYXJ0aWRvIHVzYW5kbyBkaXN0cmlidWNpw7NuIGRlIFBvaXNzb25cIlwiXCJcbiAgICBnb2xlc19sb2NhbCA9IG5wLnJhbmRvbS5wb2lzc29uKGdvbGVzX2VzcGVyYWRvc19sb2NhbClcbiAgICBnb2xlc192aXNpdGFudGUgPSBucC5yYW5kb20ucG9pc3Nvbihnb2xlc19lc3BlcmFkb3NfdmlzaXRhbnRlKVxuICAgIHJldHVybiBnb2xlc19sb2NhbCwgZ29sZXNfdmlzaXRhbnRlXG5cbiMgU2ltdWxhciBlbCBjbMOhc2ljbyAxMCB2ZWNlc1xucHJpbnQoXCLwn46yIFNpbXVsYWNpb25lcyBkZWwgQ2zDoXNpY28gKEJhcmNlbG9uYSB2cyBSZWFsIE1hZHJpZCk6XCIpXG5wcmludChcIi1cIiAqIDQwKVxuXG5mb3IgaSBpbiByYW5nZSgxMCk6XG4gICAgZ19iYXJjYSwgZ19tYWRyaWQgPSBzaW11bGFyX3BhcnRpZG8oZ29sZXNfYmFyY2EsIGdvbGVzX21hZHJpZClcbiAgICBpZiBnX2JhcmNhID4gZ19tYWRyaWQ6XG4gICAgICAgIHJlc3VsdGFkbyA9IFwiQmFyY2Vsb25hIGdhbmFcIlxuICAgIGVsaWYgZ19iYXJjYSA8IGdfbWFkcmlkOlxuICAgICAgICByZXN1bHRhZG8gPSBcIlJlYWwgTWFkcmlkIGdhbmFcIlxuICAgIGVsc2U6XG4gICAgICAgIHJlc3VsdGFkbyA9IFwiRW1wYXRlXCJcbiAgICBwcmludChmXCIgICBTaW11bGFjacOzbiB7aSsxfTogQmFyY2Vsb25hIHtnX2JhcmNhfSAtIHtnX21hZHJpZH0gUmVhbCBNYWRyaWQg4oaSIHtyZXN1bHRhZG99XCIpIn0=
+</script>
+</div>
+</section>
+<section id="simular-muchas-veces-monte-carlo" class="level3" data-number="20.3.2">
+<h3 data-number="20.3.2" class="anchored" data-anchor-id="simular-muchas-veces-monte-carlo"><span class="header-section-number">20.3.2</span> 3.2 Simular Muchas Veces (Monte Carlo)</h3>
+<p>Para obtener probabilidades precisas, simulamos miles de partidos.</p>
+<div>
+<div id="pyodide-5" class="exercise-cell">
+
+</div>
+<script type="pyodide-5-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIHNpbXVsYXJfbl9wYXJ0aWRvcyhnb2xlc19sb2NhbCwgZ29sZXNfdmlzaXRhbnRlLCBuX3NpbXVsYWNpb25lcz0xMDAwMCk6XG4gICAgXCJcIlwiXG4gICAgU2ltdWxhIG4gcGFydGlkb3MgeSBkZXZ1ZWx2ZSBlc3RhZMOtc3RpY2FzLlxuICAgIFwiXCJcIlxuICAgIHZpY3Rvcmlhc19sb2NhbCA9IDBcbiAgICBlbXBhdGVzID0gMFxuICAgIHZpY3Rvcmlhc192aXNpdGFudGUgPSAwXG4gICAgZ29sZXNfbG9jYWxfdG90YWwgPSBbXVxuICAgIGdvbGVzX3Zpc2l0YW50ZV90b3RhbCA9IFtdXG4gICAgXG4gICAgZm9yIF8gaW4gcmFuZ2Uobl9zaW11bGFjaW9uZXMpOlxuICAgICAgICBnX2wsIGdfdiA9IHNpbXVsYXJfcGFydGlkbyhnb2xlc19sb2NhbCwgZ29sZXNfdmlzaXRhbnRlKVxuICAgICAgICBnb2xlc19sb2NhbF90b3RhbC5hcHBlbmQoZ19sKVxuICAgICAgICBnb2xlc192aXNpdGFudGVfdG90YWwuYXBwZW5kKGdfdilcbiAgICAgICAgXG4gICAgICAgIGlmIGdfbCA+IGdfdjpcbiAgICAgICAgICAgIHZpY3Rvcmlhc19sb2NhbCArPSAxXG4gICAgICAgIGVsaWYgZ19sIDwgZ192OlxuICAgICAgICAgICAgdmljdG9yaWFzX3Zpc2l0YW50ZSArPSAxXG4gICAgICAgIGVsc2U6XG4gICAgICAgICAgICBlbXBhdGVzICs9IDFcbiAgICBcbiAgICByZXR1cm4ge1xuICAgICAgICAnUF9Mb2NhbCc6IHZpY3Rvcmlhc19sb2NhbCAvIG5fc2ltdWxhY2lvbmVzLFxuICAgICAgICAnUF9FbXBhdGUnOiBlbXBhdGVzIC8gbl9zaW11bGFjaW9uZXMsXG4gICAgICAgICdQX1Zpc2l0YW50ZSc6IHZpY3Rvcmlhc192aXNpdGFudGUgLyBuX3NpbXVsYWNpb25lcyxcbiAgICAgICAgJ0dvbGVzX0xvY2FsX01lZGlhJzogbnAubWVhbihnb2xlc19sb2NhbF90b3RhbCksXG4gICAgICAgICdHb2xlc19WaXNpdGFudGVfTWVkaWEnOiBucC5tZWFuKGdvbGVzX3Zpc2l0YW50ZV90b3RhbCksXG4gICAgICAgICdSZXN1bHRhZG9zJzogbGlzdCh6aXAoZ29sZXNfbG9jYWxfdG90YWwsIGdvbGVzX3Zpc2l0YW50ZV90b3RhbCkpXG4gICAgfVxuXG4jIFNpbXVsYXIgMTAsMDAwIGNsw6FzaWNvc1xucmVzdWx0YWRvc19jbGFzaWNvID0gc2ltdWxhcl9uX3BhcnRpZG9zKGdvbGVzX2JhcmNhLCBnb2xlc19tYWRyaWQsIG5fc2ltdWxhY2lvbmVzPTEwMDAwKVxuXG5wcmludChcIvCfk4ogUmVzdWx0YWRvcyBkZSAxMCwwMDAgc2ltdWxhY2lvbmVzIChCYXJjZWxvbmEgdnMgUmVhbCBNYWRyaWQpOlwiKVxucHJpbnQoZlwiICAgVmljdG9yaWEgQmFyY2Vsb25hOiB7cmVzdWx0YWRvc19jbGFzaWNvWydQX0xvY2FsJ10qMTAwOi4xZn0lXCIpXG5wcmludChmXCIgICBFbXBhdGU6ICAgICAgICAgICAgIHtyZXN1bHRhZG9zX2NsYXNpY29bJ1BfRW1wYXRlJ10qMTAwOi4xZn0lXCIpXG5wcmludChmXCIgICBWaWN0b3JpYSBSZWFsIE1hZHJpZDoge3Jlc3VsdGFkb3NfY2xhc2ljb1snUF9WaXNpdGFudGUnXSoxMDA6LjFmfSVcIilcbnByaW50KGZcIlxcbiAgIE1lZGlhIGdvbGVzIEJhcmNlbG9uYToge3Jlc3VsdGFkb3NfY2xhc2ljb1snR29sZXNfTG9jYWxfTWVkaWEnXTouMmZ9XCIpXG5wcmludChmXCIgICBNZWRpYSBnb2xlcyBSZWFsIE1hZHJpZDoge3Jlc3VsdGFkb3NfY2xhc2ljb1snR29sZXNfVmlzaXRhbnRlX01lZGlhJ106LjJmfVwiKSJ9
+</script>
+</div>
+</section>
+<section id="matriz-de-probabilidad-de-resultados" class="level3" data-number="20.3.3">
+<h3 data-number="20.3.3" class="anchored" data-anchor-id="matriz-de-probabilidad-de-resultados"><span class="header-section-number">20.3.3</span> 3.3 Matriz de Probabilidad de Resultados</h3>
+<div>
+<div id="pyodide-6" class="exercise-cell">
+
+</div>
+<script type="pyodide-6-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIG1hdHJpel9wcm9iYWJpbGlkYWRfcmVzdWx0YWRvKGdvbGVzX2xvY2FsLCBnb2xlc192aXNpdGFudGUsIG1heF9nb2xlcz02KTpcbiAgICBcIlwiXCJcbiAgICBDYWxjdWxhIGxhIHByb2JhYmlsaWRhZCBkZSBjYWRhIG1hcmNhZG9yIGV4YWN0by5cbiAgICBcIlwiXCJcbiAgICBtYXRyaXogPSBucC56ZXJvcygobWF4X2dvbGVzLCBtYXhfZ29sZXMpKVxuICAgIFxuICAgIGZvciBpIGluIHJhbmdlKG1heF9nb2xlcyk6XG4gICAgICAgIGZvciBqIGluIHJhbmdlKG1heF9nb2xlcyk6XG4gICAgICAgICAgICBwcm9iX2kgPSBwb2lzc29uLnBtZihpLCBnb2xlc19sb2NhbClcbiAgICAgICAgICAgIHByb2JfaiA9IHBvaXNzb24ucG1mKGosIGdvbGVzX3Zpc2l0YW50ZSlcbiAgICAgICAgICAgIG1hdHJpeltpLCBqXSA9IHByb2JfaSAqIHByb2JfalxuICAgIFxuICAgIHJldHVybiBtYXRyaXpcblxuIyBDYWxjdWxhciBtYXRyaXogcGFyYSBlbCBjbMOhc2ljb1xubWF0cml6X2NsYXNpY28gPSBtYXRyaXpfcHJvYmFiaWxpZGFkX3Jlc3VsdGFkbyhnb2xlc19iYXJjYSwgZ29sZXNfbWFkcmlkKVxuXG4jIFZpc3VhbGl6YXJcbmZpZywgYXggPSBwbHQuc3VicGxvdHMoZmlnc2l6ZT0oMTAsIDgpKVxuXG5pbSA9IGF4Lmltc2hvdyhtYXRyaXpfY2xhc2ljbywgY21hcD0nWWxPclJkJywgb3JpZ2luPSdsb3dlcicpXG5cbmZvciBpIGluIHJhbmdlKDYpOlxuICAgIGZvciBqIGluIHJhbmdlKDYpOlxuICAgICAgICBjb2xvciA9ICd3aGl0ZScgaWYgbWF0cml6X2NsYXNpY29baSwgal0gPiAwLjA1IGVsc2UgJ2JsYWNrJ1xuICAgICAgICBheC50ZXh0KGosIGksIGYne21hdHJpel9jbGFzaWNvW2ksIGpdKjEwMDouMWZ9JScsIGhhPSdjZW50ZXInLCB2YT0nY2VudGVyJywgXG4gICAgICAgICAgICAgICAgY29sb3I9Y29sb3IsIGZvbnRzaXplPTkpXG5cbmF4LnNldF94bGFiZWwoJ0dvbGVzIFJlYWwgTWFkcmlkJylcbmF4LnNldF95bGFiZWwoJ0dvbGVzIEJhcmNlbG9uYScpXG5heC5zZXRfdGl0bGUoJ1Byb2JhYmlsaWRhZCBkZSBjYWRhIE1hcmNhZG9yXFxuKEJhcmNlbG9uYSB2cyBSZWFsIE1hZHJpZCknKVxuYXguc2V0X3h0aWNrcyhyYW5nZSg2KSlcbmF4LnNldF95dGlja3MocmFuZ2UoNikpXG5cbnBsdC5jb2xvcmJhcihpbSwgYXg9YXgsIGxhYmVsPSdQcm9iYWJpbGlkYWQnKVxucGx0LnRpZ2h0X2xheW91dCgpXG5wbHQuc2hvdygpXG5cbiMgTWFyY2Fkb3JlcyBtw6FzIHByb2JhYmxlc1xucHJpbnQoXCJcXG7wn46vIFRvcCA1IE1hcmNhZG9yZXMgbcOhcyBQcm9iYWJsZXM6XCIpXG5yZXN1bHRhZG9zX3Byb2IgPSBbXVxuZm9yIGkgaW4gcmFuZ2UoNik6XG4gICAgZm9yIGogaW4gcmFuZ2UoNik6XG4gICAgICAgIHJlc3VsdGFkb3NfcHJvYi5hcHBlbmQoeydCYXJjZWxvbmEnOiBpLCAnUmVhbCBNYWRyaWQnOiBqLCAnUHJvYmFiaWxpZGFkJzogbWF0cml6X2NsYXNpY29baSwgal19KVxuXG50b3BfNSA9IHBkLkRhdGFGcmFtZShyZXN1bHRhZG9zX3Byb2IpLm5sYXJnZXN0KDUsICdQcm9iYWJpbGlkYWQnKVxuZm9yIF8sIHJvdyBpbiB0b3BfNS5pdGVycm93cygpOlxuICAgIHByaW50KGZcIiAgIHtpbnQocm93WydCYXJjZWxvbmEnXSl9LXtpbnQocm93WydSZWFsIE1hZHJpZCddKX06IHtyb3dbJ1Byb2JhYmlsaWRhZCddKjEwMDouMWZ9JVwiKSJ9
+</script>
+</div>
+<hr>
+</section>
+</section>
+<section id="simular-una-liga-completa" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="simular-una-liga-completa"><span class="header-section-number">20.4</span> 4. Simular una Liga Completa</h2>
+<section id="generar-calendario" class="level3" data-number="20.4.1">
+<h3 data-number="20.4.1" class="anchored" data-anchor-id="generar-calendario"><span class="header-section-number">20.4.1</span> 4.1 Generar Calendario</h3>
+<div>
+<div id="pyodide-7" class="exercise-cell">
+
+</div>
+<script type="pyodide-7-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIGdlbmVyYXJfY2FsZW5kYXJpbyhlcXVpcG9zX2xpc3RhKTpcbiAgICBcIlwiXCJHZW5lcmEgdG9kb3MgbG9zIHBhcnRpZG9zIGRlIHVuYSBsaWdhIChpZGEgeSB2dWVsdGEpXCJcIlwiXG4gICAgcGFydGlkb3MgPSBbXVxuICAgIGZvciBsb2NhbCBpbiBlcXVpcG9zX2xpc3RhOlxuICAgICAgICBmb3IgdmlzaXRhbnRlIGluIGVxdWlwb3NfbGlzdGE6XG4gICAgICAgICAgICBpZiBsb2NhbCAhPSB2aXNpdGFudGU6XG4gICAgICAgICAgICAgICAgcGFydGlkb3MuYXBwZW5kKHsnTG9jYWwnOiBsb2NhbCwgJ1Zpc2l0YW50ZSc6IHZpc2l0YW50ZX0pXG4gICAgcmV0dXJuIHBkLkRhdGFGcmFtZShwYXJ0aWRvcylcblxuIyBHZW5lcmFyIGNhbGVuZGFyaW9cbmNhbGVuZGFyaW8gPSBnZW5lcmFyX2NhbGVuZGFyaW8oZXF1aXBvc1snRXF1aXBvJ10udG9saXN0KCkpXG5wcmludChmXCLwn5OFIENhbGVuZGFyaW8gZ2VuZXJhZG86IHtsZW4oY2FsZW5kYXJpbyl9IHBhcnRpZG9zXCIpXG5wcmludChjYWxlbmRhcmlvLmhlYWQoMTApKSJ9
+</script>
+</div>
+</section>
+<section id="simular-una-temporada" class="level3" data-number="20.4.2">
+<h3 data-number="20.4.2" class="anchored" data-anchor-id="simular-una-temporada"><span class="header-section-number">20.4.2</span> 4.2 Simular una Temporada</h3>
+<div>
+<div id="pyodide-8" class="exercise-cell">
+
+</div>
+<script type="pyodide-8-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIHNpbXVsYXJfdGVtcG9yYWRhKGNhbGVuZGFyaW9fZGYsIGVxdWlwb3NfZGYpOlxuICAgIFwiXCJcIlNpbXVsYSB1bmEgdGVtcG9yYWRhIGNvbXBsZXRhIHkgZGV2dWVsdmUgbGEgdGFibGEgZmluYWxcIlwiXCJcbiAgICBcbiAgICAjIEluaWNpYWxpemFyIHRhYmxhXG4gICAgdGFibGEgPSBwZC5EYXRhRnJhbWUoe1xuICAgICAgICAnRXF1aXBvJzogZXF1aXBvc19kZlsnRXF1aXBvJ10sXG4gICAgICAgICdQdW50b3MnOiAwLFxuICAgICAgICAnUEonOiAwLFxuICAgICAgICAnUEcnOiAwLFxuICAgICAgICAnUEUnOiAwLFxuICAgICAgICAnUFAnOiAwLFxuICAgICAgICAnR0YnOiAwLFxuICAgICAgICAnR0MnOiAwXG4gICAgfSkuc2V0X2luZGV4KCdFcXVpcG8nKVxuICAgIFxuICAgICMgU2ltdWxhciBjYWRhIHBhcnRpZG9cbiAgICBmb3IgXywgcGFydGlkbyBpbiBjYWxlbmRhcmlvX2RmLml0ZXJyb3dzKCk6XG4gICAgICAgIGdvbGVzX2VzcF9sb2NhbCwgZ29sZXNfZXNwX3Zpc2l0YW50ZSA9IGNhbGN1bGFyX2dvbGVzX2VzcGVyYWRvcyhcbiAgICAgICAgICAgIHBhcnRpZG9bJ0xvY2FsJ10sIHBhcnRpZG9bJ1Zpc2l0YW50ZSddLCBlcXVpcG9zX2RmXG4gICAgICAgIClcbiAgICAgICAgXG4gICAgICAgIGdvbF9sb2NhbCwgZ29sX3Zpc2l0YW50ZSA9IHNpbXVsYXJfcGFydGlkbyhnb2xlc19lc3BfbG9jYWwsIGdvbGVzX2VzcF92aXNpdGFudGUpXG4gICAgICAgIFxuICAgICAgICAjIEFjdHVhbGl6YXIgdGFibGFcbiAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ0xvY2FsJ10sICdQSiddICs9IDFcbiAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ1Zpc2l0YW50ZSddLCAnUEonXSArPSAxXG4gICAgICAgIHRhYmxhLmxvY1twYXJ0aWRvWydMb2NhbCddLCAnR0YnXSArPSBnb2xfbG9jYWxcbiAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ0xvY2FsJ10sICdHQyddICs9IGdvbF92aXNpdGFudGVcbiAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ1Zpc2l0YW50ZSddLCAnR0YnXSArPSBnb2xfdmlzaXRhbnRlXG4gICAgICAgIHRhYmxhLmxvY1twYXJ0aWRvWydWaXNpdGFudGUnXSwgJ0dDJ10gKz0gZ29sX2xvY2FsXG4gICAgICAgIFxuICAgICAgICBpZiBnb2xfbG9jYWwgPiBnb2xfdmlzaXRhbnRlOlxuICAgICAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ0xvY2FsJ10sICdQdW50b3MnXSArPSAzXG4gICAgICAgICAgICB0YWJsYS5sb2NbcGFydGlkb1snTG9jYWwnXSwgJ1BHJ10gKz0gMVxuICAgICAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ1Zpc2l0YW50ZSddLCAnUFAnXSArPSAxXG4gICAgICAgIGVsaWYgZ29sX2xvY2FsIDwgZ29sX3Zpc2l0YW50ZTpcbiAgICAgICAgICAgIHRhYmxhLmxvY1twYXJ0aWRvWydWaXNpdGFudGUnXSwgJ1B1bnRvcyddICs9IDNcbiAgICAgICAgICAgIHRhYmxhLmxvY1twYXJ0aWRvWydWaXNpdGFudGUnXSwgJ1BHJ10gKz0gMVxuICAgICAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ0xvY2FsJ10sICdQUCddICs9IDFcbiAgICAgICAgZWxzZTpcbiAgICAgICAgICAgIHRhYmxhLmxvY1twYXJ0aWRvWydMb2NhbCddLCAnUHVudG9zJ10gKz0gMVxuICAgICAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ1Zpc2l0YW50ZSddLCAnUHVudG9zJ10gKz0gMVxuICAgICAgICAgICAgdGFibGEubG9jW3BhcnRpZG9bJ0xvY2FsJ10sICdQRSddICs9IDFcbiAgICAgICAgICAgIHRhYmxhLmxvY1twYXJ0aWRvWydWaXNpdGFudGUnXSwgJ1BFJ10gKz0gMVxuICAgIFxuICAgIHRhYmxhWydERyddID0gdGFibGFbJ0dGJ10gLSB0YWJsYVsnR0MnXVxuICAgIHJldHVybiB0YWJsYS5zb3J0X3ZhbHVlcyhbJ1B1bnRvcycsICdERyddLCBhc2NlbmRpbmc9RmFsc2UpLnJlc2V0X2luZGV4KClcblxuIyBTaW11bGFyIHVuYSB0ZW1wb3JhZGFcbnRhYmxhX2ZpbmFsID0gc2ltdWxhcl90ZW1wb3JhZGEoY2FsZW5kYXJpbywgZXF1aXBvcylcbnByaW50KFwi8J+PhiBUYWJsYSBGaW5hbCAtIFRlbXBvcmFkYSBTaW11bGFkYTpcIilcbnByaW50KHRhYmxhX2ZpbmFsLnRvX3N0cmluZyhpbmRleD1GYWxzZSkpIn0=
+</script>
+</div>
+</section>
+<section id="simular-múltiples-temporadas" class="level3" data-number="20.4.3">
+<h3 data-number="20.4.3" class="anchored" data-anchor-id="simular-múltiples-temporadas"><span class="header-section-number">20.4.3</span> 4.3 Simular Múltiples Temporadas</h3>
+<p>¿Cuántas veces gana cada equipo la liga en 1000 simulaciones?</p>
+<div>
+<div id="pyodide-9" class="exercise-cell">
+
+</div>
+<script type="pyodide-9-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIHNpbXVsYXJfbl90ZW1wb3JhZGFzKGNhbGVuZGFyaW9fZGYsIGVxdWlwb3NfZGYsIG5fdGVtcG9yYWRhcz0xMDAwKTpcbiAgICBcIlwiXCJTaW11bGEgbcO6bHRpcGxlcyB0ZW1wb3JhZGFzIHkgY3VlbnRhIHTDrXR1bG9zXCJcIlwiXG4gICAgdGl0dWxvcyA9IHtlcXVpcG86IDAgZm9yIGVxdWlwbyBpbiBlcXVpcG9zX2RmWydFcXVpcG8nXX1cbiAgICBwb2RpdW1zID0ge2VxdWlwbzogMCBmb3IgZXF1aXBvIGluIGVxdWlwb3NfZGZbJ0VxdWlwbyddfVxuICAgIHB1bnRvc19oaXN0b3JpYWwgPSB7ZXF1aXBvOiBbXSBmb3IgZXF1aXBvIGluIGVxdWlwb3NfZGZbJ0VxdWlwbyddfVxuICAgIFxuICAgIGZvciBfIGluIHJhbmdlKG5fdGVtcG9yYWRhcyk6XG4gICAgICAgIHRhYmxhID0gc2ltdWxhcl90ZW1wb3JhZGEoY2FsZW5kYXJpb19kZiwgZXF1aXBvc19kZilcbiAgICAgICAgXG4gICAgICAgIGNhbXBlb24gPSB0YWJsYS5pbG9jWzBdWydFcXVpcG8nXVxuICAgICAgICB0aXR1bG9zW2NhbXBlb25dICs9IDFcbiAgICAgICAgXG4gICAgICAgIGZvciBpIGluIHJhbmdlKG1pbigzLCBsZW4odGFibGEpKSk6XG4gICAgICAgICAgICBwb2RpdW1zW3RhYmxhLmlsb2NbaV1bJ0VxdWlwbyddXSArPSAxXG4gICAgICAgICAgICBcbiAgICAgICAgZm9yIF8sIHJvdyBpbiB0YWJsYS5pdGVycm93cygpOlxuICAgICAgICAgICAgcHVudG9zX2hpc3RvcmlhbFtyb3dbJ0VxdWlwbyddXS5hcHBlbmQocm93WydQdW50b3MnXSlcbiAgICBcbiAgICByZXR1cm4gdGl0dWxvcywgcG9kaXVtcywgcHVudG9zX2hpc3RvcmlhbFxuXG4jIFNpbXVsYXIgNTAwIHRlbXBvcmFkYXMgKHJlZHVjaWRvIHBhcmEgdmVsb2NpZGFkKVxucHJpbnQoXCLij7MgU2ltdWxhbmRvIDUwMCB0ZW1wb3JhZGFzLi4uXCIpXG50aXR1bG9zLCBwb2RpdW1zLCBwdW50b3NfaGlzdG9yaWFsID0gc2ltdWxhcl9uX3RlbXBvcmFkYXMoY2FsZW5kYXJpbywgZXF1aXBvcywgbl90ZW1wb3JhZGFzPTUwMClcblxuIyBNb3N0cmFyIHJlc3VsdGFkb3NcbnByaW50KFwiXFxu8J+PhiBUw610dWxvcyBkZSBMaWdhIChlbiA1MDAgc2ltdWxhY2lvbmVzKTpcIilcbnRpdHVsb3NfZGYgPSBwZC5EYXRhRnJhbWUoe1xuICAgICdFcXVpcG8nOiB0aXR1bG9zLmtleXMoKSxcbiAgICAnVMOtdHVsb3MnOiB0aXR1bG9zLnZhbHVlcygpLFxuICAgICdQb2RpdW1zJzogW3BvZGl1bXNbZV0gZm9yIGUgaW4gdGl0dWxvcy5rZXlzKCldLFxuICAgICdQdW50b3NfTWVkaWEnOiBbbnAubWVhbihwdW50b3NfaGlzdG9yaWFsW2VdKSBmb3IgZSBpbiB0aXR1bG9zLmtleXMoKV1cbn0pLnNvcnRfdmFsdWVzKCdUw610dWxvcycsIGFzY2VuZGluZz1GYWxzZSlcblxucHJpbnQodGl0dWxvc19kZi50b19zdHJpbmcoaW5kZXg9RmFsc2UpKVxuXG4jIFZpc3VhbGl6YXJcbmZpZywgYXggPSBwbHQuc3VicGxvdHMoZmlnc2l6ZT0oMTIsIDUpKVxudGl0dWxvc19kZl9zb3J0ZWQgPSB0aXR1bG9zX2RmLnNvcnRfdmFsdWVzKCdUw610dWxvcycpXG5iYXJzID0gYXguYmFyaCh0aXR1bG9zX2RmX3NvcnRlZFsnRXF1aXBvJ10sIHRpdHVsb3NfZGZfc29ydGVkWydUw610dWxvcyddLCBjb2xvcj0nZ29sZCcsIGVkZ2Vjb2xvcj0nYmxhY2snKVxuYXguc2V0X3hsYWJlbCgnTsO6bWVybyBkZSBUw610dWxvcycpXG5heC5zZXRfdGl0bGUoJ0Rpc3RyaWJ1Y2nDs24gZGUgVMOtdHVsb3MgZGUgTGlnYSAoNTAwIHNpbXVsYWNpb25lcyknKVxucGx0LnRpZ2h0X2xheW91dCgpXG5wbHQuc2hvdygpIn0=
+</script>
+</div>
+<hr>
+</section>
+</section>
+<section id="distribución-de-puntos-y-variabilidad" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="distribución-de-puntos-y-variabilidad"><span class="header-section-number">20.5</span> 5. Distribución de Puntos y Variabilidad</h2>
+<section id="histograma-de-puntos-del-campeón" class="level3" data-number="20.5.1">
+<h3 data-number="20.5.1" class="anchored" data-anchor-id="histograma-de-puntos-del-campeón"><span class="header-section-number">20.5.1</span> 5.1 Histograma de Puntos del Campeón</h3>
+<div>
+<div id="pyodide-10" class="exercise-cell">
+
+</div>
+<script type="pyodide-10-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQdW50b3MgZGVsIEJhcmNlbG9uYSBlbiBsYXMgNTAwIHRlbXBvcmFkYXNcbnB1bnRvc19iYXJjYSA9IHB1bnRvc19oaXN0b3JpYWxbJ0JhcmNlbG9uYSddXG5cbmZpZywgYXggPSBwbHQuc3VicGxvdHMoZmlnc2l6ZT0oMTAsIDUpKVxuYXguaGlzdChwdW50b3NfYmFyY2EsIGJpbnM9MjAsIGVkZ2Vjb2xvcj0nd2hpdGUnLCBjb2xvcj0nZGFya2JsdWUnLCBhbHBoYT0wLjcpXG5cbiMgRXN0YWTDrXN0aWNhc1xubWVkaWEgPSBucC5tZWFuKHB1bnRvc19iYXJjYSlcbnN0ZCA9IG5wLnN0ZChwdW50b3NfYmFyY2EpXG5heC5heHZsaW5lKG1lZGlhLCBjb2xvcj0ncmVkJywgbGluZXN0eWxlPSctLScsIGxpbmV3aWR0aD0yLCBsYWJlbD1mJ01lZGlhOiB7bWVkaWE6LjFmfScpXG5heC5heHZsaW5lKG1lZGlhICsgc3RkLCBjb2xvcj0nb3JhbmdlJywgbGluZXN0eWxlPSc6JywgbGluZXdpZHRoPTEuNSwgbGFiZWw9ZicrMSBTdGQ6IHttZWRpYStzdGQ6LjFmfScpXG5heC5heHZsaW5lKG1lZGlhIC0gc3RkLCBjb2xvcj0nb3JhbmdlJywgbGluZXN0eWxlPSc6JywgbGluZXdpZHRoPTEuNSwgbGFiZWw9ZictMSBTdGQ6IHttZWRpYS1zdGQ6LjFmfScpXG5cbmF4LnNldF94bGFiZWwoJ1B1bnRvcycpXG5heC5zZXRfeWxhYmVsKCdGcmVjdWVuY2lhJylcbmF4LnNldF90aXRsZSgnRGlzdHJpYnVjacOzbiBkZSBQdW50b3MgZGVsIEJhcmNlbG9uYSAoNTAwIHRlbXBvcmFkYXMpJylcbmF4LmxlZ2VuZCgpXG5wbHQudGlnaHRfbGF5b3V0KClcbnBsdC5zaG93KClcblxucHJpbnQoZlwi8J+TiiBFc3RhZMOtc3RpY2FzIEJhcmNlbG9uYTpcIilcbnByaW50KGZcIiAgIE1lZGlhOiB7bWVkaWE6LjFmfSBwdW50b3NcIilcbnByaW50KGZcIiAgIERlc3YuIFN0ZDoge3N0ZDouMWZ9IHB1bnRvc1wiKVxucHJpbnQoZlwiICAgTcOtbmltbzoge21pbihwdW50b3NfYmFyY2EpfSBwdW50b3NcIilcbnByaW50KGZcIiAgIE3DoXhpbW86IHttYXgocHVudG9zX2JhcmNhKX0gcHVudG9zXCIpIn0=
+</script>
+</div>
+</section>
+<section id="comparar-variabilidad-entre-equipos" class="level3" data-number="20.5.2">
+<h3 data-number="20.5.2" class="anchored" data-anchor-id="comparar-variabilidad-entre-equipos"><span class="header-section-number">20.5.2</span> 5.2 Comparar Variabilidad entre Equipos</h3>
+<div>
+<div id="pyodide-11" class="exercise-cell">
+
+</div>
+<script type="pyodide-11-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBCb3hwbG90IGRlIHB1bnRvcyBwb3IgZXF1aXBvXG5maWcsIGF4ID0gcGx0LnN1YnBsb3RzKGZpZ3NpemU9KDE0LCA2KSlcblxuZGF0YV9ib3hwbG90ID0gW3B1bnRvc19oaXN0b3JpYWxbZV0gZm9yIGUgaW4gdGl0dWxvc19kZi5zb3J0X3ZhbHVlcygnUHVudG9zX01lZGlhJywgYXNjZW5kaW5nPUZhbHNlKVsnRXF1aXBvJ11dXG5sYWJlbHNfYm94cGxvdCA9IHRpdHVsb3NfZGYuc29ydF92YWx1ZXMoJ1B1bnRvc19NZWRpYScsIGFzY2VuZGluZz1GYWxzZSlbJ0VxdWlwbyddLnRvbGlzdCgpXG5cbmJwID0gYXguYm94cGxvdChkYXRhX2JveHBsb3QsIGxhYmVscz1sYWJlbHNfYm94cGxvdCwgcGF0Y2hfYXJ0aXN0PVRydWUpXG5cbiMgQ29sb3JlYXJcbmNvbG9ycyA9IHBsdC5jbS5SZFlsR24obnAubGluc3BhY2UoMC44LCAwLjIsIGxlbihsYWJlbHNfYm94cGxvdCkpKVxuZm9yIHBhdGNoLCBjb2xvciBpbiB6aXAoYnBbJ2JveGVzJ10sIGNvbG9ycyk6XG4gICAgcGF0Y2guc2V0X2ZhY2Vjb2xvcihjb2xvcilcblxuYXguc2V0X3h0aWNrbGFiZWxzKGxhYmVsc19ib3hwbG90LCByb3RhdGlvbj00NSwgaGE9J3JpZ2h0JylcbmF4LnNldF95bGFiZWwoJ1B1bnRvcycpXG5heC5zZXRfdGl0bGUoJ0Rpc3RyaWJ1Y2nDs24gZGUgUHVudG9zIHBvciBFcXVpcG8gKDUwMCB0ZW1wb3JhZGFzKScpXG5heC5heGhsaW5lKDc1LCBjb2xvcj0nZ3JheScsIGxpbmVzdHlsZT0nLS0nLCBhbHBoYT0wLjUsIGxhYmVsPSdab25hIENoYW1waW9ucyAofjc1IHB0cyknKVxuYXgubGVnZW5kKClcbnBsdC50aWdodF9sYXlvdXQoKVxucGx0LnNob3coKSJ9
+</script>
+</div>
+<hr>
+</section>
+</section>
+<section id="mini-proyecto-tu-simulador-de-liga" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="mini-proyecto-tu-simulador-de-liga"><span class="header-section-number">20.6</span> 🏆 Mini-Proyecto: Tu Simulador de Liga</h2>
+<section id="pregunta-1-probabilidad-de-descenso" class="level3" data-number="20.6.1">
+<h3 data-number="20.6.1" class="anchored" data-anchor-id="pregunta-1-probabilidad-de-descenso"><span class="header-section-number">20.6.1</span> Pregunta 1: Probabilidad de Descenso</h3>
+<p>Simula 500 temporadas y calcula qué porcentaje de veces termina cada equipo en los últimos 3 puestos.</p>
+<div>
+<div id="pyodide-12" class="exercise-cell">
+
+</div>
+<script type="pyodide-12-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simular_descensos(calendario_df, equipos_df, n_temporadas<span class="op">=</span><span class="dv">500</span>):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    descensos <span class="op">=</span> {equipo: <span class="dv">0</span> <span class="cf">for</span> equipo <span class="kw">in</span> equipos_df[<span class="st">'Equipo'</span>]}</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n_temporadas):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        tabla <span class="op">=</span> simular_temporada(calendario_df, equipos_df)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="op">-</span><span class="dv">3</span>, <span class="dv">0</span>):  <span class="co"># Últimos 3</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            descensos[tabla.iloc[i][<span class="st">'Equipo'</span>]] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {k: v<span class="op">/</span>n_temporadas<span class="op">*</span><span class="dv">100</span> <span class="cf">for</span> k, v <span class="kw">in</span> <span class="bu">sorted</span>(descensos.items(), key<span class="op">=</span><span class="kw">lambda</span> x: <span class="op">-</span>x[<span class="dv">1</span>])}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>prob_descenso <span class="op">=</span> simular_descensos(calendario, equipos, <span class="dv">500</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"⬇️ Probabilidad de Descenso:"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> equipo, prob <span class="kw">in</span> prob_descenso.items():</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"   </span><span class="sc">{</span>equipo<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>prob<span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-2-ajustar-parámetros" class="level3" data-number="20.6.2">
+<h3 data-number="20.6.2" class="anchored" data-anchor-id="pregunta-2-ajustar-parámetros"><span class="header-section-number">20.6.2</span> Pregunta 2: Ajustar Parámetros</h3>
+<p>Si el Atlético mejora su Ataque de 1.5 a 1.8, ¿cuántos títulos más ganaría en 500 simulaciones?</p>
+<div>
+<div id="pyodide-13" class="exercise-cell">
+
+</div>
+<script type="pyodide-13-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modificar parámetros del Atlético</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>equipos_mejorado <span class="op">=</span> equipos.copy()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>equipos_mejorado.loc[equipos_mejorado[<span class="st">'Equipo'</span>] <span class="op">==</span> <span class="st">'Atlético'</span>, <span class="st">'Ataque'</span>] <span class="op">=</span> <span class="fl">1.8</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Simular con mejora</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>titulos_nuevo, _, _ <span class="op">=</span> simular_n_temporadas(calendario, equipos_mejorado, <span class="dv">500</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Títulos del Atlético:"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Original (Ataque=1.5): </span><span class="sc">{</span>titulos[<span class="st">'Atlético'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Mejorado (Ataque=1.8): </span><span class="sc">{</span>titulos_nuevo[<span class="st">'Atlético'</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Diferencia: +</span><span class="sc">{</span>titulos_nuevo[<span class="st">'Atlético'</span>] <span class="op">-</span> titulos[<span class="st">'Atlético'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-3-partido-clave" class="level3" data-number="20.6.3">
+<h3 data-number="20.6.3" class="anchored" data-anchor-id="pregunta-3-partido-clave"><span class="header-section-number">20.6.3</span> Pregunta 3: Partido Clave</h3>
+<p>Simula Barcelona vs Atlético 5000 veces con ambos equipos como locales alternativamente. ¿Quién tiene ventaja?</p>
+<div>
+<div id="pyodide-14" class="exercise-cell">
+
+</div>
+<script type="pyodide-14-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Barcelona local</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gl_barca, gv_atleti <span class="op">=</span> calcular_goles_esperados(<span class="st">'Barcelona'</span>, <span class="st">'Atlético'</span>, equipos)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>res_barca_local <span class="op">=</span> simular_n_partidos(gl_barca, gv_atleti, <span class="dv">5000</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Atlético local</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>gl_atleti, gv_barca <span class="op">=</span> calcular_goles_esperados(<span class="st">'Atlético'</span>, <span class="st">'Barcelona'</span>, equipos)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>res_atleti_local <span class="op">=</span> simular_n_partidos(gl_atleti, gv_barca, <span class="dv">5000</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Barcelona como LOCAL:"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Victoria Barcelona: </span><span class="sc">{</span>res_barca_local[<span class="st">'P_Local'</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Empate: </span><span class="sc">{</span>res_barca_local[<span class="st">'P_Empate'</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Victoria Atlético: </span><span class="sc">{</span>res_barca_local[<span class="st">'P_Visitante'</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Atlético como LOCAL:"</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Victoria Atlético: </span><span class="sc">{</span>res_atleti_local[<span class="st">'P_Local'</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Empate: </span><span class="sc">{</span>res_atleti_local[<span class="st">'P_Empate'</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"   Victoria Barcelona: </span><span class="sc">{</span>res_atleti_local[<span class="st">'P_Visitante'</span>]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="resumen" class="level2" data-number="20.7">
+<h2 data-number="20.7" class="anchored" data-anchor-id="resumen"><span class="header-section-number">20.7</span> Resumen</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Concepto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Distribución Poisson</strong></td>
+<td>Modela el número de goles en un partido</td>
+</tr>
+<tr class="even">
+<td><strong>Monte Carlo</strong></td>
+<td>Simular miles de veces para obtener probabilidades</td>
+</tr>
+<tr class="odd">
+<td><strong>Matriz de resultados</strong></td>
+<td>Probabilidad de cada marcador exacto</td>
+</tr>
+<tr class="even">
+<td><strong>Variabilidad</strong></td>
+<td>El mejor equipo no siempre gana la liga</td>
+</tr>
+<tr class="odd">
+<td><strong>Localía</strong></td>
+<td>Factor que aumenta los goles esperados del local</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>[!TIP] Las simulaciones son fundamentales para: - Casas de apuestas (calcular cuotas) - Analistas de clubes (planificar temporadas) - Periodistas (contextualizar resultados) - Fantasy managers (predecir rendimiento)</p>
+</blockquote>
+
+
+<script type="pyodide-data">
+eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yOC4xL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIiwicGFuZGFzIiwibnVtcHkiLCJtYXRwbG90bGliIiwicGxvdG5pbmUiLCJzZWFib3JuIiwic2Npa2l0LWxlYXJuIl19fQ==
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTE0IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTQgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE0LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTQtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xNCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEzIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTMgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEzLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTMtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMyA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTMsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTIgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEyLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTItY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTIsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTExIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTEgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTExLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTEtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEwIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTAgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEwLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTAtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTAsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl85ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS05LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtOS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzkgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzksIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTgiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl84ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS04LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtOC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzggPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzgsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTciLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl83ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS03LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzcgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzcsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTYiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl82ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS02LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzYgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzYsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl81ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS01LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzUgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzUsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl80ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS00LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzQgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8zID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzMgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzMsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8yID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0yLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzIgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzIsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8xID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0xLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzEgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLXByZWx1ZGUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJweW9kaWRlT2pzID0ge1xuICBjb25zdCB7XG4gICAgUHlvZGlkZUV2YWx1YXRvcixcbiAgICBQeW9kaWRlRW52aXJvbm1lbnRNYW5hZ2VyLFxuICAgIHNldHVwUHl0aG9uLFxuICAgIHN0YXJ0UHlvZGlkZVdvcmtlcixcbiAgICBiNjREZWNvZGUsXG4gICAgY29sbGFwc2VQYXRoLFxuICB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcblxuICBjb25zdCBzdGF0dXNDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctc3RhdHVzXCIpO1xuICBjb25zdCBpbmRpY2F0b3JDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpbmRpY2F0b3JDb250YWluZXIuY2xhc3NMaXN0LnJlbW92ZShcImQtbm9uZVwiKTtcblxuICBsZXQgc3RhdHVzVGV4dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIilcbiAgc3RhdHVzVGV4dC5jbGFzc0xpc3QgPSBcImV4ZXJjaXNlLWxvYWRpbmctZGV0YWlsc1wiO1xuICBzdGF0dXNUZXh0ID0gc3RhdHVzQ29udGFpbmVyLmFwcGVuZENoaWxkKHN0YXR1c1RleHQpO1xuICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluaXRpYWxpc2VgO1xuXG4gIC8vIEhvaXN0IGluZGljYXRvciBvdXQgZnJvbSBmaW5hbCBzbGlkZSB3aGVuIHJ1bm5pbmcgdW5kZXIgcmV2ZWFsXG4gIGNvbnN0IHJldmVhbFN0YXR1cyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsIC5leGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaWYgKHJldmVhbFN0YXR1cykge1xuICAgIHJldmVhbFN0YXR1cy5yZW1vdmUoKTtcbiAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCA+IC5zbGlkZXNcIikuYXBwZW5kQ2hpbGQocmV2ZWFsU3RhdHVzKTtcbiAgfVxuXG4gIC8vIE1ha2UgYW55IHJldmVhbCBzbGlkZXMgd2l0aCBsaXZlIGNlbGxzIHNjcm9sbGFibGVcbiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbChcIi5yZXZlYWwgLmV4ZXJjaXNlLWNlbGxcIikuZm9yRWFjaCgoZWwpID0+IHtcbiAgICBlbC5jbG9zZXN0KCdzZWN0aW9uLnNsaWRlJykuY2xhc3NMaXN0LmFkZChcInNjcm9sbGFibGVcIik7XG4gIH0pXG5cbiAgLy8gUHlvZGlkZSBzdXBwbGVtZW50YWwgZGF0YSBhbmQgb3B0aW9uc1xuICBjb25zdCBkYXRhQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLWRhdGFcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBkYXRhID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZGF0YUNvbnRlbnQpKTtcblxuICAvLyBHcmFiIGxpc3Qgb2YgcmVzb3VyY2VzIHRvIGJlIGRvd25sb2FkZWRcbiAgY29uc3QgZmlsZXNDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInZmcy1maWxlXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZmlsZXMgPSBKU09OLnBhcnNlKGI2NERlY29kZShmaWxlc0NvbnRlbnQpKTtcblxuICBsZXQgcHlvZGlkZVByb21pc2UgPSAoYXN5bmMgKCkgPT4ge1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgUHlvZGlkZWA7XG4gICAgY29uc3QgcHlvZGlkZSA9IGF3YWl0IHN0YXJ0UHlvZGlkZVdvcmtlcihkYXRhLm9wdGlvbnMpO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiBtaWNyb3BpcGA7XG4gICAgYXdhaXQgcHlvZGlkZS5sb2FkUGFja2FnZShcIm1pY3JvcGlwXCIpO1xuICAgIGNvbnN0IG1pY3JvcGlwID0gYXdhaXQgcHlvZGlkZS5weWltcG9ydChcIm1pY3JvcGlwXCIpO1xuICAgIGF3YWl0IGRhdGEucGFja2FnZXMucGtncy5tYXAoKHBrZykgPT4gKCkgPT4ge1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiAke3BrZ31gO1xuICAgICAgcmV0dXJuIG1pY3JvcGlwLmluc3RhbGwocGtnKTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcbiAgICBhd2FpdCBtaWNyb3BpcC5kZXN0cm95KCk7XG5cbiAgICAvLyBEb3dubG9hZCBhbmQgaW5zdGFsbCByZXNvdXJjZXNcbiAgICBhd2FpdCBmaWxlcy5tYXAoKGZpbGUpID0+IGFzeW5jICgpID0+IHtcbiAgICAgIGNvbnN0IG5hbWUgPSBmaWxlLnN1YnN0cmluZyhmaWxlLmxhc3RJbmRleE9mKCcvJykgKyAxKTtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcmVzb3VyY2U6ICR7bmFtZX1gO1xuICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaChmaWxlKTtcbiAgICAgIGlmICghcmVzcG9uc2Uub2spIHtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBDYW4ndCBkb3dubG9hZCBcXGAke2ZpbGV9XFxgLiBFcnJvciAke3Jlc3BvbnNlLnN0YXR1c306IFwiJHtyZXNwb25zZS5zdGF0dXNUZXh0fVwiLmApO1xuICAgICAgfVxuICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHJlc3BvbnNlLmFycmF5QnVmZmVyKCk7XG5cbiAgICAgIC8vIFN0b3JlIFVSTHMgaW4gdGhlIGN3ZCB3aXRob3V0IGFueSBzdWJkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBpZiAoZmlsZS5pbmNsdWRlcyhcIjovL1wiKSkge1xuICAgICAgICBmaWxlID0gbmFtZTtcbiAgICAgIH1cblxuICAgICAgLy8gQ29sbGFwc2UgaGlnaGVyIGRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGZpbGUgPSBjb2xsYXBzZVBhdGgoZmlsZSk7XG5cbiAgICAgIC8vIENyZWF0ZSBkaXJlY3RvcnkgdHJlZSwgaWdub3JpbmcgXCJkaXJlY3RvcnkgZXhpc3RzXCIgVkZTIGVycm9yc1xuICAgICAgY29uc3QgcGFydHMgPSBmaWxlLnNwbGl0KCcvJykuc2xpY2UoMCwgLTEpO1xuICAgICAgbGV0IHBhdGggPSAnJztcbiAgICAgIHdoaWxlIChwYXJ0cy5sZW5ndGggPiAwKSB7XG4gICAgICAgIHBhdGggKz0gcGFydHMuc2hpZnQoKSArICcvJztcbiAgICAgICAgdHJ5IHtcbiAgICAgICAgICBhd2FpdCBweW9kaWRlLkZTLm1rZGlyKHBhdGgpO1xuICAgICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgICAgaWYgKGUubmFtZSAhPT0gXCJFcnJub0Vycm9yXCIpIHRocm93IGU7XG4gICAgICAgICAgaWYgKGUuZXJybm8gIT09IDIwKSB7XG4gICAgICAgICAgICBjb25zdCBlcnJvclRleHRQdHIgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuX3N0cmVycm9yKGUuZXJybm8pO1xuICAgICAgICAgICAgY29uc3QgZXJyb3JUZXh0ID0gYXdhaXQgcHlvZGlkZS5fbW9kdWxlLlVURjhUb1N0cmluZyhlcnJvclRleHRQdHIpO1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yICR7ZS5lcnJub30gXCIke2Vycm9yVGV4dH1cIi5gKTtcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH1cblxuICAgICAgLy8gV3JpdGUgdGhpcyBmaWxlIHRvIHRoZSBWRlNcbiAgICAgIHRyeSB7XG4gICAgICAgIHJldHVybiBhd2FpdCBweW9kaWRlLkZTLndyaXRlRmlsZShmaWxlLCBuZXcgVWludDhBcnJheShkYXRhKSk7XG4gICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgIGlmIChlLm5hbWUgIT09IFwiRXJybm9FcnJvclwiKSB0aHJvdyBlO1xuICAgICAgICBjb25zdCBlcnJvclRleHRQdHIgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuX3N0cmVycm9yKGUuZXJybm8pO1xuICAgICAgICBjb25zdCBlcnJvclRleHQgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuVVRGOFRvU3RyaW5nKGVycm9yVGV4dFB0cik7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihgRmlsZXN5c3RlbSBFcnJvciAke2UuZXJybm99IFwiJHtlcnJvclRleHR9XCIuYCk7XG4gICAgICB9XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYFB5b2RpZGUgZW52aXJvbm1lbnQgc2V0dXBgO1xuICAgIGF3YWl0IHNldHVwUHl0aG9uKHB5b2RpZGUpO1xuXG4gICAgc3RhdHVzVGV4dC5yZW1vdmUoKTtcbiAgICBpZiAoc3RhdHVzQ29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA9PSAwKSB7XG4gICAgICBzdGF0dXNDb250YWluZXIucGFyZW50Tm9kZS5yZW1vdmUoKTtcbiAgICB9XG4gICAgcmV0dXJuIHB5b2RpZGU7XG4gIH0pKCkuY2F0Y2goKGVycikgPT4ge1xuICAgIHN0YXR1c1RleHQuc3R5bGUuY29sb3IgPSBcInZhcigtLWV4ZXJjaXNlLWVkaXRvci1obC1lciwgI0FEMDAwMClcIjtcbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gZXJyLm1lc3NhZ2U7XG4gICAgLy9pbmRpY2F0b3JDb250YWluZXIucXVlcnlTZWxlY3RvcihcIi5zcGlubmVyLWdyb3dcIikuY2xhc3NMaXN0LmFkZChcImQtbm9uZVwiKTtcbiAgICB0aHJvdyBlcnI7XG4gIH0pO1xuXG4gIC8vIEtlZXAgdHJhY2sgb2YgaW5pdGlhbCBPSlMgYmxvY2sgcmVuZGVyXG4gIGNvbnN0IHJlbmRlcmVkT2pzID0ge307XG5cbiAgY29uc3QgcHJvY2VzcyA9IGFzeW5jIChjb250ZXh0LCBpbnB1dHMpID0+IHtcbiAgICBjb25zdCBweW9kaWRlID0gYXdhaXQgcHlvZGlkZVByb21pc2U7XG4gICAgY29uc3QgZXZhbHVhdG9yID0gbmV3IFB5b2RpZGVFdmFsdWF0b3IocHlvZGlkZSwgY29udGV4dCk7XG4gICAgYXdhaXQgZXZhbHVhdG9yLnByb2Nlc3MoaW5wdXRzKTtcbiAgICByZXR1cm4gZXZhbHVhdG9yLmNvbnRhaW5lcjtcbiAgfVxuXG4gIHJldHVybiB7XG4gICAgcHlvZGlkZVByb21pc2UsXG4gICAgcmVuZGVyZWRPanMsXG4gICAgcHJvY2VzcyxcbiAgfTtcbn1cbiJ9XX0=
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./19_pitch_control.html" class="pagination-link" aria-label="Pitch Control: Control del Espacio con Voronoi">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Pitch Control: Control del Espacio con Voronoi</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,1458 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "",
+    "text": "Bienvenido\nEste libro es una guía completa de 0 a experto para aprender Pandas (Python), diseñada específicamente para Sport Scientists que ya tienen experiencia con R y el Tidyverse.",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "index.html#filosofía-del-libro",
+    "href": "index.html#filosofía-del-libro",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "🎯 Filosofía del Libro",
+    "text": "🎯 Filosofía del Libro\nNo enseñamos a programar desde cero. Ya sabes qué es un dataframe, qué es filtrar, qué es agrupar. Lo que necesitas es traducción y profundización.\nPara cada concepto aprenderás:\n\nCómo se dice en Pandas — equivalencia directa con dplyr/tidyr\nPor qué Pandas lo hace así — filosofía subyacente\nMúltiples formas de hacerlo — básica, intermedia, avanzada\nPráctica inmediata — bloques de código editables en el navegador\nMini-proyectos — preguntas reales de análisis deportivo",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "index.html#los-datos",
+    "href": "index.html#los-datos",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "📊 Los Datos",
+    "text": "📊 Los Datos\nTodos los ejemplos usan datos realistas de Ciencias del Deporte:\n\n\n\n\n\n\n\n\nDataset\nDescripción\nVariables\n\n\n\n\natletas\nPerfil físico del plantel\nVO2max, FC, potencia, velocidad, salto\n\n\ngps_sesiones\nSesiones de entrenamiento/partido\nDistancia, HSR, sprints, RPE, HR\n\n\ntracking\nDatos de tracking 10Hz\nPosición x/y, velocidad, aceleración\n\n\neventos\nEventos de partido (estilo StatsBomb)\nPases, tiros, xG\n\n\nbienestar\nCuestionarios wellness\nSueño, fatiga, HRV",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "index.html#estructura-del-libro",
+    "href": "index.html#estructura-del-libro",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "🗺️ Estructura del Libro",
+    "text": "🗺️ Estructura del Libro\n\n\n\n\n\n\n\n\nParte\nCapítulos\nContenido\n\n\n\n\nFundamentos\n1-2\nSeries, DataFrames, Method Chaining\n\n\nData Wrangling\n3-7\nSelect, Filter, Mutate, GroupBy, Reshaping, Joins\n\n\nProducción\n8-10\nVisualización, Missing Data, Rendimiento\n\n\nAnálisis Avanzado\n11-14\nShotmaps, Estadísticas, APIs, Machine Learning\n\n\nProducción\n15 + App\nWeb Apps (Streamlit) y Gestión de Entornos",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "index.html#interactividad",
+    "href": "index.html#interactividad",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "⚡ Interactividad",
+    "text": "⚡ Interactividad\nEste libro usa Quarto Live con Pyodide. Puedes:\n\n✅ Ejecutar código directamente en el navegador\n✅ Modificar los ejemplos y ver resultados inmediatos\n✅ Resolver ejercicios sin instalar nada\n✅ Ver soluciones desplegables para comprobar tu trabajo\n\n\n\n\n\n\n\nTipCómo usar los bloques de código\n\n\n\nCada bloque tiene un botón Run Code. Haz clic para ejecutar. Puedes editar el código antes de ejecutar.",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "index.html#tabla-de-equivalencias-rápida",
+    "href": "index.html#tabla-de-equivalencias-rápida",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "📚 Tabla de Equivalencias Rápida",
+    "text": "📚 Tabla de Equivalencias Rápida\n\n\n\n\n\n\n\n\nConcepto\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nPipe\n%&gt;%\nMethod chaining con .\n\n\nFiltrar\nfilter()\n.query()\n\n\nSeleccionar\nselect()\ndf[['col1', 'col2']]\n\n\nCrear columna\nmutate()\n.assign()\n\n\nAgrupar\ngroup_by() %&gt;% summarise()\n.groupby().agg()\n\n\nOrdenar\narrange()\n.sort_values()\n\n\nAncho → Largo\npivot_longer()\n.melt()\n\n\nLargo → Ancho\npivot_wider()\n.pivot_table()\n\n\nJoin\nleft_join()\n.merge(how='left')",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "index.html#nuevo-en-esta-edición",
+    "href": "index.html#nuevo-en-esta-edición",
+    "title": "Pandas para Tidyversers: Edición Sports Science",
+    "section": "🆕 Nuevo en esta Edición",
+    "text": "🆕 Nuevo en esta Edición\n\nCapítulo 11: Visualización de campos de fútbol, shotmaps y heatmaps\nCapítulo 12: Estadísticas aplicadas, correlación, regresión y xG\nCapítulo 13: APIs de datos (StatsBomb, Metrica)\nCapítulo 14: Introducción a Machine Learning (Clustering y modelos xG)\nCapítulo 15: Creación de Web Apps interactivas con Streamlit\nDatasets enriquecidos: Tracking 10Hz, eventos de partido, bienestar\n\n\n¡Empecemos! 👉 Continúa al Capítulo 1: Introducción",
+    "crumbs": [
+      "Bienvenido"
+    ]
+  },
+  {
+    "objectID": "01_intro.html",
+    "href": "01_intro.html",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "",
+    "text": "1.1 1. Series: El Vector de Pandas\nEn el Tidyverse, la unidad fundamental es el tibble. En Pandas, es el DataFrame. Son muy similares, pero hay diferencias críticas que debes entender desde el día 1.\nEn R/Tidyverse, un vector atómico es la estructura más básica. En Pandas, el equivalente es la Series: un array unidimensional con etiquetas (índice).",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#series-el-vector-de-pandas",
+    "href": "01_intro.html#series-el-vector-de-pandas",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "",
+    "text": "1.1.1 Ejemplo 1.1: Crear una Series desde una lista\nEn R (Tidyverse):\nfrecuencias_cardiacas &lt;- c(180, 175, 182, 168)\nEn Pandas:\n\n\n\n\n\n\n¿Por qué esto importa? A diferencia de un vector de R, una Series de Pandas tiene dos partes visibles: el índice (0, 1, 2, 3 por defecto) y los valores. Esto permite acceder a los datos tanto por posición como por etiqueta.\n\n\n\n1.1.2 🧠 Práctica 1.1: Crea tu primera Series\nCrea una Series llamada pesos con los valores: 75.5, 82.3, 68.0, 90.1\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npesos = pd.Series([75.5, 82.3, 68.0, 90.1])\nprint(pesos)\n\n\n\n\n\n\n1.1.3 Ejemplo 1.2: Series con índice personalizado\nEn R (Tidyverse):\nvo2max &lt;- c(Jugador_A = 58.5, Jugador_B = 62.1)\nvo2max[\"Jugador_B\"]\nEn Pandas:\n\n\n\n\n\n\n¿Por qué es poderoso? Al darle índice con nombres, el acceso es explícito. No necesitas recordar posiciones.\n\n\n\n1.1.4 🧠 Práctica 1.2: Series con índice\nCrea una Series de RPE (escala 1-10) para 3 días: ‘Lunes’, ‘Miércoles’, ‘Viernes’, con valores 7, 8, 6. Accede al RPE del Miércoles.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nrpe = pd.Series(data=[7, 8, 6], index=['Lunes', 'Miércoles', 'Viernes'])\nprint(rpe['Miércoles'])",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#dataframe-la-tabla-de-pandas",
+    "href": "01_intro.html#dataframe-la-tabla-de-pandas",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.2 2. DataFrame: La Tabla de Pandas",
+    "text": "1.2 2. DataFrame: La Tabla de Pandas\nEl DataFrame es una colección de Series que comparten el mismo índice.\n\n1.2.1 Ejemplo 2.1: Crear DataFrame desde diccionario\nEn R (Tidyverse):\natletas_mini &lt;- tibble(\n  Nombre = c('García', 'López', 'Martínez'),\n  Posicion = c('Delantero', 'Mediocentro', 'Defensa'),\n  Edad = c(25, 28, 23)\n)\nEn Pandas:\n\n\n\n\n\n\n¿Qué está pasando? Las claves del diccionario se convierten en nombres de columnas, los valores (listas) en los datos.\n\n\n\n1.2.2 🧠 Práctica 2.1: Tu primer DataFrame\nCrea un DataFrame de 3 sesiones de entrenamiento con columnas: ‘Fecha’, ‘Tipo’, ‘Duracion_min’.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nsesiones = pd.DataFrame({\n    'Fecha': ['2024-01-15', '2024-01-17', '2024-01-19'],\n    'Tipo': ['Fuerza', 'Técnico', 'Partido'],\n    'Duracion_min': [60, 90, 95]\n})\nprint(sesiones)",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#exploración-rápida",
+    "href": "01_intro.html#exploración-rápida",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.3 3. Exploración Rápida",
+    "text": "1.3 3. Exploración Rápida\n\n1.3.1 Ejemplo 3.1: Atributos del DataFrame\nEn R (Tidyverse):\natletas %&gt;% dim()\natletas %&gt;% names()\natletas %&gt;% glimpse()\nEn Pandas:\n\n\n\n\n\n\n\n\n1.3.2 Ejemplo 3.2: Estadísticas básicas",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#el-índice-la-diferencia-clave",
+    "href": "01_intro.html#el-índice-la-diferencia-clave",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.4 4. El Índice: La Diferencia Clave",
+    "text": "1.4 4. El Índice: La Diferencia Clave\n\n1.4.1 Ejemplo 4.1: set_index para búsquedas rápidas\n\n\n\n\n\n\n¿Por qué importa? Con millones de filas, filter() escanea toda la tabla. Con índice, .loc['ATL_005'] es instantáneo.\n\n\n\n1.4.2 🧠 Práctica 3.1: Trabajando con índices\nIndexa el DataFrame atletas por ‘Nombre’ y busca los datos del atleta ‘López’.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas_por_nombre = atletas.set_index('Nombre')\nprint(atletas_por_nombre.loc['López'])",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#vistas-vs-copias-el-error-más-común",
+    "href": "01_intro.html#vistas-vs-copias-el-error-más-común",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.5 5. Vistas vs Copias: El Error Más Común",
+    "text": "1.5 5. Vistas vs Copias: El Error Más Común\nRegla de oro: Siempre usa .copy() cuando vayas a modificar un subset filtrado.",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#mini-proyecto-perfil-del-plantel",
+    "href": "01_intro.html#mini-proyecto-perfil-del-plantel",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.6 🏆 Mini-Proyecto: Perfil del Plantel",
+    "text": "1.6 🏆 Mini-Proyecto: Perfil del Plantel\nAhora que conoces las estructuras básicas, responde estas preguntas de análisis del plantel:\n\n1.6.1 Pregunta 1: Dimensiones del Dataset\n¿Cuántos atletas hay en total y cuántas métricas físicas se han registrado?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(f\"Atletas: {atletas.shape[0]}\")\nprint(f\"Métricas registradas: {atletas.shape[1]} variables\")\nprint(f\"\\nVariables disponibles:\\n{atletas.columns.tolist()}\")\n\n\n\n\n\n1.6.2 Pregunta 2: ¿Quién es el atleta más rápido del plantel?\nEncuentra el jugador con mayor velocidad máxima y muestra su nombre, posición y velocidad.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nidx_max = atletas['VelocidadMax_kmh'].idxmax()\nprint(f\"Atleta más rápido: {atletas.loc[idx_max, 'Nombre']}\")\nprint(f\"Posición: {atletas.loc[idx_max, 'Posicion']}\")\nprint(f\"Velocidad máxima: {atletas.loc[idx_max, 'VelocidadMax_kmh']} km/h\")\n\n\n\n\n\n1.6.3 Pregunta 3: Reserva de Frecuencia Cardíaca\nLa reserva de FC = FC_Max - FC_Reposo. ¿Cuál es la reserva media del plantel?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nreserva_fc = atletas['FC_Max'] - atletas['FC_Reposo']\nprint(f\"Reserva FC media: {reserva_fc.mean():.1f} ppm\")\nprint(f\"Rango: {reserva_fc.min()} - {reserva_fc.max()} ppm\")\n\n\n\n\n\n1.6.4 Pregunta 4: Perfil por Posición\n¿Cuántos jugadores hay en cada posición? ¿Qué posición es más común?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(\"Distribución por posición:\")\nprint(atletas['Posicion'].value_counts())\nprint(f\"\\nPosición más común: {atletas['Posicion'].value_counts().index[0]}\")\n\n\n\n\n\n1.6.5 Pregunta 5: Atletas en su Prime (25-29 años)\n¿Cuántos atletas están en su “prime” (entre 25 y 29 años)?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprime = atletas[(atletas['Edad'] &gt;= 25) & (atletas['Edad'] &lt;= 29)]\nprint(f\"Atletas en prime (25-29 años): {len(prime)}\")\nprint(prime[['Nombre', 'Edad', 'Posicion']])",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#resumen-tabla-de-equivalencias",
+    "href": "01_intro.html#resumen-tabla-de-equivalencias",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.7 Resumen: Tabla de Equivalencias",
+    "text": "1.7 Resumen: Tabla de Equivalencias\n\n\n\nConcepto\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nVector\nc(1, 2, 3)\npd.Series([1, 2, 3])\n\n\nDataFrame\ntibble(...)\npd.DataFrame({...})\n\n\nVer estructura\ndf %&gt;% glimpse()\ndf.info()\n\n\nEstadísticas\ndf %&gt;% summary()\ndf.describe()\n\n\nConteo\ndf %&gt;% count(col)\ndf['col'].value_counts()",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html",
+    "href": "02_flujo_trabajo.html",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "",
+    "text": "2.1 1. El Problema del Código Imperativo\nEl “Method Chaining” transforma código imperativo en pipelines declarativos, como el pipe %&gt;% del Tidyverse.",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html#el-problema-del-código-imperativo",
+    "href": "02_flujo_trabajo.html#el-problema-del-código-imperativo",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "",
+    "text": "2.1.1 Ejemplo 1.1: El Estilo “Novato” - ❌ NO HACER\nEn R (anti-patrón):\ndf_temp &lt;- filter(gps, TipoSesion == 'Partido')\ndf_temp &lt;- arrange(df_temp, desc(Distancia_Total_m))\nresult &lt;- select(df_temp, Nombre, Distancia_Total_m)\nEn Pandas (igual de malo):\n\n\n\n\n\n\n¿Por qué es malo?\n\nCrea múltiples variables que ocupan memoria\nDifícil saber el estado en cada paso\nNo se lee como una “receta” secuencial\n\n\n\n\n2.1.2 Ejemplo 1.2: El Estilo Profesional - ✅ RECOMENDADO\nEn R (Tidyverse):\ngps %&gt;%\n  filter(TipoSesion == 'Partido') %&gt;%\n  arrange(desc(Distancia_Total_m)) %&gt;%\n  select(Nombre, Distancia_Total_m) %&gt;%\n  head(5)\nEn Pandas (Method Chaining):\n\n\n\n\n\n\n¿Por qué es mejor? Una sola asignación, lectura secuencial, paréntesis permiten saltos de línea.\n\n\n\n2.1.3 🧠 Práctica 1.1: Tu primer Chain\nConvierte este código imperativo en un chain profesional:\ndf_1 = gps[gps['RPE'] &gt; 6]\ndf_2 = df_1.groupby('Nombre').mean(numeric_only=True)\ndf_final = df_2[['HSR_m']]\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresultado = (\n    gps\n    .query(\"RPE &gt; 6\")\n    .groupby('Nombre')\n    .mean(numeric_only=True)\n    [['HSR_m']]\n)\nprint(resultado)",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html#creación-de-columnas-con-.assign",
+    "href": "02_flujo_trabajo.html#creación-de-columnas-con-.assign",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "2.2 2. Creación de Columnas con .assign()",
+    "text": "2.2 2. Creación de Columnas con .assign()\n\n2.2.1 Ejemplo 2.1: Cálculos con lambda\nEn R (Tidyverse):\ngps %&gt;%\n  filter(Distancia_Total_m &gt; 0) %&gt;%\n  mutate(Intensidad = HSR_m / Distancia_Total_m)\nEn Pandas:\n\n\n\n\n\n\n¿Por qué lambda x? x representa el DataFrame en ese punto del chain. Es como . en magrittr.\n\n\n\n2.2.2 🧠 Práctica 2.1: Creando columnas\nFiltra sesiones donde Duracion_min &gt; 0, crea Metros_por_Minuto, muestra las primeras 5 filas.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"Duracion_min &gt; 0\")\n    .assign(Metros_por_Minuto = lambda x: x['Distancia_Total_m'] / x['Duracion_min'])\n    [['Nombre', 'Distancia_Total_m', 'Duracion_min', 'Metros_por_Minuto']]\n    .head()\n)\n\n\n\n\n\n\n2.2.3 Ejemplo 2.2: Lógica condicional con np.where\nEn R: if_else() → En Pandas: np.where()",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html#depuración-con-.pipe",
+    "href": "02_flujo_trabajo.html#depuración-con-.pipe",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "2.3 3. Depuración con .pipe()",
+    "text": "2.3 3. Depuración con .pipe()\n\n2.3.1 Ejemplo 3.1: Función de inspección\n\n\n\n\n\n\n\n\n\n2.3.2 🧠 Práctica 3.1: Tu función de inspección\nCrea una función mostrar_columnas(df) que imprima las columnas y devuelva el df.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndef mostrar_columnas(df):\n    print(\"Columnas:\", df.columns.tolist())\n    return df\n\ngps.pipe(mostrar_columnas).head()",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html#mini-proyecto-pipeline-de-análisis-de-carga",
+    "href": "02_flujo_trabajo.html#mini-proyecto-pipeline-de-análisis-de-carga",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "2.4 🏆 Mini-Proyecto: Pipeline de Análisis de Carga",
+    "text": "2.4 🏆 Mini-Proyecto: Pipeline de Análisis de Carga\n\n2.4.1 Pregunta 1: Ratio de Intensidad\nCrea un pipeline que filtre Partidos, calcule HSR/Distancia*100 y muestre el top 5.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .assign(Intensidad_Pct = lambda x: x['HSR_m'] / x['Distancia_Total_m'] * 100)\n    .nlargest(5, 'Intensidad_Pct')\n    [['Nombre', 'Distancia_Total_m', 'HSR_m', 'Intensidad_Pct']]\n)\n\n\n\n\n\n2.4.2 Pregunta 2: Carga de Entrenamiento (RPE × Duración)\nCalcula la Carga (RPE × Duracion_min) y encuentra la sesión con mayor carga.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .assign(Carga = lambda x: x['RPE'] * x['Duracion_min'])\n    .nlargest(1, 'Carga')\n    [['Nombre', 'TipoSesion', 'RPE', 'Duracion_min', 'Carga']]\n)\n\n\n\n\n\n2.4.3 Pregunta 3: Promedio por Jugador (sesiones de alta carga)\nFiltra sesiones con RPE &gt;= 7, agrupa por jugador, calcula media de distancia.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"RPE &gt;= 7\")\n    .groupby('Nombre')['Distancia_Total_m']\n    .mean()\n    .sort_values(ascending=False)\n)\n\n\n\n\n\n2.4.4 Pregunta 4: Pipeline Completo con Debugging\nUsa .pipe() para mostrar el número de filas en cada paso del pipeline anterior.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndef debug(df, paso):\n    print(f\"Paso '{paso}': {len(df)} filas\")\n    return df\n\n(\n    gps\n    .pipe(debug, \"Inicial\")\n    .query(\"RPE &gt;= 7\")\n    .pipe(debug, \"Filtrado RPE&gt;=7\")\n    .groupby('Nombre')['Distancia_Total_m']\n    .mean()\n)",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html#resumen",
+    "href": "02_flujo_trabajo.html#resumen",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "2.5 Resumen",
+    "text": "2.5 Resumen\n\n\n\n\n\n\n\n\nConcepto\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nPipe\ndf %&gt;% verb()\ndf.verb()\n\n\nCrear columna\nmutate(col = expr)\n.assign(col = lambda x: expr)\n\n\nIf-else\nif_else()\nnp.where()\n\n\nDebug\nromper el pipe\n.pipe(funcion)",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "03_verbos_1.html",
+    "href": "03_verbos_1.html",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "",
+    "text": "3.1 1. Selección de Columnas\nEste capítulo traduce select(), filter(), arrange() de dplyr.",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
+    "objectID": "03_verbos_1.html#selección-de-columnas",
+    "href": "03_verbos_1.html#selección-de-columnas",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "",
+    "text": "3.1.1 Ejemplo 1.1: Selección por lista\nEn R: atletas %&gt;% select(Nombre, Posicion, VO2max)\nEn Pandas:\n\n\n\n\n\n\n¿Por qué doble corchete? df['col'] = Series (una columna). df[['col1', 'col2']] = DataFrame (varias columnas).\n\n\n\n3.1.2 🧠 Práctica 1.1\nSelecciona las columnas ‘JugadorID’, ‘VelocidadMax_kmh’ y ‘YoYo_IR1_m’. Muestra las primeras 5 filas.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas[['JugadorID', 'VelocidadMax_kmh', 'YoYo_IR1_m']].head()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
+    "objectID": "03_verbos_1.html#filtrado-de-filas",
+    "href": "03_verbos_1.html#filtrado-de-filas",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "3.2 2. Filtrado de Filas",
+    "text": "3.2 2. Filtrado de Filas\n\n3.2.1 Ejemplo 2.1: Filtro simple\nEn R: atletas %&gt;% filter(Edad &gt; 25)\nEn Pandas:\n\n\n\n\n\n\n\n\n3.2.2 Ejemplo 2.2: Múltiples condiciones\nEn R: atletas %&gt;% filter(Edad &gt; 25, Posicion == \"Delantero\")\nEn Pandas:\n\n\n\n\n\n\n\n\n3.2.3 Ejemplo 2.3: Valores en lista\nEn R: atletas %&gt;% filter(Posicion %in% c(\"Portero\", \"Defensa\"))\nEn Pandas:\n\n\n\n\n\n\n\n\n\n3.2.4 🧠 Práctica 2.1\nFiltra atletas con VO2max &gt; 55 Y Edad &lt; 28.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.query(\"VO2max &gt; 55 and Edad &lt; 28\")",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
+    "objectID": "03_verbos_1.html#ordenación",
+    "href": "03_verbos_1.html#ordenación",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "3.3 3. Ordenación",
+    "text": "3.3 3. Ordenación\n\n3.3.1 Ejemplo 3.1: Orden descendente\nEn R: atletas %&gt;% arrange(desc(VO2max))\nEn Pandas:\n\n\n\n\n\n\n\n\n3.3.2 Ejemplo 3.2: Top N\nEn R: atletas %&gt;% slice_max(VO2max, n = 5)\nEn Pandas:\n\n\n\n\n\n\n\n\n\n3.3.3 🧠 Práctica 3.1\nMuestra los 3 atletas con mejor resultado en el YoYo IR1 (mayor distancia).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.nlargest(3, 'YoYo_IR1_m')[['Nombre', 'Posicion', 'YoYo_IR1_m']]",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
+    "objectID": "03_verbos_1.html#mini-proyecto-análisis-del-plantel-por-perfiles-físicos",
+    "href": "03_verbos_1.html#mini-proyecto-análisis-del-plantel-por-perfiles-físicos",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "3.4 🏆 Mini-Proyecto: Análisis del Plantel por Perfiles Físicos",
+    "text": "3.4 🏆 Mini-Proyecto: Análisis del Plantel por Perfiles Físicos\nResponde estas preguntas sobre el dataset atletas:\n\n3.4.1 Pregunta 1: Velocistas del Equipo\n¿Qué jugadores superan los 33 km/h de velocidad máxima? Muestra nombre, posición y velocidad.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.query(\"VelocidadMax_kmh &gt; 33\")[['Nombre', 'Posicion', 'VelocidadMax_kmh']]\n\n\n\n\n\n3.4.2 Pregunta 2: Resistencia Aeróbica por Posición\n¿Quiénes son los centrocampistas con VO2max superior a 57? Son los que más corren.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.query(\"Posicion == 'Mediocentro' and VO2max &gt; 57\")[['Nombre', 'VO2max', 'YoYo_IR1_m']]\n\n\n\n\n\n3.4.3 Pregunta 3: Delanteros Jóvenes y Rápidos\nFiltra delanteros menores de 25 años y ordénalos por velocidad máxima (descendente).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    atletas\n    .query(\"Posicion == 'Delantero' and Edad &lt; 25\")\n    .sort_values('VelocidadMax_kmh', ascending=False)\n    [['Nombre', 'Edad', 'VelocidadMax_kmh']]\n)\n\n\n\n\n\n3.4.4 Pregunta 4: Top 5 en Test YoYo\n¿Quiénes son los 5 atletas con mejor rendimiento en el YoYo IR1? Incluye la posición para ver si hay un patrón.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.nlargest(5, 'YoYo_IR1_m')[['Nombre', 'Posicion', 'YoYo_IR1_m', 'VO2max']]",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
+    "objectID": "03_verbos_1.html#resumen",
+    "href": "03_verbos_1.html#resumen",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "3.5 Resumen",
+    "text": "3.5 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nSeleccionar\nselect(col1, col2)\ndf[['col1', 'col2']]\n\n\nFiltrar\nfilter(cond)\n.query(\"cond\")\n\n\nOrdenar desc\narrange(desc(col))\n.sort_values('col', ascending=False)\n\n\nTop N\nslice_max(col, n=5)\n.nlargest(5, 'col')",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
+    "objectID": "04_verbos_2.html",
+    "href": "04_verbos_2.html",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "",
+    "text": "4.1 1. Crear Columnas con .assign()\nEste capítulo traduce mutate() de dplyr.",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "04_verbos_2.html#crear-columnas-con-.assign",
+    "href": "04_verbos_2.html#crear-columnas-con-.assign",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "",
+    "text": "4.1.1 Ejemplo 1.1: Columna calculada\nEn R: atletas %&gt;% mutate(IMC = Peso_kg / (Altura_cm/100)^2)\nEn Pandas:\n\n\n\n\n\n\n¿Por qué lambda x? x representa el DataFrame actual. Similar a . en magrittr.\n\n\n\n4.1.2 🧠 Práctica 1.1\nCrea una columna Altura_m que convierta la altura de cm a metros.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.assign(Altura_m = lambda x: x['Altura_cm'] / 100)[['Nombre', 'Altura_m']].head()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "04_verbos_2.html#lógica-condicional",
+    "href": "04_verbos_2.html#lógica-condicional",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "4.2 2. Lógica Condicional",
+    "text": "4.2 2. Lógica Condicional\n\n4.2.1 Ejemplo 2.1: np.where (if_else)\nEn R: mutate(Veterano = if_else(Edad &gt; 28, \"Sí\", \"No\"))\nEn Pandas:\n\n\n\n\n\n\n\n\n4.2.2 Ejemplo 2.2: np.select (case_when)\nEn R: case_when(Edad &lt; 23 ~ \"Joven\", Edad &lt;= 28 ~ \"Prime\", TRUE ~ \"Veterano\")\n\n\n\n\n\n\n\n\n\n4.2.3 🧠 Práctica 2.1\nCrea ‘Nivel_VO2’: “Élite” si VO2max &gt;= 60, “Normal” si &gt;= 50, “Bajo” si &lt; 50.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nconds = [atletas['VO2max'] &gt;= 60, atletas['VO2max'] &gt;= 50, atletas['VO2max'] &lt; 50]\nvals = ['Élite', 'Normal', 'Bajo']\natletas.assign(Nivel_VO2 = np.select(conds, vals))[['Nombre', 'VO2max', 'Nivel_VO2']].head()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "04_verbos_2.html#operaciones-de-texto",
+    "href": "04_verbos_2.html#operaciones-de-texto",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "4.3 3. Operaciones de Texto",
+    "text": "4.3 3. Operaciones de Texto\n\n4.3.1 Ejemplo 3.1: Métodos .str\nEn R: mutate(Nombre_Upper = str_to_upper(Nombre))",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "04_verbos_2.html#mini-proyecto-métricas-de-rendimiento-derivadas",
+    "href": "04_verbos_2.html#mini-proyecto-métricas-de-rendimiento-derivadas",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "4.4 🏆 Mini-Proyecto: Métricas de Rendimiento Derivadas",
+    "text": "4.4 🏆 Mini-Proyecto: Métricas de Rendimiento Derivadas\n\n4.4.1 Pregunta 1: IMC y Composición Corporal\nCalcula el IMC de cada atleta. ¿Quién tiene el IMC más alto y más bajo? ¿Son los porteros?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    atletas\n    .assign(IMC = lambda x: x['Peso_kg'] / (x['Altura_cm']/100)**2)\n    .sort_values('IMC', ascending=False)\n    [['Nombre', 'Posicion', 'IMC']]\n    .head(3)\n)\n\n\n\n\n\n4.4.2 Pregunta 2: Potencia Relativa (W/kg)\nCalcula la potencia relativa dividiendo Potencia_W entre Peso_kg. ¿Quién tiene mejor ratio potencia/peso?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    atletas\n    .assign(Potencia_Rel = lambda x: round(x['Potencia_W'] / x['Peso_kg'], 2))\n    .nlargest(5, 'Potencia_Rel')\n    [['Nombre', 'Posicion', 'Potencia_W', 'Peso_kg', 'Potencia_Rel']]\n)\n\n\n\n\n\n4.4.3 Pregunta 3: Reserva de Frecuencia Cardíaca\nCalcula la Reserva FC (FC_Max - FC_Reposo). Clasifica como “Alta” (&gt;140), “Normal” (120-140), “Baja” (&lt;120).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndf = atletas.assign(Reserva_FC = lambda x: x['FC_Max'] - x['FC_Reposo'])\nconds = [df['Reserva_FC'] &gt; 140, df['Reserva_FC'] &gt;= 120, df['Reserva_FC'] &lt; 120]\nvals = ['Alta', 'Normal', 'Baja']\ndf.assign(Nivel_Reserva = np.select(conds, vals))[['Nombre', 'Reserva_FC', 'Nivel_Reserva']].head()\n\n\n\n\n\n4.4.4 Pregunta 4: Perfil de Rendimiento Aeróbico\nClasifica atletas por VO2max: “Élite” (&gt;=60), “Bueno” (55-59), “Promedio” (50-54), “Bajo” (&lt;50). ¿Cuántos hay en cada categoría?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nconds = [\n    atletas['VO2max'] &gt;= 60, \n    atletas['VO2max'] &gt;= 55, \n    atletas['VO2max'] &gt;= 50, \n    atletas['VO2max'] &lt; 50\n]\nvals = ['Élite', 'Bueno', 'Promedio', 'Bajo']\natletas.assign(Nivel_Aerobico = np.select(conds, vals))['Nivel_Aerobico'].value_counts()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "04_verbos_2.html#resumen",
+    "href": "04_verbos_2.html#resumen",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "4.5 Resumen",
+    "text": "4.5 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nCrear columna\nmutate(col = expr)\n.assign(col = lambda x: expr)\n\n\nIf-else\nif_else(cond, T, F)\nnp.where(cond, T, F)\n\n\nCase-when\ncase_when(...)\nnp.select([conds], [vals])\n\n\nMayúsculas\nstr_to_upper()\n.str.upper()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "05_agregacion.html",
+    "href": "05_agregacion.html",
+    "title": "5  Agregación y Window Functions",
+    "section": "",
+    "text": "5.1 1. GroupBy + Agregación\nEste capítulo traduce group_by() %&gt;% summarise() y funciones de ventana.",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
+    "objectID": "05_agregacion.html#groupby-agregación",
+    "href": "05_agregacion.html#groupby-agregación",
+    "title": "5  Agregación y Window Functions",
+    "section": "",
+    "text": "5.1.1 Ejemplo 1.1: Agregación simple\nEn R: gps %&gt;% group_by(JugadorID) %&gt;% summarise(Media = mean(Distancia_Total_m))\nEn Pandas:\n\n\n\n\n\n\n\n\n5.1.2 Ejemplo 1.2: Múltiples agregaciones\nEn R: summarise(Media = mean(x), Total = sum(y), Max = max(z))\n\n\n\n\n\n\n\n\n\n5.1.3 🧠 Práctica 1.1\nAgrupa por TipoSesion y calcula: media de Distancia, suma de HSR, conteo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps.groupby('TipoSesion').agg(\n    Media_Dist = ('Distancia_Total_m', 'mean'),\n    Total_HSR = ('HSR_m', 'sum'),\n    N = ('RPE', 'count')\n)",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
+    "objectID": "05_agregacion.html#window-functions",
+    "href": "05_agregacion.html#window-functions",
+    "title": "5  Agregación y Window Functions",
+    "section": "5.2 2. Window Functions",
+    "text": "5.2 2. Window Functions\n\n5.2.1 Ejemplo 2.1: Rolling (Media Móvil)\nEn R: mutate(Rolling = slide_dbl(x, mean, .before = 2))\n\n\n\n\n\n\n\n\n5.2.2 Ejemplo 2.2: shift (lag/lead)\nEn R: mutate(Anterior = lag(x))\n\n\n\n\n\n\n\n\n5.2.3 Ejemplo 2.3: transform (agregar sin colapsar)\nEn R: group_by() %&gt;% mutate(Media_Grupo = mean(x))\n\n\n\n\n\n\n\n\n\n5.2.4 🧠 Práctica 2.1\nCrea una columna ‘Ranking’ que ordene las sesiones por Distancia (1 = mayor).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_copy = gps.copy()\ngps_copy['Ranking'] = gps_copy['Distancia_Total_m'].rank(ascending=False).astype(int)\ngps_copy.nsmallest(5, 'Ranking')[['JugadorID', 'Distancia_Total_m', 'Ranking']]",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
+    "objectID": "05_agregacion.html#mini-proyecto-monitorización-de-carga-de-entrenamiento",
+    "href": "05_agregacion.html#mini-proyecto-monitorización-de-carga-de-entrenamiento",
+    "title": "5  Agregación y Window Functions",
+    "section": "5.3 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento",
+    "text": "5.3 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento\n\n5.3.1 Pregunta 1: Carga Acumulada por Jugador\n¿Qué jugador ha acumulado más metros en sprint? Muestra el top 3.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps.groupby('Nombre')['Sprint_m'].sum().nlargest(3)\n\n\n\n\n\n5.3.2 Pregunta 2: Perfil de Carga por Posición\n¿Cuál es la distancia media en partidos para cada posición? ¿Quién corre más?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .groupby('Posicion')['Distancia_Total_m']\n    .mean()\n    .sort_values(ascending=False)\n)\n\n\n\n\n\n5.3.3 Pregunta 3: Media Móvil de Carga Semanal\nCalcula la media móvil de 3 días del RPE para el jugador García. Esto ayuda a detectar fatiga acumulada.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngarcia = gps.query(\"Nombre == 'García'\").sort_values('Fecha').copy()\ngarcia['RPE_Rolling_3'] = garcia['RPE'].rolling(window=3).mean()\ngarcia[['Fecha', 'TipoSesion', 'RPE', 'RPE_Rolling_3']]\n\n\n\n\n\n5.3.4 Pregunta 4: Comparar Rendimiento Individual vs Grupo\nPara cada sesión, calcula cuánto difiere la distancia del jugador respecto a la media del grupo ese día.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_copy = gps.copy()\ngps_copy['Media_Dia'] = gps_copy.groupby('Fecha')['Distancia_Total_m'].transform('mean')\ngps_copy['Diff_vs_Grupo'] = gps_copy['Distancia_Total_m'] - gps_copy['Media_Dia']\ngps_copy[['Nombre', 'Fecha', 'Distancia_Total_m', 'Media_Dia', 'Diff_vs_Grupo']].head(10)",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
+    "objectID": "05_agregacion.html#resumen",
+    "href": "05_agregacion.html#resumen",
+    "title": "5  Agregación y Window Functions",
+    "section": "5.4 Resumen",
+    "text": "5.4 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nAgrupar + resumir\ngroup_by() %&gt;% summarise()\n.groupby().agg()\n\n\nMedia móvil\nslide_dbl(..., mean)\n.rolling(n).mean()\n\n\nLag\nlag(x)\n.shift(1)\n\n\nAgregar sin colapsar\nmutate() en group_by\n.transform()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
+    "objectID": "06_reshaping.html",
+    "href": "06_reshaping.html",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "",
+    "text": "6.1 1. Melt: De Ancho a Largo\nEste capítulo traduce pivot_longer() y pivot_wider() de tidyr.",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
+    "objectID": "06_reshaping.html#melt-de-ancho-a-largo",
+    "href": "06_reshaping.html#melt-de-ancho-a-largo",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "",
+    "text": "6.1.1 Ejemplo 1.1: melt básico\nEn R: pivot_longer(cols = starts_with(\"Semana\"), names_to = \"Semana\", values_to = \"Distancia\")\nEn Pandas:\n\n\n\n\n\n\n¿Qué hace melt()? “Derrite” las columnas anchas (Semana_1, Semana_2…) en filas largas.\n\n\n\n6.1.2 🧠 Práctica 1.1\nTienes estos datos. Conviértelos a formato largo con columnas: Jugador, Dia, RPE.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npd.melt(rpe_wide, id_vars=['Jugador'], var_name='Dia', value_name='RPE')",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
+    "objectID": "06_reshaping.html#pivot-de-largo-a-ancho",
+    "href": "06_reshaping.html#pivot-de-largo-a-ancho",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "6.2 2. Pivot: De Largo a Ancho",
+    "text": "6.2 2. Pivot: De Largo a Ancho\n\n6.2.1 Ejemplo 2.1: pivot_table\nEn R: pivot_wider(names_from = TipoSesion, values_from = Distancia_m)\n\n\n\n\n\n\n\n\n\n6.2.2 🧠 Práctica 2.1\nCrea una tabla pivote donde: filas = JugadorID, columnas = TipoSesion, valores = conteo de sesiones.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npd.crosstab(gps['JugadorID'], gps['TipoSesion'])",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
+    "objectID": "06_reshaping.html#mini-proyecto-análisis-de-carga-semanal",
+    "href": "06_reshaping.html#mini-proyecto-análisis-de-carga-semanal",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "6.3 🏆 Mini-Proyecto: Análisis de Carga Semanal",
+    "text": "6.3 🏆 Mini-Proyecto: Análisis de Carga Semanal\nUsando datos_wide:\n\n6.3.1 Pregunta 1\nConvierte los datos a formato largo. ¿Cuántas observaciones hay en total?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')\nprint(f\"Observaciones: {len(largo)}\")\n\n\n\n\n\n6.3.2 Pregunta 2\nEn formato largo, ¿cuál es la distancia media por semana?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')\nlargo.groupby('Semana')['Dist'].mean()\n\n\n\n\n\n6.3.3 Pregunta 3\n¿Qué jugador tuvo la mayor distancia en la Semana_3?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndatos_wide.nlargest(1, 'Semana_3')[['JugadorID', 'Semana_3']]\n\n\n\n\n\n6.3.4 Pregunta 4\nCalcula la distancia TOTAL de cada jugador (suma de todas las semanas).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID'], var_name='Semana', value_name='Dist')\nlargo.groupby('JugadorID')['Dist'].sum()",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
+    "objectID": "06_reshaping.html#resumen",
+    "href": "06_reshaping.html#resumen",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "6.4 Resumen",
+    "text": "6.4 Resumen\n\n\n\nOperación\nR (tidyr)\nPython (Pandas)\n\n\n\n\nAncho → Largo\npivot_longer()\npd.melt()\n\n\nLargo → Ancho\npivot_wider()\npd.pivot_table()\n\n\nTabla conteos\ncount() %&gt;% pivot_wider()\npd.crosstab()",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
+    "objectID": "07_joins.html",
+    "href": "07_joins.html",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "",
+    "text": "7.1 1. Los 4 Joins Básicos\nEste capítulo traduce left_join(), inner_join(), etc. de dplyr.",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
+    "objectID": "07_joins.html#los-4-joins-básicos",
+    "href": "07_joins.html#los-4-joins-básicos",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "",
+    "text": "7.1.1 Ejemplo 1.1: Left Join\nEn R: sesiones %&gt;% left_join(atletas, by = \"JugadorID\")\n\n\n\n\n\n\nObserva: ATL_006 aparece con NaN porque no existe en atletas.\n\n\n7.1.2 Ejemplo 1.2: Inner Join\n\n\n\n\n\n\nObserva: ATL_006 desaparece.\n\n\n7.1.3 Ejemplo 1.3: Outer Join\n\n\n\n\n\n\n\n\n\n7.1.4 🧠 Práctica 1.1\nHaz un left_join y filtra las filas donde Nombre es NaN (jugadores sin registro).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nsesiones.merge(atletas, on='JugadorID', how='left').query(\"Nombre.isna()\")",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
+    "objectID": "07_joins.html#concatenación",
+    "href": "07_joins.html#concatenación",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "7.2 2. Concatenación",
+    "text": "7.2 2. Concatenación\n\n7.2.1 Ejemplo 2.1: Apilar filas (bind_rows)\nEn R: bind_rows(df1, df2)\n\n\n\n\n\n\n\n\n\n7.2.2 🧠 Práctica 2.1\nCrea dos DataFrames pequeños y concaténalos verticalmente.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\na = pd.DataFrame({'Col': [1, 2]})\nb = pd.DataFrame({'Col': [3, 4]})\npd.concat([a, b], ignore_index=True)",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
+    "objectID": "07_joins.html#mini-proyecto-integración-de-datos-multi-fuente",
+    "href": "07_joins.html#mini-proyecto-integración-de-datos-multi-fuente",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "7.3 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente",
+    "text": "7.3 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente\n\n7.3.1 Pregunta 1: Jugadores Sin Actividad GPS\n¿Cuántos jugadores del plantel NO tienen ninguna sesión GPS registrada?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmerged = atletas.merge(sesiones, on='JugadorID', how='left')\nsin_sesiones = merged[merged['Distancia_m'].isna()]['JugadorID'].unique()\nprint(f\"Jugadores sin sesiones: {len(sin_sesiones)}\")\nprint(sin_sesiones)\n\n\n\n\n\n7.3.2 Pregunta 2: Combinar GPS + Bienestar\nUne las sesiones GPS con los datos de bienestar del mismo día. ¿Cuántas sesiones tienen datos de bienestar?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='left')\ncon_wellness = gps_wellness['Sueno_Calidad'].notna().sum()\nprint(f\"Sesiones con datos de bienestar: {con_wellness} de {len(gps_wellness)}\")\ngps_wellness.head()\n\n\n\n\n\n7.3.3 Pregunta 3: Informe Completo por Jugador\nCrea un informe con: Nombre, Posición, Edad, Distancia total, Número de sesiones.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresumen_sesiones = (\n    sesiones\n    .groupby('JugadorID')\n    .agg(Distancia_Total=('Distancia_m', 'sum'), N_Sesiones=('Distancia_m', 'count'))\n    .reset_index()\n)\n\ninforme = atletas.merge(resumen_sesiones, on='JugadorID', how='left')\ninforme[['Nombre', 'Posicion', 'Edad', 'Distancia_Total', 'N_Sesiones']].fillna(0)\n\n\n\n\n\n7.3.4 Pregunta 4: ¿Afecta el Sueño al Rendimiento?\nPara las sesiones con datos de bienestar, ¿hay diferencia en distancia entre los que durmieron bien (Sueno &gt;= 4) vs mal (&lt; 4)?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='inner')\ngps_wellness['Durmio_Bien'] = gps_wellness['Sueno_Calidad'] &gt;= 4\n\nprint(\"Distancia media según calidad de sueño:\")\nprint(gps_wellness.groupby('Durmio_Bien')['Distancia_m'].mean())",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
+    "objectID": "07_joins.html#resumen",
+    "href": "07_joins.html#resumen",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "7.4 Resumen",
+    "text": "7.4 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nLeft join\nleft_join(df1, df2, by=\"key\")\ndf1.merge(df2, on='key', how='left')\n\n\nInner join\ninner_join(...)\n...how='inner'\n\n\nOuter join\nfull_join(...)\n...how='outer'\n\n\nApilar\nbind_rows()\npd.concat([...])",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
+    "objectID": "08_visualizacion.html",
+    "href": "08_visualizacion.html",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "",
+    "text": "8.1 1. Gráficos Básicos\nEste capítulo cubre los fundamentos de visualización con matplotlib.",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
+    "objectID": "08_visualizacion.html#gráficos-básicos",
+    "href": "08_visualizacion.html#gráficos-básicos",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "",
+    "text": "8.1.1 Ejemplo 1.1: Histograma\nEn R: ggplot(aes(x = VO2max)) + geom_histogram()\n\n\n\n\n\n\n\n\n8.1.2 Ejemplo 1.2: Gráfico de barras\nEn R: ggplot(aes(x = Posicion)) + geom_bar()\n\n\n\n\n\n\n\n\n8.1.3 Ejemplo 1.3: Scatter plot\nEn R: ggplot(aes(x = Edad, y = VO2max)) + geom_point()\n\n\n\n\n\n\n\n\n\n8.1.4 🧠 Práctica 1.1\nCrea un histograma de la columna ‘Edad’ con 6 bins.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(7, 4))\natletas['Edad'].hist(bins=6, edgecolor='black', color='skyblue')\nplt.xlabel('Edad')\nplt.title('Distribución de Edades')\nplt.show()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
+    "objectID": "08_visualizacion.html#múltiples-gráficos",
+    "href": "08_visualizacion.html#múltiples-gráficos",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "8.2 2. Múltiples Gráficos",
+    "text": "8.2 2. Múltiples Gráficos\n\n8.2.1 Ejemplo 2.1: Subplots\n\n\n\n\n\n\n\n\n\n8.2.2 🧠 Práctica 2.1\nCrea una figura con 2 subplots: un histograma de VO2max y un bar plot de Posicion.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nfig, axes = plt.subplots(1, 2, figsize=(12, 4))\natletas['VO2max'].hist(ax=axes[0], bins=6, edgecolor='black')\naxes[0].set_title('VO2max')\natletas['Posicion'].value_counts().plot(kind='bar', ax=axes[1], edgecolor='black')\naxes[1].set_title('Posiciones')\nplt.tight_layout()\nplt.show()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
+    "objectID": "08_visualizacion.html#mini-proyecto-perfil-visual-del-plantel",
+    "href": "08_visualizacion.html#mini-proyecto-perfil-visual-del-plantel",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "8.3 🏆 Mini-Proyecto: Perfil Visual del Plantel",
+    "text": "8.3 🏆 Mini-Proyecto: Perfil Visual del Plantel\n\n8.3.1 Pregunta 1: Relación Velocidad vs Potencia\nCrea un scatter plot de VelocidadMax_kmh vs Potencia_W. ¿Los más rápidos son los más potentes?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 6))\nplt.scatter(atletas['Potencia_W'], atletas['VelocidadMax_kmh'], \n            s=100, c='steelblue', alpha=0.7, edgecolors='white')\nplt.xlabel('Potencia (W)')\nplt.ylabel('Velocidad Máxima (km/h)')\nplt.title('Relación Potencia-Velocidad')\nplt.grid(True, alpha=0.3)\nplt.show()\n# No necesariamente: la potencia es fuerza, velocidad depende también de peso y técnica\n\n\n\n\n\n8.3.2 Pregunta 2: Ranking de Velocidad por Jugador\nCrea un gráfico de barras horizontal mostrando la velocidad máxima de cada atleta, ordenado de mayor a menor.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 7))\ndatos = atletas.sort_values('VelocidadMax_kmh')\ncolores = ['red' if v &gt; 33 else 'steelblue' for v in datos['VelocidadMax_kmh']]\nplt.barh(datos['Nombre'], datos['VelocidadMax_kmh'], color=colores, edgecolor='white')\nplt.xlabel('Velocidad Máxima (km/h)')\nplt.axvline(33, color='red', linestyle='--', alpha=0.5, label='Umbral sprint (33 km/h)')\nplt.legend()\nplt.title('Ranking de Velocidad del Plantel')\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n8.3.3 Pregunta 3: Dashboard de Perfil Físico por Posición\nCrea 2 subplots: (1) VO2max medio por posición, (2) Velocidad máxima media por posición.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nfig, axes = plt.subplots(1, 2, figsize=(14, 5))\n\n# Subplot 1: VO2max por posición\natletas.groupby('Posicion')['VO2max'].mean().sort_values().plot(\n    kind='barh', ax=axes[0], color='coral', edgecolor='white')\naxes[0].set_xlabel('VO2max medio')\naxes[0].set_title('Capacidad Aeróbica por Posición')\n\n# Subplot 2: Velocidad por posición\natletas.groupby('Posicion')['VelocidadMax_kmh'].mean().sort_values().plot(\n    kind='barh', ax=axes[1], color='teal', edgecolor='white')\naxes[1].set_xlabel('Velocidad máxima media (km/h)')\naxes[1].set_title('Velocidad por Posición')\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n8.3.4 Pregunta 4: Distribución de Salto CMJ con Percentiles\nCrea un histograma del salto CMJ con líneas verticales en los percentiles 25, 50 y 75.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 5))\natletas['SaltoCMJ_cm'].hist(bins=8, edgecolor='black', color='lightgreen', alpha=0.7)\n\n# Percentiles\np25, p50, p75 = atletas['SaltoCMJ_cm'].quantile([0.25, 0.5, 0.75])\nplt.axvline(p25, color='orange', linestyle='--', label=f'P25: {p25:.0f} cm')\nplt.axvline(p50, color='red', linestyle='-', label=f'P50: {p50:.0f} cm')\nplt.axvline(p75, color='green', linestyle='--', label=f'P75: {p75:.0f} cm')\n\nplt.xlabel('Salto CMJ (cm)')\nplt.ylabel('Frecuencia')\nplt.title('Distribución del Salto Vertical')\nplt.legend()\nplt.tight_layout()\nplt.show()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
+    "objectID": "08_visualizacion.html#resumen",
+    "href": "08_visualizacion.html#resumen",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "8.4 Resumen",
+    "text": "8.4 Resumen\n\n\n\nTipo\nR (ggplot2)\nPython (matplotlib)\n\n\n\n\nHistograma\ngeom_histogram()\ndf['col'].hist()\n\n\nBarras\ngeom_col()\n.plot(kind='bar')\n\n\nScatter\ngeom_point()\nplt.scatter()\n\n\nSubplots\npatchwork\nplt.subplots()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html",
+    "href": "09_missing_data.html",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "",
+    "text": "9.1 1. Detección de Missing\nEste capítulo cubre la detección, eliminación e imputación de NA.",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html#detección-de-missing",
+    "href": "09_missing_data.html#detección-de-missing",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "",
+    "text": "9.1.1 Ejemplo 1.1: Contar nulos\nEn R: atletas %&gt;% summarise(across(everything(), ~sum(is.na(.))))\n\n\n\n\n\n\n\n\n9.1.2 Ejemplo 1.2: Filas con algún nulo\n\n\n\n\n\n\n\n\n\n9.1.3 🧠 Práctica 1.1\n¿Qué porcentaje de valores son nulos en la columna ‘VO2max’?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npct = (atletas['VO2max'].isnull().sum() / len(atletas)) * 100\nprint(f\"{pct:.1f}% de valores nulos\")",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html#eliminación-de-missing",
+    "href": "09_missing_data.html#eliminación-de-missing",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "9.2 2. Eliminación de Missing",
+    "text": "9.2 2. Eliminación de Missing\n\n9.2.1 Ejemplo 2.1: dropna\nEn R: atletas %&gt;% drop_na()\n\n\n\n\n\n\n\n\n9.2.2 Ejemplo 2.2: dropna con subset\n\n\n\n\n\n\n\n\n\n9.2.3 🧠 Práctica 2.1\nElimina solo las filas donde ‘Edad’ sea nulo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas.dropna(subset=['Edad'])",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html#imputación-de-missing",
+    "href": "09_missing_data.html#imputación-de-missing",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "9.3 3. Imputación de Missing",
+    "text": "9.3 3. Imputación de Missing\n\n9.3.1 Ejemplo 3.1: fillna con valor\nEn R: replace_na(list(col = valor))\n\n\n\n\n\n\n\n\n9.3.2 Ejemplo 3.2: fillna con estadístico\n\n\n\n\n\n\n\n\n\n9.3.3 🧠 Práctica 3.1\nRellena los nulos de ‘Edad’ con la mediana.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas['Edad'].fillna(atletas['Edad'].median())",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html#mini-proyecto-limpieza-de-datos",
+    "href": "09_missing_data.html#mini-proyecto-limpieza-de-datos",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "9.4 🏆 Mini-Proyecto: Limpieza de Datos",
+    "text": "9.4 🏆 Mini-Proyecto: Limpieza de Datos\n\n9.4.1 Pregunta 1\n¿Cuántos atletas tienen al menos un valor faltante?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlen(atletas[atletas.isnull().any(axis=1)])\n\n\n\n\n\n9.4.2 Pregunta 2\nSi eliminas todos los nulos, ¿cuántos atletas quedan?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlen(atletas.dropna())\n\n\n\n\n\n9.4.3 Pregunta 3\nImputa los valores faltantes de VO2max con la media. ¿Cuál es la nueva media?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmedia_original = atletas['VO2max'].mean()\nvo2_imputado = atletas['VO2max'].fillna(media_original)\nprint(f\"Media original: {media_original:.2f}\")\nprint(f\"Media después de imputar: {vo2_imputado.mean():.2f}\")\n\n\n\n\n\n9.4.4 Pregunta 4\n¿Qué atletas tienen nombre faltante? Muestra sus IDs.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas[atletas['Nombre'].isna()]['JugadorID'].tolist()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html#resumen",
+    "href": "09_missing_data.html#resumen",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "9.5 Resumen",
+    "text": "9.5 Resumen\n\n\n\nOperación\nR (tidyr)\nPython (Pandas)\n\n\n\n\nDetectar NA\nis.na(x)\n.isna()\n\n\nEliminar NA\ndrop_na()\n.dropna()\n\n\nReemplazar\nreplace_na(val)\n.fillna(val)\n\n\nMedia\nmean(x, na.rm=T)\n.mean() (ignora NA)",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "10_rendimiento.html",
+    "href": "10_rendimiento.html",
+    "title": "10  Rendimiento y Optimización",
+    "section": "",
+    "text": "10.1 1. Optimización de Tipos\nEste capítulo cubre técnicas para trabajar eficientemente.",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
+    "objectID": "10_rendimiento.html#optimización-de-tipos",
+    "href": "10_rendimiento.html#optimización-de-tipos",
+    "title": "10  Rendimiento y Optimización",
+    "section": "",
+    "text": "10.1.1 Ejemplo 1.1: Inspeccionar memoria\n\n\n\n\n\n\n\n\n10.1.2 Ejemplo 1.2: Convertir a category\n¿Cuándo? Columnas con pocos valores únicos (como ‘TipoSesion’).\n\n\n\n\n\n\n\n\n\n10.1.3 🧠 Práctica 1.1\n¿Cuántos valores únicos tiene ‘TipoSesion’? ¿Es buena candidata para category?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(f\"Valores únicos: {gps['TipoSesion'].nunique()}\")\nprint(\"Sí, es buena candidata porque tiene pocos valores únicos\")",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
+    "objectID": "10_rendimiento.html#operaciones-eficientes",
+    "href": "10_rendimiento.html#operaciones-eficientes",
+    "title": "10  Rendimiento y Optimización",
+    "section": "10.2 2. Operaciones Eficientes",
+    "text": "10.2 2. Operaciones Eficientes\n\n10.2.1 Ejemplo 2.1: Evitar apply()\n❌ LENTO:\ndf.apply(lambda row: row['a'] / row['b'], axis=1)\n✅ RÁPIDO (vectorizado):\n\n\n\n\n\n\n\n\n10.2.2 Ejemplo 2.2: query() para filtros\n\n\n\n\n\n\n\n\n\n10.2.3 🧠 Práctica 2.1\nCalcula de forma vectorizada: Carga = RPE × 10.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps['Carga'] = gps['RPE'] * 10\ngps[['RPE', 'Carga']].head()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
+    "objectID": "10_rendimiento.html#mini-proyecto-optimización-de-un-pipeline-de-análisis",
+    "href": "10_rendimiento.html#mini-proyecto-optimización-de-un-pipeline-de-análisis",
+    "title": "10  Rendimiento y Optimización",
+    "section": "10.3 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis",
+    "text": "10.3 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis\n\n10.3.1 Pregunta 1: Ahorro de Memoria con Categories\n¿Cuánta memoria se ahorra al convertir TODAS las columnas de texto (object) a category?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmem_antes = gps.memory_usage(deep=True).sum() / 1024\n\ngps_opt = gps.copy()\nfor col in gps_opt.select_dtypes(include='object').columns:\n    gps_opt[col] = gps_opt[col].astype('category')\n\nmem_despues = gps_opt.memory_usage(deep=True).sum() / 1024\n\nprint(f\"Antes: {mem_antes:.1f} KB\")\nprint(f\"Después: {mem_despues:.1f} KB\")\nprint(f\"Ahorro: {(1 - mem_despues/mem_antes)*100:.1f}%\")\n\n\n\n\n\n10.3.2 Pregunta 2: Filtrado Eficiente con query()\nFiltra todas las sesiones de Partido con Distancia &gt; 10000 m, RPE &gt;= 8, y HR_Media &gt; 160.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresultado = gps.query(\"TipoSesion == 'Partido' and Distancia_m &gt; 10000 and RPE &gt;= 8 and HR_Media &gt; 160\")\nprint(f\"Sesiones de alta intensidad: {len(resultado)}\")\nresultado.head()\n\n\n\n\n\n10.3.3 Pregunta 3: Cálculo Vectorizado de Intensidad\nCalcula de forma vectorizada: Intensidad = HSR_m / Distancia_m × 100. Evita usar apply().\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Vectorizado (rápido)\ngps['Intensidad_Pct'] = (gps['HSR_m'] / gps['Distancia_m']) * 100\n\n# Ver resultado\ngps[['JugadorID', 'HSR_m', 'Distancia_m', 'Intensidad_Pct']].head()\n\n\n\n\n\n10.3.4 Pregunta 4: Top Jugadores con Pipeline Eficiente\nEncuentra los 5 jugadores con mayor distancia total en Partidos. Usa un pipeline completo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .groupby('JugadorID')['Distancia_m']\n    .sum()\n    .nlargest(5)\n)",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
+    "objectID": "10_rendimiento.html#resumen",
+    "href": "10_rendimiento.html#resumen",
+    "title": "10  Rendimiento y Optimización",
+    "section": "10.4 Resumen",
+    "text": "10.4 Resumen\n\n\n\nProblema\nSolución\n\n\n\n\nColumnas de texto repetitivas\n.astype('category')\n\n\nFiltros complejos lentos\n.query()\n\n\napply() lento\nOperaciones vectorizadas\n\n\nCargar CSV grande\nusecols=, dtype=, nrows=\n\n\n\n\n¡Felicidades! 🎉 Has completado la Parte 3. Continúa con la Parte 4: Análisis Avanzado para aprender visualización de fútbol, estadísticas aplicadas y uso de APIs profesionales.",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
+    "objectID": "11_visualizacion_avanzada.html",
+    "href": "11_visualizacion_avanzada.html",
+    "title": "11  Visualización Avanzada para Fútbol",
+    "section": "",
+    "text": "Este capítulo cubre visualizaciones profesionales: campos de fútbol, shotmaps, passmaps y heatmaps.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Visualización Avanzada para Fútbol</span>"
+    ]
+  },
+  {
+    "objectID": "11_visualizacion_avanzada.html#dibujar-un-campo-de-fútbol-con-mplsoccer",
+    "href": "11_visualizacion_avanzada.html#dibujar-un-campo-de-fútbol-con-mplsoccer",
+    "title": "11  Visualización Avanzada para Fútbol",
+    "section": "11.1 1. Dibujar un Campo de Fútbol con mplsoccer",
+    "text": "11.1 1. Dibujar un Campo de Fútbol con mplsoccer\nLa librería mplsoccer facilita enormemente la creación de campos profesionales.\n\n11.1.1 Ejemplo 1.1: Campo básico\nDeclaramos un objeto Pitch. Como nuestros datos están en 105x68 (similar a StatsBomb/UEFAt), usamos pitch_type='custom'.\n\n\n\n\n\n\n\n\n\n11.1.2 🧠 Práctica 1.1\nCrea un campo con estilo “táctico”: fondo negro y líneas blancas.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,\n              pitch_color='black', line_color='white')\nfig, ax = pitch.draw(figsize=(10, 6))\nplt.show()",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Visualización Avanzada para Fútbol</span>"
+    ]
+  },
+  {
+    "objectID": "11_visualizacion_avanzada.html#shotmap-mapa-de-tiros",
+    "href": "11_visualizacion_avanzada.html#shotmap-mapa-de-tiros",
+    "title": "11  Visualización Avanzada para Fútbol",
+    "section": "11.2 2. Shotmap (Mapa de Tiros)",
+    "text": "11.2 2. Shotmap (Mapa de Tiros)\n\n11.2.1 Ejemplo 2.1: Visualizar tiros con xG\nmplsoccer tiene métodos integrados como scatter que funcionan igual que en matplotlib pero adaptados al objeto Pitch.\n\n\n\n\n\n\n\n\n11.2.2 Ejemplo 2.2: Shotmap solo mitad ofensiva\nPodemos usar view='half' (si el pitch fuera vertical) o simplemente ajustar los límites del eje con set_xlim estándar, pero mejor usamos la funcionalidad de recortar al hacer draw. Sin embargo, con custom pitch, lo más fácil a veces es hacer zoom.\n\n\n\n\n\n\n\n\n\n11.2.3 🧠 Práctica 2.1\nCrea un shotmap de los tiros de García usando mplsoccer.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ntiros_garcia = tiros.query(\"JugadorID == 'ATL_001'\")\n\npitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,\n              pitch_color='#22312b', line_color='#c7d5cc')\nfig, ax = pitch.draw(figsize=(10, 6))\n\npitch.scatter(tiros_garcia['X'], tiros_garcia['Y'], ax=ax, c='red', s=200)\n\nax.set_title(f\"Tiros de García\", fontsize=14, color='white')\nplt.show()",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Visualización Avanzada para Fútbol</span>"
+    ]
+  },
+  {
+    "objectID": "11_visualizacion_avanzada.html#heatmap-de-posiciones",
+    "href": "11_visualizacion_avanzada.html#heatmap-de-posiciones",
+    "title": "11  Visualización Avanzada para Fútbol",
+    "section": "11.3 3. Heatmap de Posiciones",
+    "text": "11.3 3. Heatmap de Posiciones\n\n11.3.1 Ejemplo 3.1: Heatmap con bin_statistic (Estilo Grid)\nmplsoccer ofrece bin_statistic para calcular estadísticas en grillas, que luego se dibujan con heatmap.\n\n\n\n\n\n\n\n\n11.3.2 Ejemplo 3.2: Heatmap KDE (Densidad)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Visualización Avanzada para Fútbol</span>"
+    ]
+  },
+  {
+    "objectID": "11_visualizacion_avanzada.html#mini-proyecto-dashboard-de-análisis-de-tiros",
+    "href": "11_visualizacion_avanzada.html#mini-proyecto-dashboard-de-análisis-de-tiros",
+    "title": "11  Visualización Avanzada para Fútbol",
+    "section": "11.4 🏆 Mini-Proyecto: Dashboard de Análisis de Tiros",
+    "text": "11.4 🏆 Mini-Proyecto: Dashboard de Análisis de Tiros\n\n11.4.1 Pregunta 1: Análisis de xG\nCalcula el xG total del equipo y el xG promedio por tiro. ¿Cuántos goles “esperaba” el equipo?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nxg_total = tiros['xG'].sum()\nxg_promedio = tiros['xG'].mean()\ngoles_reales = len(tiros.query(\"Resultado == 'Gol'\"))\n\nprint(f\"xG Total: {xg_total:.2f} goles esperados\")\nprint(f\"xG Promedio por tiro: {xg_promedio:.2f}\")\nprint(f\"Goles reales: {goles_reales}\")\nprint(f\"Diferencia: {goles_reales - xg_total:+.2f} sobre/bajo expectativa\")\n\n\n\n\n\n11.4.2 Pregunta 2: Dashboard con Subplots\nCrea una figura con 2 subplots: izquierda = shotmap con mplsoccer, derecha = barplot de xG por jugador.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Crear layout\nfig = plt.figure(figsize=(16, 6))\nax1 = fig.add_subplot(1, 2, 1)\nax2 = fig.add_subplot(1, 2, 2)\n\n# Subplot 1: Shotmap mplsoccer\npitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,\n              pitch_color='#2d2d2d', line_color='white')\npitch.draw(ax=ax1)\n\nfor _, tiro in tiros.iterrows():\n    color = 'red' if tiro['Resultado'] == 'Gol' else 'lightblue'\n    pitch.scatter(tiro['X'], tiro['Y'], s=tiro['xG']*500+50, c=color, ax=ax1)\nax1.set_title('Shotmap', color='white')\n\n# Subplot 2: xG por jugador\nxg_jugador = tiros.groupby('Nombre')['xG'].sum().sort_values()\nxg_jugador.plot(kind='barh', ax=ax2, color='steelblue', edgecolor='white')\nax2.set_xlabel('xG Total')\nax2.set_title('xG por Jugador')\nax2.set_facecolor('#f0f0f0')\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n11.4.3 Pregunta 3: Eficiencia de Conversión\n¿Qué jugador tiene la mejor eficiencia (Goles / xG)? Solo considera jugadores con xG &gt; 0.2.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Agrupar por jugador\nanalisis = tiros.groupby('Nombre').agg({\n    'xG': 'sum',\n    'Resultado': lambda x: (x == 'Gol').sum()\n}).rename(columns={'Resultado': 'Goles'})\n\n# Filtrar y calcular eficiencia\nanalisis = analisis.query(\"xG &gt; 0.2\")\nanalisis['Eficiencia'] = analisis['Goles'] / analisis['xG']\n\nprint(analisis.sort_values('Eficiencia', ascending=False))",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Visualización Avanzada para Fútbol</span>"
+    ]
+  },
+  {
+    "objectID": "11_visualizacion_avanzada.html#resumen",
+    "href": "11_visualizacion_avanzada.html#resumen",
+    "title": "11  Visualización Avanzada para Fútbol",
+    "section": "11.5 Resumen",
+    "text": "11.5 Resumen\n\n\n\nTipo de Visualización\nUso con mplsoccer\n\n\n\n\nCampo\nPitch(...) y pitch.draw()\n\n\nShotmap\npitch.scatter(...)\n\n\nHeatmap (bins)\npitch.bin_statistic(...) + pitch.heatmap(...)\n\n\nHeatmap (KDE)\npitch.kdeplot(...)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Visualización Avanzada para Fútbol</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html",
+    "href": "12_estadisticas.html",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "",
+    "text": "12.1 Introducción: ¿Por qué Estadística en Deporte?\nEste capítulo es una guía exhaustiva de estadística aplicada al análisis deportivo. Cubrimos desde conceptos fundamentales hasta técnicas avanzadas usadas por analistas profesionales.\nLa estadística en el deporte nos permite:",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#introducción-por-qué-estadística-en-deporte",
+    "href": "12_estadisticas.html#introducción-por-qué-estadística-en-deporte",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "",
+    "text": "Medir el rendimiento de forma objetiva\nComparar jugadores y equipos con rigor\nPredecir resultados y rendimiento futuro\nIdentificar patrones ocultos en los datos\nTomar decisiones basadas en evidencia, no en intuición\n\n\n[!IMPORTANT] La diferencia entre un buen analista y uno mediocre es saber cuándo usar cada técnica y cómo interpretar los resultados correctamente.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#estadística-descriptiva-conoce-tus-datos",
+    "href": "12_estadisticas.html#estadística-descriptiva-conoce-tus-datos",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.2 1. Estadística Descriptiva: Conoce Tus Datos",
+    "text": "12.2 1. Estadística Descriptiva: Conoce Tus Datos\nAntes de cualquier análisis, debemos entender la distribución de nuestros datos.\n\n12.2.1 1.1 Medidas de Tendencia Central\n\n\n\n\n\n\n\n\n12.2.2 1.2 Visualización de Distribuciones\n\n\n\n\n\n\n\n\n12.2.3 1.3 Detectar Outliers con IQR",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#correlación-midiendo-relaciones",
+    "href": "12_estadisticas.html#correlación-midiendo-relaciones",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.3 2. Correlación: Midiendo Relaciones",
+    "text": "12.3 2. Correlación: Midiendo Relaciones\n\n12.3.1 2.1 Correlación de Pearson (Variables Continuas)\nLa correlación de Pearson mide la relación lineal entre dos variables. Va de -1 a +1.\n\n\n\nValor\nInterpretación\n\n\n\n\n0.9 a 1.0\nCorrelación muy fuerte\n\n\n0.7 a 0.9\nCorrelación fuerte\n\n\n0.4 a 0.7\nCorrelación moderada\n\n\n0.2 a 0.4\nCorrelación débil\n\n\n0.0 a 0.2\nCorrelación muy débil o nula\n\n\n\n\n\n\n\n\n\n\n\n12.3.2 2.2 Correlación de Spearman (Variables Ordinales o No Lineales)\nCuando la relación no es lineal o tenemos variables ordinales, usamos Spearman.\n\n\n\n\n\n\n\n\n12.3.3 2.3 Matriz de Correlación Completa\n\n\n\n\n\n\n\n\n\n12.3.4 🧠 Práctica 2.1: Análisis de Correlación\nCalcula la correlación entre el número de Lesiones en el historial y la Edad. ¿Los jugadores mayores tienen más lesiones?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ncorr, p = pearsonr(atletas['Edad'], atletas['Lesiones_Historial'])\nprint(f\"Correlación Edad vs Lesiones: r = {corr:.3f}, p = {p:.4f}\")\n\n# Visualizar\nfig, ax = plt.subplots(figsize=(8, 5))\nax.scatter(atletas['Edad'], atletas['Lesiones_Historial'], s=60, alpha=0.6)\nax.set_xlabel('Edad')\nax.set_ylabel('Lesiones en Historial')\nax.set_title(f'Edad vs Lesiones (r = {corr:.2f})')\nplt.show()",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#tests-de-hipótesis-comparando-grupos",
+    "href": "12_estadisticas.html#tests-de-hipótesis-comparando-grupos",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.4 3. Tests de Hipótesis: Comparando Grupos",
+    "text": "12.4 3. Tests de Hipótesis: Comparando Grupos\n\n12.4.1 3.1 Conceptos Fundamentales\n\n\n\n\n\n\n\nTérmino\nDefinición\n\n\n\n\nH₀ (Hipótesis Nula)\nNo hay diferencia entre grupos\n\n\nH₁ (Hipótesis Alternativa)\nSí hay diferencia significativa\n\n\np-valor\nProbabilidad de observar estos datos si H₀ fuera cierta\n\n\nα (Nivel de significancia)\nUmbral para rechazar H₀ (típicamente 0.05)\n\n\nError Tipo I\nRechazar H₀ cuando es verdadera (falso positivo)\n\n\nError Tipo II\nNo rechazar H₀ cuando es falsa (falso negativo)\n\n\n\n\n[!WARNING] Un p-valor &lt; 0.05 NO significa que el efecto sea importante. Solo indica que es improbable que sea por azar. Siempre calcula el tamaño del efecto.\n\n\n\n12.4.2 3.2 T-Test: Comparar 2 Grupos\n¿Los delanteros tienen más goles que los mediocampistas?\n\n\n\n\n\n\n\n\n12.4.3 3.3 Tamaño del Efecto (Cohen’s d)\nEl p-valor nos dice si hay diferencia, pero no cuán grande es. Para eso usamos Cohen’s d.\n\n\n\nCohen’s d\nInterpretación\n\n\n\n\n0.2\nEfecto pequeño\n\n\n0.5\nEfecto medio\n\n\n0.8\nEfecto grande\n\n\n\n\n\n\n\n\n\n\n\n12.4.4 3.4 Mann-Whitney U: Alternativa No Paramétrica\nCuando los datos no siguen una distribución normal, usamos Mann-Whitney U.\n\n\n\n\n\n\n\n\n12.4.5 3.5 ANOVA: Comparar 3+ Grupos\n¿Hay diferencias en distancia recorrida entre TODAS las posiciones?\n\n\n\n\n\n\n\n\n12.4.6 3.6 Chi-Cuadrado: Variables Categóricas\n¿Los contraataques terminan en gol más frecuentemente?\n\n\n\n\n\n\n\n\n\n12.4.7 🧠 Práctica 3.1: Comparación de Grupos\nCompara el VO2max entre jugadores jóvenes (&lt;25 años) y veteranos (&gt;=30 años). ¿Hay diferencia significativa?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\njovenes = atletas[atletas['Edad'] &lt; 25]['VO2max']\nveteranos = atletas[atletas['Edad'] &gt;= 30]['VO2max']\n\nprint(f\"Jóvenes (n={len(jovenes)}): Media = {jovenes.mean():.1f}\")\nprint(f\"Veteranos (n={len(veteranos)}): Media = {veteranos.mean():.1f}\")\n\nt, p = ttest_ind(jovenes, veteranos)\nd = cohens_d(jovenes, veteranos)\n\nprint(f\"\\nT-test: t = {t:.3f}, p = {p:.4f}\")\nprint(f\"Cohen's d = {d:.3f}\")",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#regresión-lineal-predicción",
+    "href": "12_estadisticas.html#regresión-lineal-predicción",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.5 4. Regresión Lineal: Predicción",
+    "text": "12.5 4. Regresión Lineal: Predicción\n\n12.5.1 4.1 Regresión Simple\nPredecir Distancia a partir de VO2max.\n\n\n\n\n\n\n\n\n12.5.2 4.2 Visualización con Intervalos de Confianza\n\n\n\n\n\n\n\n\n12.5.3 4.3 Predicción con Nuevos Datos\n\n\n\n\n\n\n\n\n12.5.4 4.4 Análisis de Residuos\nLos residuos deben ser aleatorios. Si hay patrones, el modelo puede ser inadecuado.\n\n\n\n\n\n\n\n\n\n12.5.5 🧠 Práctica 4.1: Tu Propio Modelo\nConstruye un modelo para predecir HSR_Partido_m a partir de Sprint_m. ¿Tiene sentido esta relación?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nslope, intercept, r, p, se = linregress(atletas['Sprint_m'], atletas['HSR_Partido_m'])\n\nprint(f\"Modelo: HSR = {intercept:.1f} + {slope:.2f} × Sprint\")\nprint(f\"R² = {r**2:.3f}\")\nprint(f\"p-valor = {p:.4f}\")\n\n# Visualizar\nfig, ax = plt.subplots(figsize=(8, 5))\nax.scatter(atletas['Sprint_m'], atletas['HSR_Partido_m'], s=50, alpha=0.6)\nx_line = np.linspace(atletas['Sprint_m'].min(), atletas['Sprint_m'].max(), 100)\nax.plot(x_line, intercept + slope * x_line, 'r-', linewidth=2)\nax.set_xlabel('Sprint (m)')\nax.set_ylabel('HSR (m)')\nax.set_title(f'Sprint vs HSR (R² = {r**2:.2f})')\nplt.show()",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#expected-goals-xg-modelo-completo",
+    "href": "12_estadisticas.html#expected-goals-xg-modelo-completo",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.6 5. Expected Goals (xG): Modelo Completo",
+    "text": "12.6 5. Expected Goals (xG): Modelo Completo\n\n12.6.1 5.1 Análisis Exploratorio de Tiros\n\n\n\n\n\n\n\n\n12.6.2 5.2 Probabilidad de Gol por Distancia\n\n\n\n\n\n\n\n\n12.6.3 5.3 Modelo xG con Regresión Logística\nPara un modelo xG real, necesitamos regresión logística (la probabilidad debe estar entre 0 y 1).\n\n\n\n\n\n\n\n\n12.6.4 5.4 Validación del Modelo xG\n\n\n\n\n\n\n\n\n\n12.6.5 🧠 Práctica 5.1: Análisis de xG\nCalcula el xG acumulado y los goles reales para los top 5 jugadores. ¿Quién supera las expectativas?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Añadir xG a todos los tiros\ntiros['xG_Modelo'] = modelo_xg.predict_proba(tiros[['Distancia_m', 'Angulo_grados', 'Cabeza', 'Contraataque', 'Penalti']].assign(\n    Presion_Num=tiros['PresionDefensiva'].map({'Baja': 0, 'Media': 1, 'Alta': 2})\n))[:, 1]\n\n# Agregar por jugador\nresumen_jugadores = tiros.groupby('JugadorID').agg({\n    'xG_Modelo': 'sum',\n    'Gol': 'sum'\n}).rename(columns={'xG_Modelo': 'xG_Total', 'Gol': 'Goles'})\n\nresumen_jugadores['Diferencia'] = resumen_jugadores['Goles'] - resumen_jugadores['xG_Total']\nresumen_jugadores = resumen_jugadores.sort_values('Goles', ascending=False)\n\nprint(\"Top 5 Goleadores:\")\nprint(resumen_jugadores.head(5).round(2))\n\nprint(\"\\nJugadores que superan expectativas (Goles - xG &gt; 0):\")\nprint(resumen_jugadores[resumen_jugadores['Diferencia'] &gt; 1].head(5).round(2))",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#mini-proyecto-final-análisis-estadístico-completo",
+    "href": "12_estadisticas.html#mini-proyecto-final-análisis-estadístico-completo",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.7 🏆 Mini-Proyecto Final: Análisis Estadístico Completo",
+    "text": "12.7 🏆 Mini-Proyecto Final: Análisis Estadístico Completo\nRealiza un análisis completo respondiendo a estas preguntas:\n\n12.7.1 Pregunta 1: Perfil Físico por Posición\n¿Qué posición tiene el mejor perfil físico promedio? Crea un índice compuesto.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndef normalizar(col):\n    return (col - col.min()) / (col.max() - col.min())\n\natletas['Indice_Fisico'] = (\n    normalizar(atletas['VO2max']) * 0.3 +\n    normalizar(atletas['Distancia_Partido_m']) * 0.25 +\n    normalizar(atletas['HSR_Partido_m']) * 0.25 +\n    normalizar(atletas['Sprint_m']) * 0.2\n)\n\nperfil_posicion = atletas.groupby('Posicion')['Indice_Fisico'].agg(['mean', 'std']).sort_values('mean', ascending=False)\nprint(\"Índice Físico por Posición:\")\nprint(perfil_posicion.round(3))\n\n\n\n\n\n12.7.2 Pregunta 2: Predicción de Lesiones\n¿Qué variables predicen mejor el historial de lesiones? Usa correlación.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nvars_predictoras = ['Edad', 'Peso_kg', 'VO2max', 'HSR_Partido_m', 'Sprint_m', 'Aceleraciones']\n\ncorrelaciones = []\nfor var in vars_predictoras:\n    corr, p = pearsonr(atletas[var], atletas['Lesiones_Historial'])\n    correlaciones.append({'Variable': var, 'Correlación': corr, 'p-valor': p})\n\ncorr_df = pd.DataFrame(correlaciones).sort_values('Correlación', key=abs, ascending=False)\nprint(\"Correlaciones con Historial de Lesiones:\")\nprint(corr_df.round(3))\n\n\n\n\n\n12.7.3 Pregunta 3: Modelo Predictivo\nUsando la variable más correlacionada, ¿puedes predecir lesiones con regresión?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Usar la variable más correlacionada\nmejor_predictor = corr_df.iloc[0]['Variable']\nprint(f\"Mejor predictor: {mejor_predictor}\")\n\nslope, intercept, r, p, se = linregress(atletas[mejor_predictor], atletas['Lesiones_Historial'])\nprint(f\"Modelo: Lesiones = {intercept:.2f} + {slope:.4f} × {mejor_predictor}\")\nprint(f\"R² = {r**2:.3f}\")\nprint(f\"p-valor = {p:.4f}\")\n\n# Nota: R² bajo indica que las lesiones son multifactoriales",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "12_estadisticas.html#resumen-del-capítulo",
+    "href": "12_estadisticas.html#resumen-del-capítulo",
+    "title": "12  Estadísticas Aplicadas al Deporte: Guía Completa",
+    "section": "12.8 Resumen del Capítulo",
+    "text": "12.8 Resumen del Capítulo\n\n\n\n\n\n\n\n\nTécnica\nUso\nFunción Python\n\n\n\n\nPearson\nCorrelación lineal (continuas)\nstats.pearsonr(x, y)\n\n\nSpearman\nCorrelación no lineal/ordinal\nstats.spearmanr(x, y)\n\n\nT-test\nComparar 2 grupos\nstats.ttest_ind(g1, g2)\n\n\nMann-Whitney\nComparar 2 grupos (no paramétrico)\nstats.mannwhitneyu(g1, g2)\n\n\nANOVA\nComparar 3+ grupos\nstats.f_oneway(g1, g2, g3)\n\n\nChi-cuadrado\nAsociación categóricas\nstats.chi2_contingency(tabla)\n\n\nRegresión lineal\nPredecir continua\nstats.linregress(x, y)\n\n\nRegresión logística\nPredecir probabilidad\nLogisticRegression()\n\n\nCohen’s d\nTamaño del efecto\nFunción personalizada\n\n\nShapiro-Wilk\nTest de normalidad\nstats.shapiro(data)\n\n\n\n\n[!TIP] Regla de oro: Siempre reporta: 1. El estadístico del test (t, F, χ², r) 2. El p-valor 3. El tamaño del efecto (Cohen’s d, R², etc.) 4. Una frase de interpretación en lenguaje claro",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Estadísticas Aplicadas al Deporte: Guía Completa</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html",
+    "href": "13_apis_datos.html",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "",
+    "text": "13.1 1. Fuentes de Datos de Fútbol\nEste capítulo cubre cómo acceder a datos profesionales de fútbol usando APIs.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html#fuentes-de-datos-de-fútbol",
+    "href": "13_apis_datos.html#fuentes-de-datos-de-fútbol",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "",
+    "text": "13.1.1 Principales proveedores\n\n\n\nProveedor\nTipo de Datos\nAcceso\n\n\n\n\nStatsBomb\nEventos detallados\nGratis (Open Data)\n\n\nWyscout\nEventos + Video\nDe pago\n\n\nOpta\nEventos\nDe pago (clubes)\n\n\nMetrica Sports\nTracking\nSample gratis\n\n\nSkillCorner\nTracking (broadcast)\nDe pago\n\n\nFBREF\nEstadísticas agregadas\nScraping (gratis)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html#statsbomb-open-data",
+    "href": "13_apis_datos.html#statsbomb-open-data",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "13.2 2. StatsBomb Open Data",
+    "text": "13.2 2. StatsBomb Open Data\nStatsBomb ofrece datos gratuitos de partidos selectos: - Champions League (varias ediciones) - La Liga (temporadas históricas) - Copa del Mundo 2018, 2022 - Messi: datos completos de su carrera\n\n13.2.1 Ejemplo 2.1: Estructura de datos StatsBomb\nLos datos de StatsBomb vienen en formato JSON anidado. Las columnas principales son:\n# Columnas principales de eventos StatsBomb\ncolumnas = [\n    'id',              # ID único del evento\n    'index',           # Orden cronológico\n    'period',          # Período (1, 2, extra)\n    'timestamp',       # Tiempo en formato HH:MM:SS.sss\n    'minute',          # Minuto del partido\n    'second',          # Segundo\n    'type',            # Tipo: Pass, Shot, Duel, etc.\n    'possession',      # Número de posesión\n    'possession_team', # Equipo con balón\n    'play_pattern',    # Patrón: Regular Play, Counter, etc.\n    'team',            # Equipo que hace la acción\n    'player',          # Jugador\n    'position',        # Posición en el campo\n    'location',        # Coordenadas [x, y]\n    'duration'         # Duración del evento\n]\n\n\n13.2.2 Ejemplo 2.2: Código para acceder a StatsBomb\n\n\n\n\n\n\nWarningEjecutar localmente\n\n\n\nEste código requiere la librería statsbombpy. Instalar: pip install statsbombpy\n\n\n# === CÓDIGO PARA EJECUTAR LOCALMENTE ===\nfrom statsbombpy import sb\n\n# Ver competiciones disponibles\ncompeticiones = sb.competitions()\nprint(competiciones[['competition_name', 'season_name']].head(10))\n\n# Cargar partidos de una competición\n# Ejemplo: La Liga 2020/21 (competition_id=11, season_id=90)\npartidos = sb.matches(competition_id=11, season_id=90)\nprint(f\"Partidos disponibles: {len(partidos)}\")\n\n# Cargar eventos de un partido específico\nmatch_id = 3773585  # Ejemplo: Barcelona vs Real Madrid\neventos = sb.events(match_id=match_id)\nprint(f\"Eventos en el partido: {len(eventos)}\")\nprint(eventos[['minute', 'type', 'player', 'team']].head(10))\n\n\n\n13.2.3 🧠 Práctica 2.1 (Conceptual)\n¿Qué competiciones del Mundial 2022 estarían disponibles en StatsBomb Open Data?\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nStatsBomb ofrece datos gratuitos del Mundial 2022, incluyendo: - Todos los partidos de fase de grupos - Octavos, cuartos, semifinales y final - Eventos detallados (pases, tiros, duelos) - Datos de presión y posesión\nPara acceder: sb.matches(competition_id=43, season_id=106)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html#procesamiento-de-eventos",
+    "href": "13_apis_datos.html#procesamiento-de-eventos",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "13.3 3. Procesamiento de Eventos",
+    "text": "13.3 3. Procesamiento de Eventos\n\n13.3.1 Ejemplo 3.1: Datos de ejemplo (simulados)\nPara practicar sin conexión, usamos datos simulados con la misma estructura:\n\n\n\n\n\n\n\n\n13.3.2 Ejemplo 3.2: Análisis de pases\n\n\n\n\n\n\n\n\n13.3.3 Ejemplo 3.3: Análisis de tiros y xG\n\n\n\n\n\n\n\n\n\n13.3.4 🧠 Práctica 3.1\nCalcula la distancia media de los pases por equipo (usando location_x, pass_end_x).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npases = eventos_simulados.query(\"type == 'Pass'\").copy()\npases['distancia_pase'] = abs(pases['pass_end_x'] - pases['location_x'])\n\nprint(\"Distancia media de pases por equipo:\")\nprint(pases.groupby('team')['distancia_pase'].mean().round(1))",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html#otras-fuentes-de-datos",
+    "href": "13_apis_datos.html#otras-fuentes-de-datos",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "13.4 4. Otras Fuentes de Datos",
+    "text": "13.4 4. Otras Fuentes de Datos\n\n13.4.1 4.1 Metrica Sports (Tracking Data)\nMetrica ofrece datos de tracking de ejemplo: - Posiciones de 22 jugadores + balón - 25 frames por segundo - Eventos sincronizados\n# Ejemplo de carga de tracking Metrica (ejecutar localmente)\nimport pandas as pd\n\n# Descargar de: https://github.com/metrica-sports/sample-data\ntracking_home = pd.read_csv('Sample_Game_1_RawTrackingData_Home_Team.csv')\ntracking_away = pd.read_csv('Sample_Game_1_RawTrackingData_Away_Team.csv')\n\nprint(f\"Frames: {len(tracking_home)}\")\nprint(f\"Columnas por jugador: x, y para cada uno\")\n\n\n13.4.2 4.2 FBREF (Web Scraping)\nFBREF ofrece estadísticas agregadas que se pueden scrapear:\n# Ejemplo conceptual de scraping FBREF\nimport pandas as pd\n\n# FBREF permite leer tablas HTML directamente\nurl = \"https://fbref.com/en/comps/12/La-Liga-Stats\"\ntablas = pd.read_html(url)\n\n# La primera tabla suele ser la clasificación\nclasificacion = tablas[0]\nprint(clasificacion.head())\n\n\n\n\n\n\nWarningNota sobre scraping\n\n\n\n\nRevisa los términos de servicio antes de scrapear\nRespeta los rate limits\nConsidera usar APIs oficiales cuando estén disponibles",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html#mini-proyecto-análisis-de-un-partido",
+    "href": "13_apis_datos.html#mini-proyecto-análisis-de-un-partido",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "13.5 🏆 Mini-Proyecto: Análisis de un Partido",
+    "text": "13.5 🏆 Mini-Proyecto: Análisis de un Partido\nUsando los datos simulados, realiza un análisis completo:\n\n13.5.1 Pregunta 1: Posesión por Equipo\nCalcula el porcentaje aproximado de posesión (número de eventos por equipo).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nposesion = eventos_simulados.groupby('team').size()\nposesion_pct = (posesion / posesion.sum() * 100).round(1)\n\nprint(\"Posesión aproximada:\")\nfor equipo, pct in posesion_pct.items():\n    print(f\"  {equipo}: {pct}%\")\n\n\n\n\n\n13.5.2 Pregunta 2: Jugadores Más Activos\n¿Qué 3 jugadores tuvieron más eventos?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\njugadores_activos = eventos_simulados.groupby('player').size().nlargest(3)\nprint(\"Jugadores más activos:\")\nprint(jugadores_activos)\n\n\n\n\n\n13.5.3 Pregunta 3: Mapa de Calor de Eventos\nCrea un histograma 2D de las ubicaciones de los eventos.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nimport matplotlib.pyplot as plt\n\nfig, ax = plt.subplots(figsize=(12, 8))\n\nax.hist2d(eventos_simulados['location_x'], eventos_simulados['location_y'], \n          bins=20, cmap='hot')\n\nax.set_xlabel('X (largo del campo)')\nax.set_ylabel('Y (ancho del campo)')\nax.set_title('Densidad de Eventos en el Campo')\nax.set_xlim(0, 120)\nax.set_ylim(0, 80)\nplt.colorbar(ax.collections[0], label='Frecuencia')\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n13.5.4 Pregunta 4: Resumen Ejecutivo\nCrea un DataFrame resumen del partido con métricas clave por equipo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresumen = eventos_simulados.groupby('team').agg({\n    'id': 'count',\n    'type': lambda x: (x == 'Pass').sum(),\n    'shot_xg': 'sum'\n}).rename(columns={\n    'id': 'Total_Eventos',\n    'type': 'Pases',\n    'shot_xg': 'xG_Total'\n})\n\n# Añadir porcentaje de posesión\ntotal = resumen['Total_Eventos'].sum()\nresumen['Posesion_Pct'] = (resumen['Total_Eventos'] / total * 100).round(1)\n\nprint(\"=== RESUMEN DEL PARTIDO ===\")\nprint(resumen.fillna(0).round(2))",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "13_apis_datos.html#resumen",
+    "href": "13_apis_datos.html#resumen",
+    "title": "13  APIs y Fuentes de Datos",
+    "section": "13.6 Resumen",
+    "text": "13.6 Resumen\n\n\n\nFuente\nTipo\nAcceso\nURL\n\n\n\n\nStatsBomb\nEventos\nGratis (Open Data)\ngithub.com/statsbomb\n\n\nMetrica\nTracking\nSample gratis\ngithub.com/metrica-sports\n\n\nFBREF\nEstadísticas\nScraping\nfbref.com\n\n\nWyscout\nEventos + Video\nDe pago\nwyscout.com\n\n\n\n\n13.6.1 Código de referencia para StatsBomb\n# Instalación\n# pip install statsbombpy\n\nfrom statsbombpy import sb\n\n# Lista de competiciones\ncomps = sb.competitions()\n\n# Partidos de una competición\nmatches = sb.matches(competition_id=43, season_id=106)  # Mundial 2022\n\n# Eventos de un partido\nevents = sb.events(match_id=3869685)  # Final Argentina vs Francia\n\n# Filtrar pases de Messi\nmessi_pases = events.query(\"player == 'Lionel Andrés Messi Cuccittini' and type == 'Pass'\")",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>APIs y Fuentes de Datos</span>"
+    ]
+  },
+  {
+    "objectID": "14_machine_learning.html",
+    "href": "14_machine_learning.html",
+    "title": "14  Machine Learning: Clustering y xG",
+    "section": "",
+    "text": "14.1 1. Aprendizaje No Supervisado: Clustering de Jugadores\nEste capítulo introduce el Machine Learning aplicado al fútbol usando scikit-learn. Veremos dos casos uso clásicos inspirados en Soccermatics: Clustering para definir roles de jugadores y Regresión Logística para crear un modelo de Expected Goals (xG).\n¿Podemos agrupar a los jugadores por sus características físicas sin saber su posición a priori? Usaremos K-Means.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Machine Learning: Clustering y xG</span>"
+    ]
+  },
+  {
+    "objectID": "14_machine_learning.html#aprendizaje-no-supervisado-clustering-de-jugadores",
+    "href": "14_machine_learning.html#aprendizaje-no-supervisado-clustering-de-jugadores",
+    "title": "14  Machine Learning: Clustering y xG",
+    "section": "",
+    "text": "14.1.1 Seleccionar Features y Normalizar\nEl clustering funciona por distancia matemática, así que debemos “normalizar” los datos para que variables grandes (Potencia: 800W) no dominen a las pequeñas (Velocidad: 30km/h).\n\n\n\n\n\n\n\n\n14.1.2 Aplicar K-Means\nVamos a buscar 3 grupos (clusters) naturales en los datos.\n\n\n\n\n\n\nInterpretación típica: - Cluster 0: ¿Quizás los velocistas/extremos? - Cluster 1: ¿Quizás los potentes/defensas? - Cluster 2: ¿Quizás los equilibrados/mediocentros?\n\n\n14.1.3 Visualizar Clusters",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Machine Learning: Clustering y xG</span>"
+    ]
+  },
+  {
+    "objectID": "14_machine_learning.html#aprendizaje-supervisado-modelo-de-expected-goals-xg",
+    "href": "14_machine_learning.html#aprendizaje-supervisado-modelo-de-expected-goals-xg",
+    "title": "14  Machine Learning: Clustering y xG",
+    "section": "14.2 2. Aprendizaje Supervisado: Modelo de Expected Goals (xG)",
+    "text": "14.2 2. Aprendizaje Supervisado: Modelo de Expected Goals (xG)\nEl xG es la probabilidad de que un tiro sea gol. Usaremos Regresión Logística para predecir EsGol (0 o 1) basándonos en la distancia y el ángulo.\n\n14.2.1 Preparar Datos de Tiros\nPrimero, simulemos un dataset de tiros más grande para entrenar, usando nuestro módulo datasets.\n\n\n\n\n\n\n\n\n14.2.2 Entrenar Modelo\n\n\n\n\n\n\n\n[!TIP] Un coeficiente negativo en Distancia significa que a mayor distancia, menor probabilidad de gol (lógico). Un coeficiente positivo en Ángulo significa que a mayor ángulo (más visión), mayor probabilidad.\n\n\n\n14.2.3 Evaluar y Predecir xG\nProbemos el modelo en los datos de test que nunca ha visto.\n\n\n\n\n\n\n\n\n14.2.4 Visualizar el Modelo de xG\nVamos a ver cómo cae la probabilidad de gol con la distancia.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Machine Learning: Clustering y xG</span>"
+    ]
+  },
+  {
+    "objectID": "14_machine_learning.html#mini-proyecto-analista-de-datos-del-club",
+    "href": "14_machine_learning.html#mini-proyecto-analista-de-datos-del-club",
+    "title": "14  Machine Learning: Clustering y xG",
+    "section": "14.3 🏆 Mini-Proyecto: Analista de Datos del Club",
+    "text": "14.3 🏆 Mini-Proyecto: Analista de Datos del Club\n\n14.3.1 Pregunta 1: Clustering con 2 variables\nHaz un clustering K-Means (3 grupos) usando SOLO Peso_kg y Altura_cm. ¿Se separan bien los perfiles?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nX_simple = atletas[['Peso_kg', 'Altura_cm']].dropna()\nkmeans_simple = KMeans(n_clusters=3, random_state=0).fit(X_simple)\n \nplt.scatter(atletas['Peso_kg'], atletas['Altura_cm'], c=kmeans_simple.labels_)\nplt.xlabel('Peso')\nplt.ylabel('Altura')\nplt.title('Clustering por Antropometría')\nplt.show()\n\n\n\n\n\n14.3.2 Pregunta 2: ¿Quién tiene más xG acumulado?\nEn el dataset de resultados (test set), suma el xG_Modelo. ¿Coincide más o menos con los goles reales totales?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ntotal_xg = resultados['xG_Modelo'].sum()\ntotal_goles = resultados['Gol_Real'].sum()\nprint(f\"xG Total Esperado: {total_xg:.2f}\")\nprint(f\"Goles Reales Totales: {total_goles}\")\n# Deberían estar cerca si el modelo está bien calibrado\n\n\n\n\n\n14.3.3 Pregunta 3: Predecir un tiro imposible\nUsa el modelo para predecir el xG de un tiro desde 50 metros con 5 grados de ángulo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ntiro_imposible = pd.DataFrame({'Distancia': [50], 'Angulo': [5]})\nxg_tiro = modelo_xg.predict_proba(tiro_imposible)[0, 1]\nprint(f\"xG del tiro imposible: {xg_tiro:.5f}\")",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Machine Learning: Clustering y xG</span>"
+    ]
+  },
+  {
+    "objectID": "15_streamlit.html",
+    "href": "15_streamlit.html",
+    "title": "15  Web Apps con Streamlit: Tu Primer Dashboard",
+    "section": "",
+    "text": "15.1 1. Hola Mundo en Streamlit\nSi vienes de R, probablemente amas Shiny. En Python, la respuesta moderna, rápida y amada por la comunidad es Streamlit.\nStreamlit permite convertir scripts de datos en aplicaciones web compartibles en minutos, sin saber HTML, CSS o JavaScript. Solo Python puro.\nCrea un archivo llamado app.py y escribe esto:\nPara correrlo, abre tu terminal (Anaconda Prompt o VS Code Terminal) y escribe:",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Web Apps con Streamlit: Tu Primer Dashboard</span>"
+    ]
+  },
+  {
+    "objectID": "15_streamlit.html#hola-mundo-en-streamlit",
+    "href": "15_streamlit.html#hola-mundo-en-streamlit",
+    "title": "15  Web Apps con Streamlit: Tu Primer Dashboard",
+    "section": "",
+    "text": "import streamlit as st\nimport pandas as pd\n\nst.title(\"⚽ Mi Primer Dashboard de Fútbol\")\nst.write(\"¡Bienvenido a mi aplicación de análisis!\")\n\n# Crear un botón\nif st.button('Celebrar Gol'):\n    st.balloons()\n\npip install streamlit\nstreamlit run app.py",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Web Apps con Streamlit: Tu Primer Dashboard</span>"
+    ]
+  },
+  {
+    "objectID": "15_streamlit.html#estructura-de-una-app-de-análisis",
+    "href": "15_streamlit.html#estructura-de-una-app-de-análisis",
+    "title": "15  Web Apps con Streamlit: Tu Primer Dashboard",
+    "section": "15.2 2. Estructura de una App de Análisis",
+    "text": "15.2 2. Estructura de una App de Análisis\nVamos a construir un Perfil de Jugador Interactivo. La estructura típica usa la barra lateral (st.sidebar) para controles y el panel principal para gráficos.\n\n15.2.1 Paso 1: Cargar Datos\nimport streamlit as st\nimport pandas as pd\nimport matplotlib.pyplot as plt\n\n# Título\nst.title(\"📊 Informe de Rendimiento Físico\")\n\n# Cargar datos (puedes usar tu archivo local)\n@st.cache_data  # ¡Magia! Guarda los datos en caché para no recargar siempre\ndef cargar_datos():\n    # Simulamos datos aquí para el ejemplo, tú cargarías 'data/atletas.csv'\n    df = pd.DataFrame({\n        'Nombre': ['García', 'López', 'Martínez', 'Sánchez'],\n        'Posicion': ['Delantero', 'Medio', 'Defensa', 'Portero'],\n        'Velocidad': [33, 31, 29, 25],\n        'Potencia': [800, 750, 900, 600]\n    })\n    return df\n\ndf = cargar_datos()\n\n# Mostrar la tabla si el usuario quiere\nif st.checkbox(\"Mostrar Datos Crudos\"):\n    st.dataframe(df)\n\n\n15.2.2 Paso 2: Filtros en la Sidebar\n# Barra lateral\nst.sidebar.header(\"Filtros\")\n\n# Selector de Posición\nposiciones = df['Posicion'].unique()\nfiltro_pos = st.sidebar.multiselect(\"Filtrar Posición\", posiciones, default=posiciones)\n\n# Slider de Velocidad Mínima\nmin_vel = st.sidebar.slider(\"Velocidad Mínima (km/h)\", 0, 35, 20)\n\n# Aplicar filtros\ndf_filtrado = df[\n    (df['Posicion'].isin(filtro_pos)) & \n    (df['Velocidad'] &gt;= min_vel)\n]\n\nst.write(f\"Jugadores encontrados: {len(df_filtrado)}\")\n\n\n15.2.3 Paso 3: Gráficos Interactivos\nStreamlit funciona nativamente con Matplotlib, Plotly, Altair y más.\n# Crear dos columnas\ncol1, col2 = st.columns(2)\n\nwith col1:\n    st.subheader(\"Velocidad por Jugador\")\n    st.bar_chart(df_filtrado.set_index('Nombre')['Velocidad'])\n\nwith col2:\n    st.subheader(\"Relación Potencia-Velocidad\")\n    fig, ax = plt.subplots()\n    ax.scatter(df_filtrado['Potencia'], df_filtrado['Velocidad'], c='red', s=100)\n    ax.set_xlabel('Potencia')\n    ax.set_ylabel('Velocidad')\n    st.pyplot(fig)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Web Apps con Streamlit: Tu Primer Dashboard</span>"
+    ]
+  },
+  {
+    "objectID": "15_streamlit.html#despliegue-deploy",
+    "href": "15_streamlit.html#despliegue-deploy",
+    "title": "15  Web Apps con Streamlit: Tu Primer Dashboard",
+    "section": "15.3 3. Despliegue (Deploy)",
+    "text": "15.3 3. Despliegue (Deploy)\nLo mejor de Streamlit es compartir.\n\nSube tu código a GitHub.\nVe a share.streamlit.io.\nConecta tu repo y ¡listo! Tienes una URL pública (ej: mi-app-futbol.streamlit.app) para enviar al entrenador o publicar en LinkedIn.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Web Apps con Streamlit: Tu Primer Dashboard</span>"
+    ]
+  },
+  {
+    "objectID": "15_streamlit.html#mini-proyecto-tu-dashboard-personal",
+    "href": "15_streamlit.html#mini-proyecto-tu-dashboard-personal",
+    "title": "15  Web Apps con Streamlit: Tu Primer Dashboard",
+    "section": "15.4 🏆 Mini-Proyecto: Tu Dashboard Personal",
+    "text": "15.4 🏆 Mini-Proyecto: Tu Dashboard Personal\n(Para realizar en tu ordenador local)\nObjetivo: Crear una app scouting.py que: 1. Cargue el dataset atletas.csv. 2. Tenga un selector en la sidebar para elegir un jugador específico. 3. Muestre sus métricas clave (Metric Card) con st.metric(label=\"VO2max\", value=60). 4. Muestre un gráfico comparando al jugador seleccionado con el promedio del equipo.\nEstructura sugerida:\n# Pista\njugador_seleccionado = st.sidebar.selectbox(\"Elegir Jugador\", df['Nombre'])\ndatos_jugador = df[df['Nombre'] == jugador_seleccionado].iloc[0]\n\ncol1, col2 = st.columns(2)\ncol1.metric(\"Velocidad Máx\", f\"{datos_jugador['VelocidadMax_kmh']} km/h\")\ncol2.metric(\"VO2max\", datos_jugador['VO2max'])",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Web Apps con Streamlit: Tu Primer Dashboard</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html",
+    "href": "16_scouting_radar.html",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "",
+    "text": "16.1 1. El Problema del Scouting Tradicional\nEste capítulo introduce el scouting estadístico inspirado en Soccermatics. Aprenderás a crear Radar Plots (gráficos de araña) para comparar jugadores usando percentiles.\nLas estadísticas básicas (goles, pases completados, etc.) no dicen mucho por sí solas. Necesitamos:",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html#el-problema-del-scouting-tradicional",
+    "href": "16_scouting_radar.html#el-problema-del-scouting-tradicional",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "",
+    "text": "Contexto: ¿Son pases fáciles o difíciles?\nComparación: ¿Cómo se compara con otros jugadores de su posición?\nNormalización: ¿Ajustamos por minutos jugados o posesión del equipo?",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html#calcular-percentiles",
+    "href": "16_scouting_radar.html#calcular-percentiles",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "16.2 2. Calcular Percentiles",
+    "text": "16.2 2. Calcular Percentiles\nEl percentil nos dice qué porcentaje de jugadores está por debajo de un valor dado.\n\n\n\n\n\n\n\n[!TIP] Un percentil del 90% significa que el jugador está en el top 10% de esa métrica.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html#crear-el-radar-plot",
+    "href": "16_scouting_radar.html#crear-el-radar-plot",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "16.3 3. Crear el Radar Plot",
+    "text": "16.3 3. Crear el Radar Plot\nAhora creamos el gráfico de radar. Este tipo de visualización se ha popularizado gracias a StatsBomb y FBRef.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html#comparar-múltiples-jugadores",
+    "href": "16_scouting_radar.html#comparar-múltiples-jugadores",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "16.4 4. Comparar Múltiples Jugadores",
+    "text": "16.4 4. Comparar Múltiples Jugadores\nPodemos superponer varios jugadores para compararlos visualmente.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html#mini-proyecto-tu-informe-de-scouting",
+    "href": "16_scouting_radar.html#mini-proyecto-tu-informe-de-scouting",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "16.5 🏆 Mini-Proyecto: Tu Informe de Scouting",
+    "text": "16.5 🏆 Mini-Proyecto: Tu Informe de Scouting\n\n16.5.1 Pregunta 1: Ranking por Goles\n¿Cuáles son los 5 delanteros con más goles por 90 minutos? Muestra su nombre y valor.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    delanteros\n    .nlargest(5, 'Goles_p90')\n    [['Nombre', 'Goles_p90', 'xG_p90']]\n)\n\n\n\n\n\n16.5.2 Pregunta 2: Filtrar por Percentil\nEncuentra todos los delanteros que están en el top 20% (percentil &gt;= 80) en AMBAS métricas: Goles y xG.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndelanteros.query(\"Goles_p90_pct &gt;= 80 and xG_p90_pct &gt;= 80\")[['Nombre', 'Goles_p90_pct', 'xG_p90_pct']]\n\n\n\n\n\n16.5.3 Pregunta 3: Crea tu Propio Radar\nElige otro delantero del dataset y crea su radar plot.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\njugador_elegido = delanteros[delanteros['Nombre'] == 'Delantero_15'].iloc[0]\ncrear_radar(jugador_elegido, metricas_pct, etiquetas_bonitas, titulo=\"Radar: Delantero 15\")\nplt.show()",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "16_scouting_radar.html#resumen",
+    "href": "16_scouting_radar.html#resumen",
+    "title": "16  Scouting Estadístico: Radar Plots",
+    "section": "16.6 Resumen",
+    "text": "16.6 Resumen\n\n\n\n\n\n\n\nConcepto\nDescripción\n\n\n\n\nPercentil\nPosición relativa (0-100) respecto a otros jugadores\n\n\nNormalización p90\nEstadísticas ajustadas por 90 minutos jugados\n\n\nRadar Plot\nVisualización multidimensional para comparar perfiles\n\n\nContexto\nComparar con jugadores de la misma posición y liga",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Scouting Estadístico: Radar Plots</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html",
+    "href": "17_expected_threat.html",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "",
+    "text": "17.1 1. ¿Qué es Expected Threat?\nEl Expected Goals (xG) solo mide el valor de los tiros. Pero, ¿cómo valoramos un pase brillante que no termina en disparo? El Expected Threat (xT) resuelve este problema.\nxT responde a la pregunta:\nUn pase desde el centro del campo hacia el área aumenta el xT. Un pase hacia atrás lo disminuye.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#qué-es-expected-threat",
+    "href": "17_expected_threat.html#qué-es-expected-threat",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "",
+    "text": "“¿Cuánto aumenta o disminuye la probabilidad de marcar gol como resultado de una acción?”",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#visualizar-la-matriz-xt",
+    "href": "17_expected_threat.html#visualizar-la-matriz-xt",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "17.2 2. Visualizar la Matriz xT",
+    "text": "17.2 2. Visualizar la Matriz xT\nEsta visualización muestra el “valor” de tener el balón en cada zona del campo.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#calcular-el-xt-de-una-acción",
+    "href": "17_expected_threat.html#calcular-el-xt-de-una-acción",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "17.3 3. Calcular el xT de una Acción",
+    "text": "17.3 3. Calcular el xT de una Acción\nEl valor de una acción (pase, regate) es la diferencia entre el xT de la posición final y la inicial.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#aplicar-xt-a-datos-de-eventos",
+    "href": "17_expected_threat.html#aplicar-xt-a-datos-de-eventos",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "17.4 4. Aplicar xT a Datos de Eventos",
+    "text": "17.4 4. Aplicar xT a Datos de Eventos\nCalculamos el xT para cada pase en un dataset de eventos.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#ranking-de-jugadores-por-xt",
+    "href": "17_expected_threat.html#ranking-de-jugadores-por-xt",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "17.5 5. Ranking de Jugadores por xT",
+    "text": "17.5 5. Ranking de Jugadores por xT\n¿Quién añade más amenaza con sus pases?",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#mini-proyecto-analista-de-pases",
+    "href": "17_expected_threat.html#mini-proyecto-analista-de-pases",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "17.6 🏆 Mini-Proyecto: Analista de Pases",
+    "text": "17.6 🏆 Mini-Proyecto: Analista de Pases\n\n17.6.1 Pregunta 1: Los Mejores Pases\n¿Cuáles son los 5 pases con mayor xT añadido del partido? Muestra jugador, posiciones y valor.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npases.nlargest(5, 'xT_Añadido')[['Jugador', 'Minuto', 'X_Inicio', 'X_Fin', 'xT_Añadido']]\n\n\n\n\n\n17.6.2 Pregunta 2: xT por Zona del Campo\nDivide el campo en 3 zonas (Defensa: X&lt;35, Medio: 35-70, Ataque: &gt;70). ¿Desde qué zona se generan pases con mayor xT medio?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npases['Zona'] = pd.cut(pases['X_Inicio'], bins=[0, 35, 70, 105], labels=['Defensa', 'Medio', 'Ataque'])\npases.groupby('Zona')['xT_Añadido'].mean().sort_values(ascending=False)\n\n\n\n\n\n17.6.3 Pregunta 3: Visualizar Pases de Alto xT\nCrea un scatter plot de todos los pases, coloreando los de xT &gt; 0.05 de rojo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nfig, ax = plt.subplots(figsize=(12, 8))\n\n# Pases normales\nnormales = pases[pases['xT_Añadido'] &lt;= 0.05]\nax.scatter(normales['X_Inicio'], normales['Y_Inicio'], c='gray', alpha=0.3, s=20, label='Normal')\n\n# Pases de alto xT\nalto_xT = pases[pases['xT_Añadido'] &gt; 0.05]\nax.scatter(alto_xT['X_Inicio'], alto_xT['Y_Inicio'], c='red', s=50, label='Alto xT (&gt;0.05)')\n\nax.set_xlim(0, 105)\nax.set_ylim(0, 68)\nax.legend()\nax.set_title('Origen de Pases por xT')\nplt.show()",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "17_expected_threat.html#resumen",
+    "href": "17_expected_threat.html#resumen",
+    "title": "17  Valoración de Acciones: Expected Threat (xT)",
+    "section": "17.7 Resumen",
+    "text": "17.7 Resumen\n\n\n\n\n\n\n\nConcepto\nDescripción\n\n\n\n\nxG\nProbabilidad de marcar un tiro\n\n\nxT\nProbabilidad de marcar desde una zona del campo\n\n\nxT añadido\nDiferencia de xT entre posición final e inicial de una acción\n\n\nMatriz xT\nGrid que asigna valor a cada zona del campo",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Valoración de Acciones: Expected Threat (xT)</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html",
+    "href": "18_passing_networks.html",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "",
+    "text": "18.1 1. ¿Qué es una Passing Network?\nLas Passing Networks (redes de pases) visualizan cómo fluye el balón entre jugadores. Son una de las visualizaciones más icónicas del análisis de fútbol moderno.\nUna red de pases muestra: - Nodos: Jugadores, posicionados según su posición media en el campo - Aristas (líneas): Conexiones de pase entre jugadores - Grosor: Frecuencia de pases entre esa pareja - Tamaño del nodo: Participación del jugador (pases dados + recibidos)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html#calcular-la-matriz-de-pases",
+    "href": "18_passing_networks.html#calcular-la-matriz-de-pases",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "18.2 2. Calcular la Matriz de Pases",
+    "text": "18.2 2. Calcular la Matriz de Pases\nCreamos una matriz que cuenta cuántos pases hay entre cada par de jugadores.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html#calcular-participación-de-cada-jugador",
+    "href": "18_passing_networks.html#calcular-participación-de-cada-jugador",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "18.3 3. Calcular Participación de Cada Jugador",
+    "text": "18.3 3. Calcular Participación de Cada Jugador\nEl tamaño de cada nodo refleja la participación total (pases dados + recibidos).",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html#dibujar-la-passing-network",
+    "href": "18_passing_networks.html#dibujar-la-passing-network",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "18.4 4. Dibujar la Passing Network",
+    "text": "18.4 4. Dibujar la Passing Network\nAhora visualizamos la red sobre un campo de fútbol simplificado.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html#métricas-de-centralidad",
+    "href": "18_passing_networks.html#métricas-de-centralidad",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "18.5 5. Métricas de Centralidad",
+    "text": "18.5 5. Métricas de Centralidad\n¿Quién es el jugador más “central” en la red? Podemos calcular métricas de grafo.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html#mini-proyecto-análisis-de-red",
+    "href": "18_passing_networks.html#mini-proyecto-análisis-de-red",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "18.6 🏆 Mini-Proyecto: Análisis de Red",
+    "text": "18.6 🏆 Mini-Proyecto: Análisis de Red\n\n18.6.1 Pregunta 1: Las Conexiones Más Fuertes\n¿Cuál es la pareja de jugadores con más pases entre ellos? Muestra la dirección.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ntop_conexiones = (\n    pases\n    .groupby(['De_JugadorID', 'A_JugadorID'])\n    .size()\n    .nlargest(5)\n    .reset_index(name='Pases')\n)\n\n# Añadir nombres\ntop_conexiones = top_conexiones.merge(\n    jugadores[['JugadorID', 'Nombre']], left_on='De_JugadorID', right_on='JugadorID'\n).merge(\n    jugadores[['JugadorID', 'Nombre']], left_on='A_JugadorID', right_on='JugadorID', suffixes=('_De', '_A')\n)\nprint(top_conexiones[['Nombre_De', 'Nombre_A', 'Pases']])\n\n\n\n\n\n18.6.2 Pregunta 2: Distribución de Pases del Portero\n¿A qué jugadores pasó más el portero (GK)? Visualízalo con un bar chart.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\npases_gk = pases[pases['De_JugadorID'] == 1]  # GK tiene ID 1\ndistribucion = pases_gk.groupby('A_JugadorID').size()\n\n# Añadir nombres\ndistribucion.index = distribucion.index.map(dict(zip(jugadores['JugadorID'], jugadores['Nombre'])))\n\ndistribucion.sort_values().plot(kind='barh', color='steelblue')\nplt.xlabel('Pases del GK')\nplt.title('Distribución de Pases del Portero')\nplt.show()\n\n\n\n\n\n18.6.3 Pregunta 3: Red sin el Jugador Clave\n¿Cómo cambiaría la red si eliminamos al jugador más participativo? Crea la visualización.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Encontrar jugador más participativo\nmas_participativo = jugadores.nlargest(1, 'Participacion')['JugadorID'].values[0]\nprint(f\"Eliminando al jugador ID {mas_participativo}\")\n\n# Filtrar pases sin ese jugador\npases_sin = pases[(pases['De_JugadorID'] != mas_participativo) & \n                   (pases['A_JugadorID'] != mas_participativo)]\n\n# Recalcular matriz\nnueva_matriz = pases_sin.groupby(['De_JugadorID', 'A_JugadorID']).size().unstack(fill_value=0)\n\n# Recalcular participación\njugadores_copia = jugadores.copy()\njugadores_copia['Participacion'] = (\n    pases_sin.groupby('De_JugadorID').size().reindex(jugadores_copia['JugadorID']).fillna(0).values +\n    pases_sin.groupby('A_JugadorID').size().reindex(jugadores_copia['JugadorID']).fillna(0).values\n)\n\n# Dibujar (simplificado)\nprint(\"La red ahora tendría menos conexiones por el centro del campo.\")",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "18_passing_networks.html#resumen",
+    "href": "18_passing_networks.html#resumen",
+    "title": "18  Redes de Pases: Passing Networks",
+    "section": "18.7 Resumen",
+    "text": "18.7 Resumen\n\n\n\nConcepto\nDescripción\n\n\n\n\nNodo\nJugador en la red\n\n\nArista\nConexión de pases entre dos jugadores\n\n\nGrado\nNúmero de conexiones de un jugador\n\n\nCentralidad\nImportancia de un jugador en la red\n\n\nUmbral\nMínimo de pases para mostrar una conexión",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Redes de Pases: Passing Networks</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html",
+    "href": "19_pitch_control.html",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "",
+    "text": "19.1 1. Introducción: ¿Qué es el Control del Espacio?\nEl Pitch Control (control del espacio) es una de las métricas más avanzadas del fútbol moderno. Responde a la pregunta: ¿Qué equipo controla cada zona del campo en un momento dado?\nEste capítulo cubre: - Diagramas de Voronoi - Modelos de control espacial - Aplicaciones tácticas (pressing, transiciones)\nEn el fútbol moderno, el espacio es tan valioso como el balón. Un equipo que controla más espacio tiene más opciones de pase, más rutas de ataque y más facilidad para defender.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#introducción-qué-es-el-control-del-espacio",
+    "href": "19_pitch_control.html#introducción-qué-es-el-control-del-espacio",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "",
+    "text": "[!IMPORTANT] El pitch control no es solo estar cerca del balón. Es controlar las zonas donde el balón podría ir.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#diagramas-de-voronoi-la-base-del-pitch-control",
+    "href": "19_pitch_control.html#diagramas-de-voronoi-la-base-del-pitch-control",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "19.2 2. Diagramas de Voronoi: La Base del Pitch Control",
+    "text": "19.2 2. Diagramas de Voronoi: La Base del Pitch Control\nUn diagrama de Voronoi divide el espacio en regiones donde cada punto pertenece al jugador más cercano.\n\n19.2.1 2.1 Crear un Diagrama de Voronoi Básico\n\n\n\n\n\n\n\n\n19.2.2 2.2 Calcular Área Controlada por Equipo",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#pitch-control-dinámico-incorporar-velocidad",
+    "href": "19_pitch_control.html#pitch-control-dinámico-incorporar-velocidad",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "19.3 3. Pitch Control Dinámico: Incorporar Velocidad",
+    "text": "19.3 3. Pitch Control Dinámico: Incorporar Velocidad\nEl Voronoi básico asume que los jugadores están quietos. En realidad, debemos considerar: - Velocidad actual del jugador - Tiempo de reacción - Aceleración máxima\n\n19.3.1 3.1 Simular Velocidades\n\n\n\n\n\n\n\n\n19.3.2 3.2 Modelo de Tiempo de Llegada\n¿Cuánto tarda cada jugador en llegar a un punto dado?\n\n\n\n\n\n\n\n\n19.3.3 3.3 Mapa de Probabilidad de Control\nCreamos un mapa de calor donde cada celda muestra la probabilidad de que un equipo llegue primero.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#aplicaciones-tácticas",
+    "href": "19_pitch_control.html#aplicaciones-tácticas",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "19.4 4. Aplicaciones Tácticas",
+    "text": "19.4 4. Aplicaciones Tácticas\n\n19.4.1 4.1 Análisis de Pressing\n¿Qué tan bien presiona el equipo local en campo rival?\n\n\n\n\n\n\n\n\n19.4.2 4.2 Zonas de Peligro\n¿Qué zonas controla cada equipo cerca de portería?",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#visualización-avanzada-pitch-control-animado",
+    "href": "19_pitch_control.html#visualización-avanzada-pitch-control-animado",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "19.5 5. Visualización Avanzada: Pitch Control Animado",
+    "text": "19.5 5. Visualización Avanzada: Pitch Control Animado\nEn la práctica, el pitch control se calcula frame a frame para crear animaciones.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#mini-proyecto-análisis-de-pitch-control",
+    "href": "19_pitch_control.html#mini-proyecto-análisis-de-pitch-control",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "19.6 🏆 Mini-Proyecto: Análisis de Pitch Control",
+    "text": "19.6 🏆 Mini-Proyecto: Análisis de Pitch Control\n\n19.6.1 Pregunta 1: Mejor Opción de Pase\nEl jugador con balón quiere pasar. ¿A quién debería pasar para maximizar el control del espacio?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Posición actual del balón\nprint(f\"Balón en: ({balon['X']}, {balon['Y']})\")\n\n# Calcular control en la posición de cada compañero local\nopciones_pase = []\nfor _, jugador in equipo_local.iterrows():\n    if jugador['Nombre'] != 'GK':  # Excluir portero\n        control = calcular_probabilidad_control(todos_jugadores, jugador['X'], jugador['Y'])\n        opciones_pase.append({\n            'Jugador': jugador['Nombre'],\n            'X': jugador['X'],\n            'Y': jugador['Y'],\n            'Control': control\n        })\n\nopciones_df = pd.DataFrame(opciones_pase).sort_values('Control', ascending=False)\nprint(\"\\n🎯 Mejores opciones de pase:\")\nprint(opciones_df.head(5).round(3))\n\n\n\n\n\n19.6.2 Pregunta 2: Vulnerabilidad Defensiva\n¿En qué zona el equipo visitante tiene más control? Eso indica vulnerabilidad del equipo local.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Encontrar zonas donde el visitante domina (control local &lt; 0.4)\nzonas_vulnerables = []\n\nfor i, y in enumerate(y_grid):\n    for j, x in enumerate(x_grid):\n        if probabilidades[i, j] &lt; 0.4:\n            zonas_vulnerables.append({'X': x, 'Y': y, 'Control_Visitante': 1 - probabilidades[i, j]})\n\nif zonas_vulnerables:\n    vuln_df = pd.DataFrame(zonas_vulnerables).sort_values('Control_Visitante', ascending=False)\n    print(\"⚠️ Zonas más vulnerables (dominadas por visitante):\")\n    print(vuln_df.head(10).round(2))\nelse:\n    print(\"✅ No hay zonas críticas dominadas por el visitante\")\n\n\n\n\n\n19.6.3 Pregunta 3: Cambiar Formación\nSi el CM1 del equipo local se mueve de (45, 22) a (55, 30), ¿cómo cambia el control?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Copiar datos y modificar\njugadores_nueva_formacion = todos_jugadores.copy()\nidx_cm1 = jugadores_nueva_formacion[(jugadores_nueva_formacion['Nombre'] == 'CM1') & \n                                      (jugadores_nueva_formacion['Equipo'] == 'Local')].index[0]\njugadores_nueva_formacion.loc[idx_cm1, 'X'] = 55\njugadores_nueva_formacion.loc[idx_cm1, 'Y'] = 30\n\n# Calcular nuevo control\ncontrol_antes = probabilidades.mean()\n\nprobs_nueva = np.zeros((n_y, n_x))\nfor i, y in enumerate(y_grid):\n    for j, x in enumerate(x_grid):\n        probs_nueva[i, j] = calcular_probabilidad_control(jugadores_nueva_formacion, x, y, sigma=0.8)\n\ncontrol_despues = probs_nueva.mean()\n\nprint(f\"Control ANTES: {control_antes*100:.1f}%\")\nprint(f\"Control DESPUÉS: {control_despues*100:.1f}%\")\nprint(f\"Cambio: {(control_despues - control_antes)*100:+.1f}%\")",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "19_pitch_control.html#resumen",
+    "href": "19_pitch_control.html#resumen",
+    "title": "19  Pitch Control: Control del Espacio con Voronoi",
+    "section": "19.7 Resumen",
+    "text": "19.7 Resumen\n\n\n\nConcepto\nDescripción\n\n\n\n\nVoronoi\nDivide el espacio según el jugador más cercano\n\n\nPitch Control\nProbabilidad de que un equipo controle cada zona\n\n\nTiempo de llegada\nCuánto tarda un jugador en alcanzar un punto\n\n\nControl dinámico\nIncorpora velocidad y dirección de movimiento\n\n\nZonas de pressing\nAnálisis del control en campo rival\n\n\n\n\n[!TIP] El pitch control es fundamental para evaluar: - Calidad del pressing - Opciones de pase - Vulnerabilidades defensivas - Transiciones ataque-defensa",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Pitch Control: Control del Espacio con Voronoi</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html",
+    "href": "20_simulacion_partidos.html",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "",
+    "text": "20.1 1. La Aleatoriedad en el Fútbol\nEste capítulo explora cómo simular resultados de partidos de fútbol usando distribuciones de probabilidad. Entenderemos el papel fundamental de la aleatoriedad en el fútbol y cómo las simulaciones nos ayudan a predecir resultados.\nEl fútbol es uno de los deportes con mayor variabilidad en resultados. Un equipo “mejor” no siempre gana.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#la-aleatoriedad-en-el-fútbol",
+    "href": "20_simulacion_partidos.html#la-aleatoriedad-en-el-fútbol",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "",
+    "text": "[!IMPORTANT] En una liga de 38 partidos, un equipo con 60% de probabilidad de ganar cada partido puede terminar desde campeón hasta fuera de Champions.",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#modelo-de-poisson-para-goles",
+    "href": "20_simulacion_partidos.html#modelo-de-poisson-para-goles",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "20.2 2. Modelo de Poisson para Goles",
+    "text": "20.2 2. Modelo de Poisson para Goles\nLos goles de un equipo siguen aproximadamente una distribución de Poisson. Esto significa que si un equipo marca en promedio λ goles, la probabilidad de marcar exactamente k goles es:\n\\[P(X = k) = \\frac{\\lambda^k e^{-\\lambda}}{k!}\\]\n\n20.2.1 2.1 Visualizar la Distribución de Poisson\n\n\n\n\n\n\n\n\n20.2.2 2.2 Calcular Goles Esperados de un Partido",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#simular-un-partido",
+    "href": "20_simulacion_partidos.html#simular-un-partido",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "20.3 3. Simular un Partido",
+    "text": "20.3 3. Simular un Partido\n\n20.3.1 3.1 Generar un Resultado Aleatorio\n\n\n\n\n\n\n\n\n20.3.2 3.2 Simular Muchas Veces (Monte Carlo)\nPara obtener probabilidades precisas, simulamos miles de partidos.\n\n\n\n\n\n\n\n\n20.3.3 3.3 Matriz de Probabilidad de Resultados",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#simular-una-liga-completa",
+    "href": "20_simulacion_partidos.html#simular-una-liga-completa",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "20.4 4. Simular una Liga Completa",
+    "text": "20.4 4. Simular una Liga Completa\n\n20.4.1 4.1 Generar Calendario\n\n\n\n\n\n\n\n\n20.4.2 4.2 Simular una Temporada\n\n\n\n\n\n\n\n\n20.4.3 4.3 Simular Múltiples Temporadas\n¿Cuántas veces gana cada equipo la liga en 1000 simulaciones?",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#distribución-de-puntos-y-variabilidad",
+    "href": "20_simulacion_partidos.html#distribución-de-puntos-y-variabilidad",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "20.5 5. Distribución de Puntos y Variabilidad",
+    "text": "20.5 5. Distribución de Puntos y Variabilidad\n\n20.5.1 5.1 Histograma de Puntos del Campeón\n\n\n\n\n\n\n\n\n20.5.2 5.2 Comparar Variabilidad entre Equipos",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#mini-proyecto-tu-simulador-de-liga",
+    "href": "20_simulacion_partidos.html#mini-proyecto-tu-simulador-de-liga",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "20.6 🏆 Mini-Proyecto: Tu Simulador de Liga",
+    "text": "20.6 🏆 Mini-Proyecto: Tu Simulador de Liga\n\n20.6.1 Pregunta 1: Probabilidad de Descenso\nSimula 500 temporadas y calcula qué porcentaje de veces termina cada equipo en los últimos 3 puestos.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndef simular_descensos(calendario_df, equipos_df, n_temporadas=500):\n    descensos = {equipo: 0 for equipo in equipos_df['Equipo']}\n    \n    for _ in range(n_temporadas):\n        tabla = simular_temporada(calendario_df, equipos_df)\n        for i in range(-3, 0):  # Últimos 3\n            descensos[tabla.iloc[i]['Equipo']] += 1\n    \n    return {k: v/n_temporadas*100 for k, v in sorted(descensos.items(), key=lambda x: -x[1])}\n\nprob_descenso = simular_descensos(calendario, equipos, 500)\nprint(\"⬇️ Probabilidad de Descenso:\")\nfor equipo, prob in prob_descenso.items():\n    print(f\"   {equipo}: {prob:.1f}%\")\n\n\n\n\n\n20.6.2 Pregunta 2: Ajustar Parámetros\nSi el Atlético mejora su Ataque de 1.5 a 1.8, ¿cuántos títulos más ganaría en 500 simulaciones?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Modificar parámetros del Atlético\nequipos_mejorado = equipos.copy()\nequipos_mejorado.loc[equipos_mejorado['Equipo'] == 'Atlético', 'Ataque'] = 1.8\n\n# Simular con mejora\ntitulos_nuevo, _, _ = simular_n_temporadas(calendario, equipos_mejorado, 500)\n\nprint(\"Títulos del Atlético:\")\nprint(f\"   Original (Ataque=1.5): {titulos['Atlético']}\")\nprint(f\"   Mejorado (Ataque=1.8): {titulos_nuevo['Atlético']}\")\nprint(f\"   Diferencia: +{titulos_nuevo['Atlético'] - titulos['Atlético']}\")\n\n\n\n\n\n20.6.3 Pregunta 3: Partido Clave\nSimula Barcelona vs Atlético 5000 veces con ambos equipos como locales alternativamente. ¿Quién tiene ventaja?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Barcelona local\ngl_barca, gv_atleti = calcular_goles_esperados('Barcelona', 'Atlético', equipos)\nres_barca_local = simular_n_partidos(gl_barca, gv_atleti, 5000)\n\n# Atlético local\ngl_atleti, gv_barca = calcular_goles_esperados('Atlético', 'Barcelona', equipos)\nres_atleti_local = simular_n_partidos(gl_atleti, gv_barca, 5000)\n\nprint(\"Barcelona como LOCAL:\")\nprint(f\"   Victoria Barcelona: {res_barca_local['P_Local']*100:.1f}%\")\nprint(f\"   Empate: {res_barca_local['P_Empate']*100:.1f}%\")\nprint(f\"   Victoria Atlético: {res_barca_local['P_Visitante']*100:.1f}%\")\n\nprint(\"\\nAtlético como LOCAL:\")\nprint(f\"   Victoria Atlético: {res_atleti_local['P_Local']*100:.1f}%\")\nprint(f\"   Empate: {res_atleti_local['P_Empate']*100:.1f}%\")\nprint(f\"   Victoria Barcelona: {res_atleti_local['P_Visitante']*100:.1f}%\")",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  },
+  {
+    "objectID": "20_simulacion_partidos.html#resumen",
+    "href": "20_simulacion_partidos.html#resumen",
+    "title": "20  Simulación de Partidos: Predicción y Aleatoriedad",
+    "section": "20.7 Resumen",
+    "text": "20.7 Resumen\n\n\n\nConcepto\nDescripción\n\n\n\n\nDistribución Poisson\nModela el número de goles en un partido\n\n\nMonte Carlo\nSimular miles de veces para obtener probabilidades\n\n\nMatriz de resultados\nProbabilidad de cada marcador exacto\n\n\nVariabilidad\nEl mejor equipo no siempre gana la liga\n\n\nLocalía\nFactor que aumenta los goles esperados del local\n\n\n\n\n[!TIP] Las simulaciones son fundamentales para: - Casas de apuestas (calcular cuotas) - Analistas de clubes (planificar temporadas) - Periodistas (contextualizar resultados) - Fantasy managers (predecir rendimiento)",
+    "crumbs": [
+      "Análisis avanzado en fútbol",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Simulación de Partidos: Predicción y Aleatoriedad</span>"
+    ]
+  }
+]

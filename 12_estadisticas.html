@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>12&nbsp; Estadísticas Aplicadas al Deporte: Guía Completa – Pandas para Tidyversers: Edición Sports Science</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./13_apis_datos.html" rel="next">
+<link href="./11_visualizacion_avanzada.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f2c6d6e2b784ddc5de38779acc06f37d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/live-runtime/live-runtime.js" type="module"></script>
+<link href="site_libs/quarto-contrib/live-runtime/live-runtime.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_visualizacion_avanzada.html">Análisis avanzado en fútbol</a></li><li class="breadcrumb-item"><a href="./12_estadisticas.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estadísticas Aplicadas al Deporte: Guía Completa</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Pandas para Tidyversers: Edición Sports Science</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bienvenido</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Fundamentos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introducción: De Tibbles a DataFrames</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02_flujo_trabajo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">El Flujo de Trabajo Profesional: Method Chaining</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Manipulación de Datos</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03_verbos_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Verbos Básicos I: Selección, Filtrado y Ordenación</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04_verbos_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Verbos Básicos II: Transformación de Datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05_agregacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Agregación y Window Functions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Transformación y Combinación</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06_reshaping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Reshaping: Transformar la Forma de los Datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07_joins.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Joins: Combinando Múltiples Tablas</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Visualización y Producción</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08_visualizacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Visualización de Datos con Matplotlib</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09_missing_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Manejo de Datos Faltantes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10_rendimiento.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Rendimiento y Optimización</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Análisis avanzado en fútbol</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11_visualizacion_avanzada.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualización Avanzada para Fútbol</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12_estadisticas.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estadísticas Aplicadas al Deporte: Guía Completa</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13_apis_datos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">APIs y Fuentes de Datos</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14_machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Machine Learning: Clustering y xG</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./15_streamlit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Web Apps con Streamlit: Tu Primer Dashboard</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./16_scouting_radar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Scouting Estadístico: Radar Plots</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./17_expected_threat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Valoración de Acciones: Expected Threat (xT)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./18_passing_networks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Redes de Pases: Passing Networks</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./19_pitch_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Pitch Control: Control del Espacio con Voronoi</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./20_simulacion_partidos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Simulación de Partidos: Predicción y Aleatoriedad</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introducción-por-qué-estadística-en-deporte" id="toc-introducción-por-qué-estadística-en-deporte" class="nav-link active" data-scroll-target="#introducción-por-qué-estadística-en-deporte"><span class="header-section-number">12.1</span> Introducción: ¿Por qué Estadística en Deporte?</a></li>
+  <li><a href="#estadística-descriptiva-conoce-tus-datos" id="toc-estadística-descriptiva-conoce-tus-datos" class="nav-link" data-scroll-target="#estadística-descriptiva-conoce-tus-datos"><span class="header-section-number">12.2</span> 1. Estadística Descriptiva: Conoce Tus Datos</a>
+  <ul class="collapse">
+  <li><a href="#medidas-de-tendencia-central" id="toc-medidas-de-tendencia-central" class="nav-link" data-scroll-target="#medidas-de-tendencia-central"><span class="header-section-number">12.2.1</span> 1.1 Medidas de Tendencia Central</a></li>
+  <li><a href="#visualización-de-distribuciones" id="toc-visualización-de-distribuciones" class="nav-link" data-scroll-target="#visualización-de-distribuciones"><span class="header-section-number">12.2.2</span> 1.2 Visualización de Distribuciones</a></li>
+  <li><a href="#detectar-outliers-con-iqr" id="toc-detectar-outliers-con-iqr" class="nav-link" data-scroll-target="#detectar-outliers-con-iqr"><span class="header-section-number">12.2.3</span> 1.3 Detectar Outliers con IQR</a></li>
+  </ul></li>
+  <li><a href="#correlación-midiendo-relaciones" id="toc-correlación-midiendo-relaciones" class="nav-link" data-scroll-target="#correlación-midiendo-relaciones"><span class="header-section-number">12.3</span> 2. Correlación: Midiendo Relaciones</a>
+  <ul class="collapse">
+  <li><a href="#correlación-de-pearson-variables-continuas" id="toc-correlación-de-pearson-variables-continuas" class="nav-link" data-scroll-target="#correlación-de-pearson-variables-continuas"><span class="header-section-number">12.3.1</span> 2.1 Correlación de Pearson (Variables Continuas)</a></li>
+  <li><a href="#correlación-de-spearman-variables-ordinales-o-no-lineales" id="toc-correlación-de-spearman-variables-ordinales-o-no-lineales" class="nav-link" data-scroll-target="#correlación-de-spearman-variables-ordinales-o-no-lineales"><span class="header-section-number">12.3.2</span> 2.2 Correlación de Spearman (Variables Ordinales o No Lineales)</a></li>
+  <li><a href="#matriz-de-correlación-completa" id="toc-matriz-de-correlación-completa" class="nav-link" data-scroll-target="#matriz-de-correlación-completa"><span class="header-section-number">12.3.3</span> 2.3 Matriz de Correlación Completa</a></li>
+  <li><a href="#práctica-2.1-análisis-de-correlación" id="toc-práctica-2.1-análisis-de-correlación" class="nav-link" data-scroll-target="#práctica-2.1-análisis-de-correlación"><span class="header-section-number">12.3.4</span> 🧠 Práctica 2.1: Análisis de Correlación</a></li>
+  </ul></li>
+  <li><a href="#tests-de-hipótesis-comparando-grupos" id="toc-tests-de-hipótesis-comparando-grupos" class="nav-link" data-scroll-target="#tests-de-hipótesis-comparando-grupos"><span class="header-section-number">12.4</span> 3. Tests de Hipótesis: Comparando Grupos</a>
+  <ul class="collapse">
+  <li><a href="#conceptos-fundamentales" id="toc-conceptos-fundamentales" class="nav-link" data-scroll-target="#conceptos-fundamentales"><span class="header-section-number">12.4.1</span> 3.1 Conceptos Fundamentales</a></li>
+  <li><a href="#t-test-comparar-2-grupos" id="toc-t-test-comparar-2-grupos" class="nav-link" data-scroll-target="#t-test-comparar-2-grupos"><span class="header-section-number">12.4.2</span> 3.2 T-Test: Comparar 2 Grupos</a></li>
+  <li><a href="#tamaño-del-efecto-cohens-d" id="toc-tamaño-del-efecto-cohens-d" class="nav-link" data-scroll-target="#tamaño-del-efecto-cohens-d"><span class="header-section-number">12.4.3</span> 3.3 Tamaño del Efecto (Cohen’s d)</a></li>
+  <li><a href="#mann-whitney-u-alternativa-no-paramétrica" id="toc-mann-whitney-u-alternativa-no-paramétrica" class="nav-link" data-scroll-target="#mann-whitney-u-alternativa-no-paramétrica"><span class="header-section-number">12.4.4</span> 3.4 Mann-Whitney U: Alternativa No Paramétrica</a></li>
+  <li><a href="#anova-comparar-3-grupos" id="toc-anova-comparar-3-grupos" class="nav-link" data-scroll-target="#anova-comparar-3-grupos"><span class="header-section-number">12.4.5</span> 3.5 ANOVA: Comparar 3+ Grupos</a></li>
+  <li><a href="#chi-cuadrado-variables-categóricas" id="toc-chi-cuadrado-variables-categóricas" class="nav-link" data-scroll-target="#chi-cuadrado-variables-categóricas"><span class="header-section-number">12.4.6</span> 3.6 Chi-Cuadrado: Variables Categóricas</a></li>
+  <li><a href="#práctica-3.1-comparación-de-grupos" id="toc-práctica-3.1-comparación-de-grupos" class="nav-link" data-scroll-target="#práctica-3.1-comparación-de-grupos"><span class="header-section-number">12.4.7</span> 🧠 Práctica 3.1: Comparación de Grupos</a></li>
+  </ul></li>
+  <li><a href="#regresión-lineal-predicción" id="toc-regresión-lineal-predicción" class="nav-link" data-scroll-target="#regresión-lineal-predicción"><span class="header-section-number">12.5</span> 4. Regresión Lineal: Predicción</a>
+  <ul class="collapse">
+  <li><a href="#regresión-simple" id="toc-regresión-simple" class="nav-link" data-scroll-target="#regresión-simple"><span class="header-section-number">12.5.1</span> 4.1 Regresión Simple</a></li>
+  <li><a href="#visualización-con-intervalos-de-confianza" id="toc-visualización-con-intervalos-de-confianza" class="nav-link" data-scroll-target="#visualización-con-intervalos-de-confianza"><span class="header-section-number">12.5.2</span> 4.2 Visualización con Intervalos de Confianza</a></li>
+  <li><a href="#predicción-con-nuevos-datos" id="toc-predicción-con-nuevos-datos" class="nav-link" data-scroll-target="#predicción-con-nuevos-datos"><span class="header-section-number">12.5.3</span> 4.3 Predicción con Nuevos Datos</a></li>
+  <li><a href="#análisis-de-residuos" id="toc-análisis-de-residuos" class="nav-link" data-scroll-target="#análisis-de-residuos"><span class="header-section-number">12.5.4</span> 4.4 Análisis de Residuos</a></li>
+  <li><a href="#práctica-4.1-tu-propio-modelo" id="toc-práctica-4.1-tu-propio-modelo" class="nav-link" data-scroll-target="#práctica-4.1-tu-propio-modelo"><span class="header-section-number">12.5.5</span> 🧠 Práctica 4.1: Tu Propio Modelo</a></li>
+  </ul></li>
+  <li><a href="#expected-goals-xg-modelo-completo" id="toc-expected-goals-xg-modelo-completo" class="nav-link" data-scroll-target="#expected-goals-xg-modelo-completo"><span class="header-section-number">12.6</span> 5. Expected Goals (xG): Modelo Completo</a>
+  <ul class="collapse">
+  <li><a href="#análisis-exploratorio-de-tiros" id="toc-análisis-exploratorio-de-tiros" class="nav-link" data-scroll-target="#análisis-exploratorio-de-tiros"><span class="header-section-number">12.6.1</span> 5.1 Análisis Exploratorio de Tiros</a></li>
+  <li><a href="#probabilidad-de-gol-por-distancia" id="toc-probabilidad-de-gol-por-distancia" class="nav-link" data-scroll-target="#probabilidad-de-gol-por-distancia"><span class="header-section-number">12.6.2</span> 5.2 Probabilidad de Gol por Distancia</a></li>
+  <li><a href="#modelo-xg-con-regresión-logística" id="toc-modelo-xg-con-regresión-logística" class="nav-link" data-scroll-target="#modelo-xg-con-regresión-logística"><span class="header-section-number">12.6.3</span> 5.3 Modelo xG con Regresión Logística</a></li>
+  <li><a href="#validación-del-modelo-xg" id="toc-validación-del-modelo-xg" class="nav-link" data-scroll-target="#validación-del-modelo-xg"><span class="header-section-number">12.6.4</span> 5.4 Validación del Modelo xG</a></li>
+  <li><a href="#práctica-5.1-análisis-de-xg" id="toc-práctica-5.1-análisis-de-xg" class="nav-link" data-scroll-target="#práctica-5.1-análisis-de-xg"><span class="header-section-number">12.6.5</span> 🧠 Práctica 5.1: Análisis de xG</a></li>
+  </ul></li>
+  <li><a href="#mini-proyecto-final-análisis-estadístico-completo" id="toc-mini-proyecto-final-análisis-estadístico-completo" class="nav-link" data-scroll-target="#mini-proyecto-final-análisis-estadístico-completo"><span class="header-section-number">12.7</span> 🏆 Mini-Proyecto Final: Análisis Estadístico Completo</a>
+  <ul class="collapse">
+  <li><a href="#pregunta-1-perfil-físico-por-posición" id="toc-pregunta-1-perfil-físico-por-posición" class="nav-link" data-scroll-target="#pregunta-1-perfil-físico-por-posición"><span class="header-section-number">12.7.1</span> Pregunta 1: Perfil Físico por Posición</a></li>
+  <li><a href="#pregunta-2-predicción-de-lesiones" id="toc-pregunta-2-predicción-de-lesiones" class="nav-link" data-scroll-target="#pregunta-2-predicción-de-lesiones"><span class="header-section-number">12.7.2</span> Pregunta 2: Predicción de Lesiones</a></li>
+  <li><a href="#pregunta-3-modelo-predictivo" id="toc-pregunta-3-modelo-predictivo" class="nav-link" data-scroll-target="#pregunta-3-modelo-predictivo"><span class="header-section-number">12.7.3</span> Pregunta 3: Modelo Predictivo</a></li>
+  </ul></li>
+  <li><a href="#resumen-del-capítulo" id="toc-resumen-del-capítulo" class="nav-link" data-scroll-target="#resumen-del-capítulo"><span class="header-section-number">12.8</span> Resumen del Capítulo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./11_visualizacion_avanzada.html">Análisis avanzado en fútbol</a></li><li class="breadcrumb-item"><a href="./12_estadisticas.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estadísticas Aplicadas al Deporte: Guía Completa</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Estadísticas Aplicadas al Deporte: Guía Completa</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Este capítulo es una guía exhaustiva de estadística aplicada al análisis deportivo. Cubrimos desde conceptos fundamentales hasta técnicas avanzadas usadas por analistas profesionales.</p>
+<section id="introducción-por-qué-estadística-en-deporte" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="introducción-por-qué-estadística-en-deporte"><span class="header-section-number">12.1</span> Introducción: ¿Por qué Estadística en Deporte?</h2>
+<p>La estadística en el deporte nos permite:</p>
+<ol type="1">
+<li><strong>Medir</strong> el rendimiento de forma objetiva</li>
+<li><strong>Comparar</strong> jugadores y equipos con rigor</li>
+<li><strong>Predecir</strong> resultados y rendimiento futuro</li>
+<li><strong>Identificar</strong> patrones ocultos en los datos</li>
+<li><strong>Tomar decisiones</strong> basadas en evidencia, no en intuición</li>
+</ol>
+<blockquote class="blockquote">
+<p>[!IMPORTANT] La diferencia entre un buen analista y uno mediocre es saber <strong>cuándo</strong> usar cada técnica y <strong>cómo interpretar</strong> los resultados correctamente.</p>
+</blockquote>
+<div>
+<div id="pyodide-1" class="exercise-cell">
+
+</div>
+<script type="pyodide-1-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiaW1wb3J0IHBhbmRhcyBhcyBwZFxuaW1wb3J0IG51bXB5IGFzIG5wXG5pbXBvcnQgbWF0cGxvdGxpYi5weXBsb3QgYXMgcGx0XG5mcm9tIHNjaXB5IGltcG9ydCBzdGF0c1xuZnJvbSBzY2lweS5zdGF0cyBpbXBvcnQgcGVhcnNvbnIsIHNwZWFybWFuciwgbGlucmVncmVzcywgdHRlc3RfaW5kLCBtYW5ud2hpdG5leXUsIGZfb25ld2F5LCBjaGkyX2NvbnRpbmdlbmN5XG5cbiMgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiMgREFUQVNFVFMgQ09NUExFVE9TIFBBUkEgQU7DgUxJU0lTIEVTVEFEw41TVElDT1xuIyA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxubnAucmFuZG9tLnNlZWQoNDIpXG5cbiMgMS4gRGF0YXNldCBkZSBhdGxldGFzIGNvbiBtw6l0cmljYXMgZGUgcmVuZGltaWVudG9cbnBvc2ljaW9uZXMgPSBbJ1BvcnRlcm8nLCAnRGVmZW5zYScsICdNZWRpb2NlbnRybycsICdFeHRyZW1vJywgJ0RlbGFudGVybyddXG5uX2F0bGV0YXMgPSA1MFxuXG5hdGxldGFzID0gcGQuRGF0YUZyYW1lKHtcbiAgICAnSnVnYWRvcklEJzogW2YnQVRMX3tpOjAzZH0nIGZvciBpIGluIHJhbmdlKDEsIG5fYXRsZXRhcyArIDEpXSxcbiAgICAnTm9tYnJlJzogW2YnSnVnYWRvcl97aX0nIGZvciBpIGluIHJhbmdlKDEsIG5fYXRsZXRhcyArIDEpXSxcbiAgICAnUG9zaWNpb24nOiBucC5yYW5kb20uY2hvaWNlKHBvc2ljaW9uZXMsIG5fYXRsZXRhcyksXG4gICAgJ0VkYWQnOiBucC5yYW5kb20ucmFuZGludCgxOCwgMzYsIG5fYXRsZXRhcyksXG4gICAgJ0FsdHVyYV9jbSc6IG5wLnJhbmRvbS5yYW5kaW50KDE2NSwgMjAwLCBuX2F0bGV0YXMpLFxuICAgICdQZXNvX2tnJzogbnAucmFuZG9tLnJhbmRpbnQoNjAsIDk1LCBuX2F0bGV0YXMpLFxuICAgICdWTzJtYXgnOiBucC5yYW5kb20udW5pZm9ybSg0MiwgNjgsIG5fYXRsZXRhcyksXG4gICAgJ0ZDX01heCc6IG5wLnJhbmRvbS5yYW5kaW50KDE3NSwgMjA1LCBuX2F0bGV0YXMpLFxuICAgICdEaXN0YW5jaWFfUGFydGlkb19tJzogbnAucmFuZG9tLnJhbmRpbnQoNzUwMCwgMTMwMDAsIG5fYXRsZXRhcyksXG4gICAgJ0hTUl9QYXJ0aWRvX20nOiBucC5yYW5kb20ucmFuZGludCgyMDAsIDEyMDAsIG5fYXRsZXRhcyksXG4gICAgJ1NwcmludF9tJzogbnAucmFuZG9tLnJhbmRpbnQoMTAwLCA1MDAsIG5fYXRsZXRhcyksXG4gICAgJ0FjZWxlcmFjaW9uZXMnOiBucC5yYW5kb20ucmFuZGludCgzMCwgMTIwLCBuX2F0bGV0YXMpLFxuICAgICdHb2xlc19UZW1wb3JhZGEnOiBucC5yYW5kb20ucmFuZGludCgwLCAyNSwgbl9hdGxldGFzKSxcbiAgICAnQXNpc3RlbmNpYXNfVGVtcG9yYWRhJzogbnAucmFuZG9tLnJhbmRpbnQoMCwgMTgsIG5fYXRsZXRhcyksXG4gICAgJ0xlc2lvbmVzX0hpc3RvcmlhbCc6IG5wLnJhbmRvbS5yYW5kaW50KDAsIDgsIG5fYXRsZXRhcylcbn0pXG5cbiMgQWp1c3RhciBkYXRvcyBwYXJhIHF1ZSBzZWFuIG3DoXMgcmVhbGlzdGFzIHBvciBwb3NpY2nDs25cbmZvciBpZHgsIHJvdyBpbiBhdGxldGFzLml0ZXJyb3dzKCk6XG4gICAgaWYgcm93WydQb3NpY2lvbiddID09ICdQb3J0ZXJvJzpcbiAgICAgICAgYXRsZXRhcy5sb2NbaWR4LCAnRGlzdGFuY2lhX1BhcnRpZG9fbSddID0gbnAucmFuZG9tLnJhbmRpbnQoNTAwMCwgNzAwMClcbiAgICAgICAgYXRsZXRhcy5sb2NbaWR4LCAnSFNSX1BhcnRpZG9fbSddID0gbnAucmFuZG9tLnJhbmRpbnQoNTAsIDIwMClcbiAgICAgICAgYXRsZXRhcy5sb2NbaWR4LCAnVk8ybWF4J10gPSBucC5yYW5kb20udW5pZm9ybSg0MiwgNTIpXG4gICAgZWxpZiByb3dbJ1Bvc2ljaW9uJ10gPT0gJ01lZGlvY2VudHJvJzpcbiAgICAgICAgYXRsZXRhcy5sb2NbaWR4LCAnRGlzdGFuY2lhX1BhcnRpZG9fbSddID0gbnAucmFuZG9tLnJhbmRpbnQoMTA1MDAsIDEzMDAwKVxuICAgICAgICBhdGxldGFzLmxvY1tpZHgsICdWTzJtYXgnXSA9IG5wLnJhbmRvbS51bmlmb3JtKDU1LCA2OClcbiAgICBlbGlmIHJvd1snUG9zaWNpb24nXSA9PSAnRGVsYW50ZXJvJzpcbiAgICAgICAgYXRsZXRhcy5sb2NbaWR4LCAnU3ByaW50X20nXSA9IG5wLnJhbmRvbS5yYW5kaW50KDMwMCwgNTAwKVxuICAgICAgICBhdGxldGFzLmxvY1tpZHgsICdHb2xlc19UZW1wb3JhZGEnXSA9IG5wLnJhbmRvbS5yYW5kaW50KDUsIDI1KVxuXG4jIEhhY2VyIHF1ZSBWTzJtYXggY29ycmVsYWNpb25lIGNvbiBEaXN0YW5jaWFcbmF0bGV0YXNbJ0Rpc3RhbmNpYV9QYXJ0aWRvX20nXSA9IChcbiAgICBhdGxldGFzWydWTzJtYXgnXSAqIDE1MCArIFxuICAgIG5wLnJhbmRvbS5ub3JtYWwoMCwgODAwLCBuX2F0bGV0YXMpXG4pLmFzdHlwZShpbnQpLmNsaXAoNTAwMCwgMTQwMDApXG5cbiMgMi4gRGF0YXNldCBkZSB0aXJvcyBwYXJhIG1vZGVsb3MgeEcgKG3DoXMgZ3JhbmRlIHkgZGV0YWxsYWRvKVxubl90aXJvcyA9IDUwMFxudGlyb3MgPSBwZC5EYXRhRnJhbWUoe1xuICAgICdUaXJvSUQnOiByYW5nZSgxLCBuX3Rpcm9zICsgMSksXG4gICAgJ1BhcnRpZG9JRCc6IG5wLnJhbmRvbS5yYW5kaW50KDEsIDUxLCBuX3Rpcm9zKSxcbiAgICAnSnVnYWRvcklEJzogbnAucmFuZG9tLmNob2ljZShhdGxldGFzWydKdWdhZG9ySUQnXS52YWx1ZXMsIG5fdGlyb3MpLFxuICAgICdNaW51dG8nOiBucC5yYW5kb20ucmFuZGludCgxLCA5MSwgbl90aXJvcyksXG4gICAgJ0Rpc3RhbmNpYV9tJzogbnAucmFuZG9tLnVuaWZvcm0oMywgNDAsIG5fdGlyb3MpLFxuICAgICdBbmd1bG9fZ3JhZG9zJzogbnAucmFuZG9tLnVuaWZvcm0oMywgODUsIG5fdGlyb3MpLFxuICAgICdDYWJlemEnOiBucC5yYW5kb20uY2hvaWNlKFswLCAxXSwgbl90aXJvcywgcD1bMC44MiwgMC4xOF0pLFxuICAgICdQcmVzaW9uRGVmZW5zaXZhJzogbnAucmFuZG9tLmNob2ljZShbJ0JhamEnLCAnTWVkaWEnLCAnQWx0YSddLCBuX3Rpcm9zLCBwPVswLjI1LCAwLjUwLCAwLjI1XSksXG4gICAgJ0NvbnRyYWF0YXF1ZSc6IG5wLnJhbmRvbS5jaG9pY2UoWzAsIDFdLCBuX3Rpcm9zLCBwPVswLjg1LCAwLjE1XSksXG4gICAgJ1BlbmFsdGknOiBucC5yYW5kb20uY2hvaWNlKFswLCAxXSwgbl90aXJvcywgcD1bMC45NSwgMC4wNV0pXG59KVxuXG4jIENhbGN1bGFyIHByb2JhYmlsaWRhZCByZWFsIGRlIGdvbCBwYXJhIHNpbXVsYXIgZXRpcXVldGFzXG5kZWYgY2FsY3VsYXJfcHJvYl9nb2wocm93KTpcbiAgICBiYXNlID0gMC4zNVxuICAgICMgRGlzdGFuY2lhOiBjYWRhIG1ldHJvIHJlZHVjZSBwcm9iYWJpbGlkYWRcbiAgICBkaXN0X2VmZmVjdCA9IC0wLjAxMiAqIHJvd1snRGlzdGFuY2lhX20nXVxuICAgICMgw4FuZ3VsbzogbWF5b3Igw6FuZ3VsbyA9IG1lam9yIG9wb3J0dW5pZGFkXG4gICAgYW5nX2VmZmVjdCA9IDAuMDAzICogcm93WydBbmd1bG9fZ3JhZG9zJ11cbiAgICAjIENhYmV6YTogbGlnZXJhbWVudGUgbcOhcyBkaWbDrWNpbFxuICAgIGhlYWRfZWZmZWN0ID0gLTAuMDggaWYgcm93WydDYWJlemEnXSA9PSAxIGVsc2UgMFxuICAgICMgUHJlc2nDs24gZGVmZW5zaXZhXG4gICAgcHJlc3NfZWZmZWN0ID0geydCYWphJzogMC4wNSwgJ01lZGlhJzogMCwgJ0FsdGEnOiAtMC4wOH1bcm93WydQcmVzaW9uRGVmZW5zaXZhJ11dXG4gICAgIyBDb250cmFhdGFxdWU6IG1lam9yIG9wb3J0dW5pZGFkXG4gICAgY291bnRlcl9lZmZlY3QgPSAwLjEwIGlmIHJvd1snQ29udHJhYXRhcXVlJ10gPT0gMSBlbHNlIDBcbiAgICAjIFBlbmFsdGk6IG11eSBhbHRhIHByb2JhYmlsaWRhZFxuICAgIHBlbmFsdHlfZWZmZWN0ID0gMC40NSBpZiByb3dbJ1BlbmFsdGknXSA9PSAxIGVsc2UgMFxuICAgIFxuICAgIHByb2IgPSBiYXNlICsgZGlzdF9lZmZlY3QgKyBhbmdfZWZmZWN0ICsgaGVhZF9lZmZlY3QgKyBwcmVzc19lZmZlY3QgKyBjb3VudGVyX2VmZmVjdCArIHBlbmFsdHlfZWZmZWN0XG4gICAgcmV0dXJuIG5wLmNsaXAocHJvYiArIG5wLnJhbmRvbS5ub3JtYWwoMCwgMC4wMyksIDAuMDIsIDAuOTUpXG5cbnRpcm9zWyd4R19SZWFsJ10gPSB0aXJvcy5hcHBseShjYWxjdWxhcl9wcm9iX2dvbCwgYXhpcz0xKVxudGlyb3NbJ0dvbCddID0gKG5wLnJhbmRvbS5yYW5kb20obl90aXJvcykgPCB0aXJvc1sneEdfUmVhbCddKS5hc3R5cGUoaW50KVxuXG5wcmludChcIuKchSBEYXRvcyBjYXJnYWRvcyBwYXJhIGFuw6FsaXNpcyBlc3RhZMOtc3RpY29cIilcbnByaW50KGZcIiAgIEF0bGV0YXM6IHtsZW4oYXRsZXRhcyl9IGp1Z2Fkb3JlcyBlbiB7YXRsZXRhc1snUG9zaWNpb24nXS5udW5pcXVlKCl9IHBvc2ljaW9uZXNcIilcbnByaW50KGZcIiAgIFRpcm9zOiB7bGVuKHRpcm9zKX0gcmVnaXN0cm9zLCB7dGlyb3NbJ0dvbCddLnN1bSgpfSBnb2xlcyAoe3Rpcm9zWydHb2wnXS5tZWFuKCkqMTAwOi4xZn0lKVwiKSJ9
+</script>
+</div>
+<hr>
+</section>
+<section id="estadística-descriptiva-conoce-tus-datos" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="estadística-descriptiva-conoce-tus-datos"><span class="header-section-number">12.2</span> 1. Estadística Descriptiva: Conoce Tus Datos</h2>
+<p>Antes de cualquier análisis, debemos entender la distribución de nuestros datos.</p>
+<section id="medidas-de-tendencia-central" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" class="anchored" data-anchor-id="medidas-de-tendencia-central"><span class="header-section-number">12.2.1</span> 1.1 Medidas de Tendencia Central</h3>
+<div>
+<div id="pyodide-2" class="exercise-cell">
+
+</div>
+<script type="pyodide-2-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBDYWxjdWxhciBlc3RhZMOtc3RpY2FzIGRlc2NyaXB0aXZhcyBwYXJhIFZPMm1heCBwb3IgcG9zaWNpw7NuXG5kZXNjX3ZvMiA9IGF0bGV0YXMuZ3JvdXBieSgnUG9zaWNpb24nKVsnVk8ybWF4J10uYWdnKFsnY291bnQnLCAnbWVhbicsICdtZWRpYW4nLCAnc3RkJywgJ21pbicsICdtYXgnXSlcbmRlc2Nfdm8yLmNvbHVtbnMgPSBbJ04nLCAnTWVkaWEnLCAnTWVkaWFuYScsICdEZXN2LlN0ZCcsICdNw61uJywgJ03DoXgnXVxuXG5wcmludChcIvCfk4ogRXN0YWTDrXN0aWNhcyBEZXNjcmlwdGl2YXMgZGUgVk8ybWF4IHBvciBQb3NpY2nDs246XCIpXG5wcmludChkZXNjX3ZvMi5yb3VuZCgxKSkifQ==
+</script>
+</div>
+</section>
+<section id="visualización-de-distribuciones" class="level3" data-number="12.2.2">
+<h3 data-number="12.2.2" class="anchored" data-anchor-id="visualización-de-distribuciones"><span class="header-section-number">12.2.2</span> 1.2 Visualización de Distribuciones</h3>
+<div>
+<div id="pyodide-3" class="exercise-cell">
+
+</div>
+<script type="pyodide-3-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZmlnLCBheGVzID0gcGx0LnN1YnBsb3RzKDIsIDIsIGZpZ3NpemU9KDE0LCAxMCkpXG5cbiMgMS4gSGlzdG9ncmFtYSBkZSBWTzJtYXhcbmF4ZXNbMCwgMF0uaGlzdChhdGxldGFzWydWTzJtYXgnXSwgYmlucz0xNSwgZWRnZWNvbG9yPSd3aGl0ZScsIGNvbG9yPSdzdGVlbGJsdWUnLCBhbHBoYT0wLjcpXG5heGVzWzAsIDBdLmF4dmxpbmUoYXRsZXRhc1snVk8ybWF4J10ubWVhbigpLCBjb2xvcj0ncmVkJywgbGluZXN0eWxlPSctLScsIGxhYmVsPWYnTWVkaWE6IHthdGxldGFzW1wiVk8ybWF4XCJdLm1lYW4oKTouMWZ9JylcbmF4ZXNbMCwgMF0uYXh2bGluZShhdGxldGFzWydWTzJtYXgnXS5tZWRpYW4oKSwgY29sb3I9J2dyZWVuJywgbGluZXN0eWxlPSctLScsIGxhYmVsPWYnTWVkaWFuYToge2F0bGV0YXNbXCJWTzJtYXhcIl0ubWVkaWFuKCk6LjFmfScpXG5heGVzWzAsIDBdLnNldF94bGFiZWwoJ1ZPMm1heCAobWwva2cvbWluKScpXG5heGVzWzAsIDBdLnNldF95bGFiZWwoJ0ZyZWN1ZW5jaWEnKVxuYXhlc1swLCAwXS5zZXRfdGl0bGUoJ0Rpc3RyaWJ1Y2nDs24gZGUgVk8ybWF4JylcbmF4ZXNbMCwgMF0ubGVnZW5kKClcblxuIyAyLiBCb3hwbG90IHBvciBwb3NpY2nDs25cbmF0bGV0YXMuYm94cGxvdChjb2x1bW49J0Rpc3RhbmNpYV9QYXJ0aWRvX20nLCBieT0nUG9zaWNpb24nLCBheD1heGVzWzAsIDFdKVxuYXhlc1swLCAxXS5zZXRfeGxhYmVsKCdQb3NpY2nDs24nKVxuYXhlc1swLCAxXS5zZXRfeWxhYmVsKCdEaXN0YW5jaWEgKG0pJylcbmF4ZXNbMCwgMV0uc2V0X3RpdGxlKCdEaXN0YW5jaWEgcG9yIFBvc2ljacOzbicpXG5wbHQuc3VwdGl0bGUoJycpICAjIEVsaW1pbmFyIHTDrXR1bG8gYXV0b23DoXRpY29cblxuIyAzLiBTY2F0dGVyIGNvbiB0ZW5kZW5jaWFcbmF4ZXNbMSwgMF0uc2NhdHRlcihhdGxldGFzWydWTzJtYXgnXSwgYXRsZXRhc1snRGlzdGFuY2lhX1BhcnRpZG9fbSddLCBcbiAgICAgICAgICAgICAgICAgICBjPSdzdGVlbGJsdWUnLCBzPTUwLCBhbHBoYT0wLjYsIGVkZ2Vjb2xvcnM9J3doaXRlJylcbiMgTMOtbmVhIGRlIHRlbmRlbmNpYVxueiA9IG5wLnBvbHlmaXQoYXRsZXRhc1snVk8ybWF4J10sIGF0bGV0YXNbJ0Rpc3RhbmNpYV9QYXJ0aWRvX20nXSwgMSlcbnAgPSBucC5wb2x5MWQoeilcbmF4ZXNbMSwgMF0ucGxvdChhdGxldGFzWydWTzJtYXgnXS5zb3J0X3ZhbHVlcygpLCBwKGF0bGV0YXNbJ1ZPMm1heCddLnNvcnRfdmFsdWVzKCkpLCBcbiAgICAgICAgICAgICAgICAnci0tJywgbGluZXdpZHRoPTIsIGxhYmVsPSdUZW5kZW5jaWEnKVxuYXhlc1sxLCAwXS5zZXRfeGxhYmVsKCdWTzJtYXgnKVxuYXhlc1sxLCAwXS5zZXRfeWxhYmVsKCdEaXN0YW5jaWEgUGFydGlkbyAobSknKVxuYXhlc1sxLCAwXS5zZXRfdGl0bGUoJ1ZPMm1heCB2cyBEaXN0YW5jaWEnKVxuYXhlc1sxLCAwXS5sZWdlbmQoKVxuXG4jIDQuIERpc3RyaWJ1Y2nDs24gZGUgZ29sZXNcbnRpcm9zX3Bvcl9qdWdhZG9yID0gdGlyb3MuZ3JvdXBieSgnSnVnYWRvcklEJylbJ0dvbCddLnN1bSgpXG5heGVzWzEsIDFdLmhpc3QodGlyb3NfcG9yX2p1Z2Fkb3IsIGJpbnM9MTIsIGVkZ2Vjb2xvcj0nd2hpdGUnLCBjb2xvcj0nY29yYWwnLCBhbHBoYT0wLjcpXG5heGVzWzEsIDFdLnNldF94bGFiZWwoJ0dvbGVzIE1hcmNhZG9zJylcbmF4ZXNbMSwgMV0uc2V0X3lsYWJlbCgnTsO6bWVybyBkZSBKdWdhZG9yZXMnKVxuYXhlc1sxLCAxXS5zZXRfdGl0bGUoJ0Rpc3RyaWJ1Y2nDs24gZGUgR29sZXMgcG9yIEp1Z2Fkb3InKVxuXG5wbHQudGlnaHRfbGF5b3V0KClcbnBsdC5zaG93KCkifQ==
+</script>
+</div>
+</section>
+<section id="detectar-outliers-con-iqr" class="level3" data-number="12.2.3">
+<h3 data-number="12.2.3" class="anchored" data-anchor-id="detectar-outliers-con-iqr"><span class="header-section-number">12.2.3</span> 1.3 Detectar Outliers con IQR</h3>
+<div>
+<div id="pyodide-4" class="exercise-cell">
+
+</div>
+<script type="pyodide-4-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIGRldGVjdGFyX291dGxpZXJzKGRmLCBjb2x1bW5hKTpcbiAgICBcIlwiXCJEZXRlY3RhIG91dGxpZXJzIHVzYW5kbyBlbCBtw6l0b2RvIElRUlwiXCJcIlxuICAgIFExID0gZGZbY29sdW1uYV0ucXVhbnRpbGUoMC4yNSlcbiAgICBRMyA9IGRmW2NvbHVtbmFdLnF1YW50aWxlKDAuNzUpXG4gICAgSVFSID0gUTMgLSBRMVxuICAgIFxuICAgIGxpbWl0ZV9pbmZlcmlvciA9IFExIC0gMS41ICogSVFSXG4gICAgbGltaXRlX3N1cGVyaW9yID0gUTMgKyAxLjUgKiBJUVJcbiAgICBcbiAgICBvdXRsaWVycyA9IGRmWyhkZltjb2x1bW5hXSA8IGxpbWl0ZV9pbmZlcmlvcikgfCAoZGZbY29sdW1uYV0gPiBsaW1pdGVfc3VwZXJpb3IpXVxuICAgIFxuICAgIHByaW50KGZcIvCfk4ggQW7DoWxpc2lzIGRlIE91dGxpZXJzIHBhcmEgJ3tjb2x1bW5hfSc6XCIpXG4gICAgcHJpbnQoZlwiICAgUTE6IHtRMTouMWZ9LCBRMzoge1EzOi4xZn0sIElRUjoge0lRUjouMWZ9XCIpXG4gICAgcHJpbnQoZlwiICAgTMOtbWl0ZXM6IFt7bGltaXRlX2luZmVyaW9yOi4xZn0sIHtsaW1pdGVfc3VwZXJpb3I6LjFmfV1cIilcbiAgICBwcmludChmXCIgICBPdXRsaWVycyBkZXRlY3RhZG9zOiB7bGVuKG91dGxpZXJzKX1cIilcbiAgICBcbiAgICByZXR1cm4gb3V0bGllcnNcblxub3V0bGllcnNfdm8yID0gZGV0ZWN0YXJfb3V0bGllcnMoYXRsZXRhcywgJ1ZPMm1heCcpXG5pZiBsZW4ob3V0bGllcnNfdm8yKSA+IDA6XG4gICAgcHJpbnQoXCJcXG4gICBKdWdhZG9yZXMgb3V0bGllcnM6XCIpXG4gICAgcHJpbnQob3V0bGllcnNfdm8yW1snTm9tYnJlJywgJ1Bvc2ljaW9uJywgJ1ZPMm1heCddXSkifQ==
+</script>
+</div>
+<hr>
+</section>
+</section>
+<section id="correlación-midiendo-relaciones" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="correlación-midiendo-relaciones"><span class="header-section-number">12.3</span> 2. Correlación: Midiendo Relaciones</h2>
+<section id="correlación-de-pearson-variables-continuas" class="level3" data-number="12.3.1">
+<h3 data-number="12.3.1" class="anchored" data-anchor-id="correlación-de-pearson-variables-continuas"><span class="header-section-number">12.3.1</span> 2.1 Correlación de Pearson (Variables Continuas)</h3>
+<p>La correlación de Pearson mide la <strong>relación lineal</strong> entre dos variables. Va de -1 a +1.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Valor</th>
+<th>Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.9 a 1.0</td>
+<td>Correlación muy fuerte</td>
+</tr>
+<tr class="even">
+<td>0.7 a 0.9</td>
+<td>Correlación fuerte</td>
+</tr>
+<tr class="odd">
+<td>0.4 a 0.7</td>
+<td>Correlación moderada</td>
+</tr>
+<tr class="even">
+<td>0.2 a 0.4</td>
+<td>Correlación débil</td>
+</tr>
+<tr class="odd">
+<td>0.0 a 0.2</td>
+<td>Correlación muy débil o nula</td>
+</tr>
+</tbody>
+</table>
+<div>
+<div id="pyodide-5" class="exercise-cell">
+
+</div>
+<script type="pyodide-5-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBDb3JyZWxhY2nDs24gVk8ybWF4IHZzIERpc3RhbmNpYVxuY29ycl9wZWFyc29uLCBwX3ZhbHVlID0gcGVhcnNvbnIoYXRsZXRhc1snVk8ybWF4J10sIGF0bGV0YXNbJ0Rpc3RhbmNpYV9QYXJ0aWRvX20nXSlcblxucHJpbnQoXCLwn5SXIENvcnJlbGFjacOzbiBkZSBQZWFyc29uOiBWTzJtYXggdnMgRGlzdGFuY2lhXCIpXG5wcmludChmXCIgICByID0ge2NvcnJfcGVhcnNvbjouM2Z9XCIpXG5wcmludChmXCIgICBwLXZhbG9yID0ge3BfdmFsdWU6LjRmfVwiKVxucHJpbnQoZlwiICAgUsKyID0ge2NvcnJfcGVhcnNvbioqMjouM2Z9ICh2YXJpYW56YSBleHBsaWNhZGEpXCIpXG5cbiMgSW50ZXJwcmV0YWNpw7NuIGF1dG9tw6F0aWNhXG5pZiBhYnMoY29ycl9wZWFyc29uKSA+PSAwLjc6XG4gICAgZnVlcnphID0gXCJGVUVSVEVcIlxuZWxpZiBhYnMoY29ycl9wZWFyc29uKSA+PSAwLjQ6XG4gICAgZnVlcnphID0gXCJNT0RFUkFEQVwiXG5lbHNlOlxuICAgIGZ1ZXJ6YSA9IFwiRMOJQklMXCJcbiAgICBcbmRpcmVjY2lvbiA9IFwicG9zaXRpdmFcIiBpZiBjb3JyX3BlYXJzb24gPiAwIGVsc2UgXCJuZWdhdGl2YVwiXG5zaWcgPSBcInNpZ25pZmljYXRpdmEgKHA8MC4wNSlcIiBpZiBwX3ZhbHVlIDwgMC4wNSBlbHNlIFwiTk8gc2lnbmlmaWNhdGl2YVwiXG5cbnByaW50KGZcIlxcbiAgIOKchSBDb3JyZWxhY2nDs24ge2Z1ZXJ6YX0ge2RpcmVjY2lvbn0sIHtzaWd9XCIpIn0=
+</script>
+</div>
+</section>
+<section id="correlación-de-spearman-variables-ordinales-o-no-lineales" class="level3" data-number="12.3.2">
+<h3 data-number="12.3.2" class="anchored" data-anchor-id="correlación-de-spearman-variables-ordinales-o-no-lineales"><span class="header-section-number">12.3.2</span> 2.2 Correlación de Spearman (Variables Ordinales o No Lineales)</h3>
+<p>Cuando la relación no es lineal o tenemos variables ordinales, usamos Spearman.</p>
+<div>
+<div id="pyodide-6" class="exercise-cell">
+
+</div>
+<script type="pyodide-6-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBDb21wYXJhciBQZWFyc29uIHZzIFNwZWFybWFuIHBhcmEgRWRhZCB2cyBWTzJtYXhcbmNvcnJfcGVhcnNvbiwgcF9wZWFyc29uID0gcGVhcnNvbnIoYXRsZXRhc1snRWRhZCddLCBhdGxldGFzWydWTzJtYXgnXSlcbmNvcnJfc3BlYXJtYW4sIHBfc3BlYXJtYW4gPSBzcGVhcm1hbnIoYXRsZXRhc1snRWRhZCddLCBhdGxldGFzWydWTzJtYXgnXSlcblxucHJpbnQoXCLwn5OKIENvbXBhcmFjacOzbiBQZWFyc29uIHZzIFNwZWFybWFuIChFZGFkIHZzIFZPMm1heCk6XCIpXG5wcmludChmXCIgICBQZWFyc29uOiAgciA9IHtjb3JyX3BlYXJzb246LjNmfSwgcCA9IHtwX3BlYXJzb246LjRmfVwiKVxucHJpbnQoZlwiICAgU3BlYXJtYW46IM+BID0ge2NvcnJfc3BlYXJtYW46LjNmfSwgcCA9IHtwX3NwZWFybWFuOi40Zn1cIilcblxuIyBTaSBkaWZpZXJlbiBtdWNobywgbGEgcmVsYWNpw7NuIHB1ZWRlIHNlciBubyBsaW5lYWxcbmlmIGFicyhjb3JyX3BlYXJzb24gLSBjb3JyX3NwZWFybWFuKSA+IDAuMTpcbiAgICBwcmludChcIlxcbiAgIOKaoO+4jyBEaWZlcmVuY2lhIG5vdGFibGU6IGxhIHJlbGFjacOzbiBwdWVkZSBzZXIgTk8gTElORUFMXCIpIn0=
+</script>
+</div>
+</section>
+<section id="matriz-de-correlación-completa" class="level3" data-number="12.3.3">
+<h3 data-number="12.3.3" class="anchored" data-anchor-id="matriz-de-correlación-completa"><span class="header-section-number">12.3.3</span> 2.3 Matriz de Correlación Completa</h3>
+<div>
+<div id="pyodide-7" class="exercise-cell">
+
+</div>
+<script type="pyodide-7-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBTZWxlY2Npb25hciB2YXJpYWJsZXMgZGUgaW50ZXLDqXNcbnZhcnNfZmlzaWNhcyA9IFsnRWRhZCcsICdWTzJtYXgnLCAnRGlzdGFuY2lhX1BhcnRpZG9fbScsICdIU1JfUGFydGlkb19tJywgJ1NwcmludF9tJywgJ0FjZWxlcmFjaW9uZXMnXVxubWF0cml6X2NvcnIgPSBhdGxldGFzW3ZhcnNfZmlzaWNhc10uY29ycigpXG5cbmZpZywgYXggPSBwbHQuc3VicGxvdHMoZmlnc2l6ZT0oMTAsIDgpKVxuXG4jIEhlYXRtYXAgbWVqb3JhZG9cbmltID0gYXguaW1zaG93KG1hdHJpel9jb3JyLCBjbWFwPSdSZEJ1X3InLCB2bWluPS0xLCB2bWF4PTEsIGFzcGVjdD0nYXV0bycpXG5cbiMgQ29uZmlndXJhY2nDs24gZGUgZWplc1xuYXguc2V0X3h0aWNrcyhyYW5nZShsZW4odmFyc19maXNpY2FzKSkpXG5heC5zZXRfeXRpY2tzKHJhbmdlKGxlbih2YXJzX2Zpc2ljYXMpKSlcbmF4LnNldF94dGlja2xhYmVscyh2YXJzX2Zpc2ljYXMsIHJvdGF0aW9uPTQ1LCBoYT0ncmlnaHQnLCBmb250c2l6ZT0xMClcbmF4LnNldF95dGlja2xhYmVscyh2YXJzX2Zpc2ljYXMsIGZvbnRzaXplPTEwKVxuXG4jIEHDsWFkaXIgdmFsb3JlcyBlbiBjYWRhIGNlbGRhXG5mb3IgaSBpbiByYW5nZShsZW4odmFyc19maXNpY2FzKSk6XG4gICAgZm9yIGogaW4gcmFuZ2UobGVuKHZhcnNfZmlzaWNhcykpOlxuICAgICAgICB2YWxvciA9IG1hdHJpel9jb3JyLmlsb2NbaSwgal1cbiAgICAgICAgY29sb3IgPSAnd2hpdGUnIGlmIGFicyh2YWxvcikgPiAwLjUgZWxzZSAnYmxhY2snXG4gICAgICAgIGF4LnRleHQoaiwgaSwgZid7dmFsb3I6LjJmfScsIGhhPSdjZW50ZXInLCB2YT0nY2VudGVyJywgY29sb3I9Y29sb3IsIGZvbnRzaXplPTkpXG5cbiMgQmFycmEgZGUgY29sb3JcbmNiYXIgPSBwbHQuY29sb3JiYXIoaW0sIGF4PWF4LCBzaHJpbms9MC44KVxuY2Jhci5zZXRfbGFiZWwoJ0NvZWZpY2llbnRlIGRlIENvcnJlbGFjacOzbicsIGZvbnRzaXplPTEwKVxuXG5heC5zZXRfdGl0bGUoJ01hdHJpeiBkZSBDb3JyZWxhY2nDs24gLSBWYXJpYWJsZXMgRsOtc2ljYXMnLCBmb250c2l6ZT0xMiwgZm9udHdlaWdodD0nYm9sZCcpXG5wbHQudGlnaHRfbGF5b3V0KClcbnBsdC5zaG93KClcblxuIyBFbmNvbnRyYXIgbGFzIGNvcnJlbGFjaW9uZXMgbcOhcyBmdWVydGVzIChleGNsdXllbmRvIGRpYWdvbmFsKVxucHJpbnQoXCJcXG7wn5SdIFRvcCA1IENvcnJlbGFjaW9uZXMgbcOhcyBGdWVydGVzOlwiKVxuY29ycl9wYWlycyA9IFtdXG5mb3IgaSwgY29sMSBpbiBlbnVtZXJhdGUodmFyc19maXNpY2FzKTpcbiAgICBmb3IgaiwgY29sMiBpbiBlbnVtZXJhdGUodmFyc19maXNpY2FzKTpcbiAgICAgICAgaWYgaSA8IGo6ICAjIFNvbG8gdHJpw6FuZ3VsbyBzdXBlcmlvclxuICAgICAgICAgICAgY29ycl9wYWlycy5hcHBlbmQoKGNvbDEsIGNvbDIsIGFicyhtYXRyaXpfY29yci5sb2NbY29sMSwgY29sMl0pLCBtYXRyaXpfY29yci5sb2NbY29sMSwgY29sMl0pKVxuXG5jb3JyX3BhaXJzLnNvcnQoa2V5PWxhbWJkYSB4OiB4WzJdLCByZXZlcnNlPVRydWUpXG5mb3IgY29sMSwgY29sMiwgYWJzX2NvcnIsIGNvcnIgaW4gY29ycl9wYWlyc1s6NV06XG4gICAgcHJpbnQoZlwiICAge2NvbDF9IHZzIHtjb2wyfTogciA9IHtjb3JyOi4zZn1cIikifQ==
+</script>
+</div>
+<hr>
+</section>
+<section id="práctica-2.1-análisis-de-correlación" class="level3" data-number="12.3.4">
+<h3 data-number="12.3.4" class="anchored" data-anchor-id="práctica-2.1-análisis-de-correlación"><span class="header-section-number">12.3.4</span> 🧠 Práctica 2.1: Análisis de Correlación</h3>
+<p>Calcula la correlación entre el número de Lesiones en el historial y la Edad. ¿Los jugadores mayores tienen más lesiones?</p>
+<div>
+<div id="pyodide-8" class="exercise-cell">
+
+</div>
+<script type="pyodide-8-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YTogVXNhIHBlYXJzb25yKCkgbyBzcGVhcm1hbnIoKVxuXG4jIEVzY3JpYmUgdHUgY8OzZGlnbyBhcXXDrTpcbiJ9
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>corr, p <span class="op">=</span> pearsonr(atletas[<span class="st">'Edad'</span>], atletas[<span class="st">'Lesiones_Historial'</span>])</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Correlación Edad vs Lesiones: r = </span><span class="sc">{</span>corr<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ax.scatter(atletas[<span class="st">'Edad'</span>], atletas[<span class="st">'Lesiones_Historial'</span>], s<span class="op">=</span><span class="dv">60</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Edad'</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Lesiones en Historial'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'Edad vs Lesiones (r = </span><span class="sc">{</span>corr<span class="sc">:.2f}</span><span class="ss">)'</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="tests-de-hipótesis-comparando-grupos" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="tests-de-hipótesis-comparando-grupos"><span class="header-section-number">12.4</span> 3. Tests de Hipótesis: Comparando Grupos</h2>
+<section id="conceptos-fundamentales" class="level3" data-number="12.4.1">
+<h3 data-number="12.4.1" class="anchored" data-anchor-id="conceptos-fundamentales"><span class="header-section-number">12.4.1</span> 3.1 Conceptos Fundamentales</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Término</th>
+<th>Definición</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>H₀ (Hipótesis Nula)</strong></td>
+<td>No hay diferencia entre grupos</td>
+</tr>
+<tr class="even">
+<td><strong>H₁ (Hipótesis Alternativa)</strong></td>
+<td>Sí hay diferencia significativa</td>
+</tr>
+<tr class="odd">
+<td><strong>p-valor</strong></td>
+<td>Probabilidad de observar estos datos si H₀ fuera cierta</td>
+</tr>
+<tr class="even">
+<td><strong>α (Nivel de significancia)</strong></td>
+<td>Umbral para rechazar H₀ (típicamente 0.05)</td>
+</tr>
+<tr class="odd">
+<td><strong>Error Tipo I</strong></td>
+<td>Rechazar H₀ cuando es verdadera (falso positivo)</td>
+</tr>
+<tr class="even">
+<td><strong>Error Tipo II</strong></td>
+<td>No rechazar H₀ cuando es falsa (falso negativo)</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>[!WARNING] Un p-valor &lt; 0.05 NO significa que el efecto sea importante. Solo indica que es improbable que sea por azar. Siempre calcula el <strong>tamaño del efecto</strong>.</p>
+</blockquote>
+</section>
+<section id="t-test-comparar-2-grupos" class="level3" data-number="12.4.2">
+<h3 data-number="12.4.2" class="anchored" data-anchor-id="t-test-comparar-2-grupos"><span class="header-section-number">12.4.2</span> 3.2 T-Test: Comparar 2 Grupos</h3>
+<p>¿Los delanteros tienen más goles que los mediocampistas?</p>
+<div>
+<div id="pyodide-9" class="exercise-cell">
+
+</div>
+<script type="pyodide-9-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBTZXBhcmFyIGdydXBvc1xuZ29sZXNfZGVsYW50ZXJvcyA9IGF0bGV0YXNbYXRsZXRhc1snUG9zaWNpb24nXSA9PSAnRGVsYW50ZXJvJ11bJ0dvbGVzX1RlbXBvcmFkYSddXG5nb2xlc19tZWRpb3MgPSBhdGxldGFzW2F0bGV0YXNbJ1Bvc2ljaW9uJ10gPT0gJ01lZGlvY2VudHJvJ11bJ0dvbGVzX1RlbXBvcmFkYSddXG5cbnByaW50KGZcIkRlbGFudGVyb3MgKG49e2xlbihnb2xlc19kZWxhbnRlcm9zKX0pOiBNZWRpYSA9IHtnb2xlc19kZWxhbnRlcm9zLm1lYW4oKTouMWZ9LCBTdGQgPSB7Z29sZXNfZGVsYW50ZXJvcy5zdGQoKTouMWZ9XCIpXG5wcmludChmXCJNZWRpb2NlbnRyb3MgKG49e2xlbihnb2xlc19tZWRpb3MpfSk6IE1lZGlhID0ge2dvbGVzX21lZGlvcy5tZWFuKCk6LjFmfSwgU3RkID0ge2dvbGVzX21lZGlvcy5zdGQoKTouMWZ9XCIpXG5cbiMgVC10ZXN0IGluZGVwZW5kaWVudGVcbnRfc3RhdCwgcF92YWx1ZSA9IHR0ZXN0X2luZChnb2xlc19kZWxhbnRlcm9zLCBnb2xlc19tZWRpb3MpXG5cbnByaW50KGZcIlxcbvCfk4ogVC1UZXN0IEluZGVwZW5kaWVudGU6XCIpXG5wcmludChmXCIgICB0ID0ge3Rfc3RhdDouM2Z9XCIpXG5wcmludChmXCIgICBwLXZhbG9yID0ge3BfdmFsdWU6LjRmfVwiKVxuXG5pZiBwX3ZhbHVlIDwgMC4wNTpcbiAgICBwcmludChcIiAgIOKchSBEaWZlcmVuY2lhIFNJR05JRklDQVRJVkEgKHAgPCAwLjA1KVwiKVxuZWxzZTpcbiAgICBwcmludChcIiAgIOKdjCBEaWZlcmVuY2lhIE5PIHNpZ25pZmljYXRpdmFcIikifQ==
+</script>
+</div>
+</section>
+<section id="tamaño-del-efecto-cohens-d" class="level3" data-number="12.4.3">
+<h3 data-number="12.4.3" class="anchored" data-anchor-id="tamaño-del-efecto-cohens-d"><span class="header-section-number">12.4.3</span> 3.3 Tamaño del Efecto (Cohen’s d)</h3>
+<p>El p-valor nos dice si hay diferencia, pero no cuán grande es. Para eso usamos Cohen’s d.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Cohen’s d</th>
+<th>Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.2</td>
+<td>Efecto pequeño</td>
+</tr>
+<tr class="even">
+<td>0.5</td>
+<td>Efecto medio</td>
+</tr>
+<tr class="odd">
+<td>0.8</td>
+<td>Efecto grande</td>
+</tr>
+</tbody>
+</table>
+<div>
+<div id="pyodide-10" class="exercise-cell">
+
+</div>
+<script type="pyodide-10-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZGVmIGNvaGVuc19kKGdyb3VwMSwgZ3JvdXAyKTpcbiAgICBcIlwiXCJDYWxjdWxhIGVsIHRhbWHDsW8gZGVsIGVmZWN0byBDb2hlbidzIGRcIlwiXCJcbiAgICBuMSwgbjIgPSBsZW4oZ3JvdXAxKSwgbGVuKGdyb3VwMilcbiAgICB2YXIxLCB2YXIyID0gZ3JvdXAxLnZhcigpLCBncm91cDIudmFyKClcbiAgICBcbiAgICAjIFBvb2xlZCBzdGFuZGFyZCBkZXZpYXRpb25cbiAgICBwb29sZWRfc3RkID0gbnAuc3FydCgoKG4xIC0gMSkgKiB2YXIxICsgKG4yIC0gMSkgKiB2YXIyKSAvIChuMSArIG4yIC0gMikpXG4gICAgXG4gICAgcmV0dXJuIChncm91cDEubWVhbigpIC0gZ3JvdXAyLm1lYW4oKSkgLyBwb29sZWRfc3RkXG5cbmQgPSBjb2hlbnNfZChnb2xlc19kZWxhbnRlcm9zLCBnb2xlc19tZWRpb3MpXG5cbnByaW50KGZcIvCfk48gVGFtYcOxbyBkZWwgRWZlY3RvOlwiKVxucHJpbnQoZlwiICAgQ29oZW4ncyBkID0ge2Q6LjNmfVwiKVxuXG5pZiBhYnMoZCkgPj0gMC44OlxuICAgIHByaW50KFwiICAg4oaSIEVmZWN0byBHUkFOREVcIilcbmVsaWYgYWJzKGQpID49IDAuNTpcbiAgICBwcmludChcIiAgIOKGkiBFZmVjdG8gTUVESU9cIilcbmVsc2U6XG4gICAgcHJpbnQoXCIgICDihpIgRWZlY3RvIFBFUVVFw5FPXCIpIn0=
+</script>
+</div>
+</section>
+<section id="mann-whitney-u-alternativa-no-paramétrica" class="level3" data-number="12.4.4">
+<h3 data-number="12.4.4" class="anchored" data-anchor-id="mann-whitney-u-alternativa-no-paramétrica"><span class="header-section-number">12.4.4</span> 3.4 Mann-Whitney U: Alternativa No Paramétrica</h3>
+<p>Cuando los datos no siguen una distribución normal, usamos Mann-Whitney U.</p>
+<div>
+<div id="pyodide-11" class="exercise-cell">
+
+</div>
+<script type="pyodide-11-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBWZXJpZmljYXIgbm9ybWFsaWRhZCBjb24gU2hhcGlyby1XaWxrXG5zdGF0X2RlbCwgcF9kZWwgPSBzdGF0cy5zaGFwaXJvKGdvbGVzX2RlbGFudGVyb3MpXG5zdGF0X21lZCwgcF9tZWQgPSBzdGF0cy5zaGFwaXJvKGdvbGVzX21lZGlvcylcblxucHJpbnQoXCLwn5SNIFRlc3QgZGUgTm9ybWFsaWRhZCAoU2hhcGlyby1XaWxrKTpcIilcbnByaW50KGZcIiAgIERlbGFudGVyb3M6IHAgPSB7cF9kZWw6LjRmfSB7JyhOb3JtYWwpJyBpZiBwX2RlbCA+IDAuMDUgZWxzZSAnKE5PIE5vcm1hbCknfVwiKVxucHJpbnQoZlwiICAgTWVkaW9jZW50cm9zOiBwID0ge3BfbWVkOi40Zn0geycoTm9ybWFsKScgaWYgcF9tZWQgPiAwLjA1IGVsc2UgJyhOTyBOb3JtYWwpJ31cIilcblxuIyBNYW5uLVdoaXRuZXkgVSAobm8gcGFyYW3DqXRyaWNvKVxudV9zdGF0LCBwX213ID0gbWFubndoaXRuZXl1KGdvbGVzX2RlbGFudGVyb3MsIGdvbGVzX21lZGlvcywgYWx0ZXJuYXRpdmU9J3R3by1zaWRlZCcpXG5cbnByaW50KGZcIlxcbvCfk4ogTWFubi1XaGl0bmV5IFUgVGVzdDpcIilcbnByaW50KGZcIiAgIFUgPSB7dV9zdGF0Oi4xZn1cIilcbnByaW50KGZcIiAgIHAtdmFsb3IgPSB7cF9tdzouNGZ9XCIpIn0=
+</script>
+</div>
+</section>
+<section id="anova-comparar-3-grupos" class="level3" data-number="12.4.5">
+<h3 data-number="12.4.5" class="anchored" data-anchor-id="anova-comparar-3-grupos"><span class="header-section-number">12.4.5</span> 3.5 ANOVA: Comparar 3+ Grupos</h3>
+<p>¿Hay diferencias en distancia recorrida entre TODAS las posiciones?</p>
+<div>
+<div id="pyodide-12" class="exercise-cell">
+
+</div>
+<script type="pyodide-12-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBTZXBhcmFyIHBvciBwb3NpY2nDs25cbmdydXBvc19kaXN0ID0gW2F0bGV0YXNbYXRsZXRhc1snUG9zaWNpb24nXSA9PSBwb3NdWydEaXN0YW5jaWFfUGFydGlkb19tJ10gZm9yIHBvcyBpbiBwb3NpY2lvbmVzXVxuXG4jIEFOT1ZBIGRlIHVuYSB2w61hXG5mX3N0YXQsIHBfYW5vdmEgPSBmX29uZXdheSgqZ3J1cG9zX2Rpc3QpXG5cbnByaW50KFwi8J+TiiBBTk9WQSAtIERpc3RhbmNpYSBwb3IgUG9zaWNpw7NuOlwiKVxucHJpbnQoZlwiICAgRiA9IHtmX3N0YXQ6LjNmfVwiKVxucHJpbnQoZlwiICAgcC12YWxvciA9IHtwX2Fub3ZhOi42Zn1cIilcblxuaWYgcF9hbm92YSA8IDAuMDU6XG4gICAgcHJpbnQoXCIgICDinIUgSGF5IGRpZmVyZW5jaWFzIFNJR05JRklDQVRJVkFTIGVudHJlIHBvc2ljaW9uZXNcIilcbmVsc2U6XG4gICAgcHJpbnQoXCIgICDinYwgTm8gaGF5IGRpZmVyZW5jaWFzIHNpZ25pZmljYXRpdmFzXCIpXG5cbiMgVmlzdWFsaXphclxuZmlnLCBheCA9IHBsdC5zdWJwbG90cyhmaWdzaXplPSgxMCwgNikpXG5hdGxldGFzLmJveHBsb3QoY29sdW1uPSdEaXN0YW5jaWFfUGFydGlkb19tJywgYnk9J1Bvc2ljaW9uJywgYXg9YXgpXG5heC5zZXRfeGxhYmVsKCdQb3NpY2nDs24nKVxuYXguc2V0X3lsYWJlbCgnRGlzdGFuY2lhIGVuIFBhcnRpZG8gKG0pJylcbmF4LnNldF90aXRsZShmJ0Rpc3RhbmNpYSBwb3IgUG9zaWNpw7NuIChBTk9WQSBwID0ge3BfYW5vdmE6LjRmfSknKVxucGx0LnN1cHRpdGxlKCcnKVxucGx0LnRpZ2h0X2xheW91dCgpXG5wbHQuc2hvdygpIn0=
+</script>
+</div>
+</section>
+<section id="chi-cuadrado-variables-categóricas" class="level3" data-number="12.4.6">
+<h3 data-number="12.4.6" class="anchored" data-anchor-id="chi-cuadrado-variables-categóricas"><span class="header-section-number">12.4.6</span> 3.6 Chi-Cuadrado: Variables Categóricas</h3>
+<p>¿Los contraataques terminan en gol más frecuentemente?</p>
+<div>
+<div id="pyodide-13" class="exercise-cell">
+
+</div>
+<script type="pyodide-13-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBUYWJsYSBkZSBjb250aW5nZW5jaWFcbnRhYmxhID0gcGQuY3Jvc3N0YWIodGlyb3NbJ0NvbnRyYWF0YXF1ZSddLCB0aXJvc1snR29sJ10pXG50YWJsYS5pbmRleCA9IFsnSnVnYWRhIE5vcm1hbCcsICdDb250cmFhdGFxdWUnXVxudGFibGEuY29sdW1ucyA9IFsnTm8gR29sJywgJ0dvbCddXG5cbnByaW50KFwi8J+TiiBUYWJsYSBkZSBDb250aW5nZW5jaWE6XCIpXG5wcmludCh0YWJsYSlcblxuIyBBw7FhZGlyIHBvcmNlbnRhamVzXG50YWJsYV9wY3QgPSB0YWJsYS5kaXYodGFibGEuc3VtKGF4aXM9MSksIGF4aXM9MCkgKiAxMDBcbnByaW50KFwiXFxu8J+TiiBQb3JjZW50YWplczpcIilcbnByaW50KHRhYmxhX3BjdC5yb3VuZCgxKSlcblxuIyBUZXN0IENoaS1jdWFkcmFkb1xuY2hpMiwgcF9jaGksIGRvZiwgZXhwZWN0ZWQgPSBjaGkyX2NvbnRpbmdlbmN5KHRhYmxhKVxuXG5wcmludChmXCJcXG7wn5OKIFRlc3QgQ2hpLUN1YWRyYWRvOlwiKVxucHJpbnQoZlwiICAgz4fCsiA9IHtjaGkyOi4zZn1cIilcbnByaW50KGZcIiAgIHAtdmFsb3IgPSB7cF9jaGk6LjRmfVwiKVxucHJpbnQoZlwiICAgR3JhZG9zIGRlIGxpYmVydGFkID0ge2RvZn1cIilcblxuaWYgcF9jaGkgPCAwLjA1OlxuICAgIHByaW50KFwiICAg4pyFIEFzb2NpYWNpw7NuIFNJR05JRklDQVRJVkEgZW50cmUgY29udHJhYXRhcXVlIHkgZ29sXCIpIn0=
+</script>
+</div>
+<hr>
+</section>
+<section id="práctica-3.1-comparación-de-grupos" class="level3" data-number="12.4.7">
+<h3 data-number="12.4.7" class="anchored" data-anchor-id="práctica-3.1-comparación-de-grupos"><span class="header-section-number">12.4.7</span> 🧠 Práctica 3.1: Comparación de Grupos</h3>
+<p>Compara el VO2max entre jugadores jóvenes (&lt;25 años) y veteranos (&gt;=30 años). ¿Hay diferencia significativa?</p>
+<div>
+<div id="pyodide-14" class="exercise-cell">
+
+</div>
+<script type="pyodide-14-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YTogQ3JlYSBkb3MgZ3J1cG9zLCBhcGxpY2EgdC10ZXN0IHkgY2FsY3VsYSBDb2hlbidzIGRcblxuIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>jovenes <span class="op">=</span> atletas[atletas[<span class="st">'Edad'</span>] <span class="op">&lt;</span> <span class="dv">25</span>][<span class="st">'VO2max'</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>veteranos <span class="op">=</span> atletas[atletas[<span class="st">'Edad'</span>] <span class="op">&gt;=</span> <span class="dv">30</span>][<span class="st">'VO2max'</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Jóvenes (n=</span><span class="sc">{</span><span class="bu">len</span>(jovenes)<span class="sc">}</span><span class="ss">): Media = </span><span class="sc">{</span>jovenes<span class="sc">.</span>mean()<span class="sc">:.1f}</span><span class="ss">"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Veteranos (n=</span><span class="sc">{</span><span class="bu">len</span>(veteranos)<span class="sc">}</span><span class="ss">): Media = </span><span class="sc">{</span>veteranos<span class="sc">.</span>mean()<span class="sc">:.1f}</span><span class="ss">"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>t, p <span class="op">=</span> ttest_ind(jovenes, veteranos)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> cohens_d(jovenes, veteranos)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">T-test: t = </span><span class="sc">{</span>t<span class="sc">:.3f}</span><span class="ss">, p = </span><span class="sc">{</span>p<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Cohen's d = </span><span class="sc">{</span>d<span class="sc">:.3f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="regresión-lineal-predicción" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="regresión-lineal-predicción"><span class="header-section-number">12.5</span> 4. Regresión Lineal: Predicción</h2>
+<section id="regresión-simple" class="level3" data-number="12.5.1">
+<h3 data-number="12.5.1" class="anchored" data-anchor-id="regresión-simple"><span class="header-section-number">12.5.1</span> 4.1 Regresión Simple</h3>
+<p>Predecir Distancia a partir de VO2max.</p>
+<div>
+<div id="pyodide-15" class="exercise-cell">
+
+</div>
+<script type="pyodide-15-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBWYXJpYWJsZXNcbnggPSBhdGxldGFzWydWTzJtYXgnXVxueSA9IGF0bGV0YXNbJ0Rpc3RhbmNpYV9QYXJ0aWRvX20nXVxuXG4jIFJlZ3Jlc2nDs25cbnNsb3BlLCBpbnRlcmNlcHQsIHJfdmFsdWUsIHBfdmFsdWUsIHN0ZF9lcnIgPSBsaW5yZWdyZXNzKHgsIHkpXG5cbnByaW50KFwi8J+TiCBNb2RlbG8gZGUgUmVncmVzacOzbiBMaW5lYWw6XCIpXG5wcmludChmXCIgICBEaXN0YW5jaWEgPSB7aW50ZXJjZXB0Oi4xZn0gKyB7c2xvcGU6LjFmfSDDlyBWTzJtYXhcIilcbnByaW50KGZcIlxcbvCfk4ogTcOpdHJpY2FzIGRlbCBNb2RlbG86XCIpXG5wcmludChmXCIgICBSwrIgPSB7cl92YWx1ZSoqMjouM2Z9ICh7cl92YWx1ZSoqMioxMDA6LjFmfSUgZGUgdmFyaWFuemEgZXhwbGljYWRhKVwiKVxucHJpbnQoZlwiICAgcC12YWxvciA9IHtwX3ZhbHVlOi42Zn1cIilcbnByaW50KGZcIiAgIEVycm9yIGVzdMOhbmRhciA9IHtzdGRfZXJyOi4yZn1cIilcblxuIyBJbnRlcnByZXRhY2nDs24gZGUgbGEgcGVuZGllbnRlXG5wcmludChmXCJcXG7wn5OWIEludGVycHJldGFjacOzbjpcIilcbnByaW50KGZcIiAgIFBvciBjYWRhIDEgbWwva2cvbWluIGRlIGF1bWVudG8gZW4gVk8ybWF4LFwiKVxucHJpbnQoZlwiICAgbGEgZGlzdGFuY2lhIGF1bWVudGEgZW4gcHJvbWVkaW8ge3Nsb3BlOi4wZn0gbWV0cm9zLlwiKSJ9
+</script>
+</div>
+</section>
+<section id="visualización-con-intervalos-de-confianza" class="level3" data-number="12.5.2">
+<h3 data-number="12.5.2" class="anchored" data-anchor-id="visualización-con-intervalos-de-confianza"><span class="header-section-number">12.5.2</span> 4.2 Visualización con Intervalos de Confianza</h3>
+<div>
+<div id="pyodide-16" class="exercise-cell">
+
+</div>
+<script type="pyodide-16-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZmlnLCBheCA9IHBsdC5zdWJwbG90cyhmaWdzaXplPSgxMiwgNykpXG5cbiMgRGF0b3NcbmF4LnNjYXR0ZXIoeCwgeSwgcz02MCwgYWxwaGE9MC42LCBjPSdzdGVlbGJsdWUnLCBlZGdlY29sb3JzPSd3aGl0ZScsIGxhYmVsPSdEYXRvcycpXG5cbiMgTMOtbmVhIGRlIHJlZ3Jlc2nDs25cbnhfbGluZSA9IG5wLmxpbnNwYWNlKHgubWluKCksIHgubWF4KCksIDEwMClcbnlfbGluZSA9IGludGVyY2VwdCArIHNsb3BlICogeF9saW5lXG5heC5wbG90KHhfbGluZSwgeV9saW5lLCAnci0nLCBsaW5ld2lkdGg9Mi41LCBsYWJlbD1mJ1JlZ3Jlc2nDs24gKFLCsj17cl92YWx1ZSoqMjouMmZ9KScpXG5cbiMgSW50ZXJ2YWxvIGRlIGNvbmZpYW56YSBhcHJveGltYWRvICjCsSAyIFNFKVxubiA9IGxlbih4KVxueF9tZWFuID0geC5tZWFuKClcbnNlX3kgPSBzdGRfZXJyICogbnAuc3FydCgxL24gKyAoeF9saW5lIC0geF9tZWFuKSoqMiAvICgoeCAtIHhfbWVhbikqKjIpLnN1bSgpKSAqICh5Lm1heCgpIC0geS5taW4oKSkgLyAxMFxuXG5heC5maWxsX2JldHdlZW4oeF9saW5lLCB5X2xpbmUgLSAyKnNlX3ksIHlfbGluZSArIDIqc2VfeSwgXG4gICAgICAgICAgICAgICAgYWxwaGE9MC4yLCBjb2xvcj0ncmVkJywgbGFiZWw9J0lDIDk1JScpXG5cbmF4LnNldF94bGFiZWwoJ1ZPMm1heCAobWwva2cvbWluKScsIGZvbnRzaXplPTEyKVxuYXguc2V0X3lsYWJlbCgnRGlzdGFuY2lhIGVuIFBhcnRpZG8gKG0pJywgZm9udHNpemU9MTIpXG5heC5zZXRfdGl0bGUoJ1JlZ3Jlc2nDs246IFZPMm1heCDihpIgRGlzdGFuY2lhJywgZm9udHNpemU9MTQsIGZvbnR3ZWlnaHQ9J2JvbGQnKVxuYXgubGVnZW5kKGZvbnRzaXplPTEwKVxuYXguZ3JpZChUcnVlLCBhbHBoYT0wLjMpXG5wbHQudGlnaHRfbGF5b3V0KClcbnBsdC5zaG93KCkifQ==
+</script>
+</div>
+</section>
+<section id="predicción-con-nuevos-datos" class="level3" data-number="12.5.3">
+<h3 data-number="12.5.3" class="anchored" data-anchor-id="predicción-con-nuevos-datos"><span class="header-section-number">12.5.3</span> 4.3 Predicción con Nuevos Datos</h3>
+<div>
+<div id="pyodide-17" class="exercise-cell">
+
+</div>
+<script type="pyodide-17-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQcmVkZWNpciBwYXJhIG51ZXZvcyBqdWdhZG9yZXNcbm51ZXZvc19qdWdhZG9yZXMgPSBwZC5EYXRhRnJhbWUoe1xuICAgICdOb21icmUnOiBbJ051ZXZvX0EnLCAnTnVldm9fQicsICdOdWV2b19DJ10sXG4gICAgJ1ZPMm1heCc6IFs1MCwgNTgsIDY1XVxufSlcblxubnVldm9zX2p1Z2Fkb3Jlc1snRGlzdGFuY2lhX1ByZWRpY2hhJ10gPSBpbnRlcmNlcHQgKyBzbG9wZSAqIG51ZXZvc19qdWdhZG9yZXNbJ1ZPMm1heCddXG5cbnByaW50KFwi8J+UriBQcmVkaWNjaW9uZXMgcGFyYSBOdWV2b3MgSnVnYWRvcmVzOlwiKVxucHJpbnQobnVldm9zX2p1Z2Fkb3JlcykifQ==
+</script>
+</div>
+</section>
+<section id="análisis-de-residuos" class="level3" data-number="12.5.4">
+<h3 data-number="12.5.4" class="anchored" data-anchor-id="análisis-de-residuos"><span class="header-section-number">12.5.4</span> 4.4 Análisis de Residuos</h3>
+<p>Los residuos deben ser aleatorios. Si hay patrones, el modelo puede ser inadecuado.</p>
+<div>
+<div id="pyodide-18" class="exercise-cell">
+
+</div>
+<script type="pyodide-18-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBDYWxjdWxhciByZXNpZHVvc1xuYXRsZXRhc1snUHJlZGljY2lvbiddID0gaW50ZXJjZXB0ICsgc2xvcGUgKiBhdGxldGFzWydWTzJtYXgnXVxuYXRsZXRhc1snUmVzaWR1byddID0gYXRsZXRhc1snRGlzdGFuY2lhX1BhcnRpZG9fbSddIC0gYXRsZXRhc1snUHJlZGljY2lvbiddXG5cbmZpZywgYXhlcyA9IHBsdC5zdWJwbG90cygxLCAyLCBmaWdzaXplPSgxNCwgNSkpXG5cbiMgUmVzaWR1b3MgdnMgUHJlZGljY2nDs25cbmF4ZXNbMF0uc2NhdHRlcihhdGxldGFzWydQcmVkaWNjaW9uJ10sIGF0bGV0YXNbJ1Jlc2lkdW8nXSwgcz01MCwgYWxwaGE9MC42KVxuYXhlc1swXS5heGhsaW5lKDAsIGNvbG9yPSdyZWQnLCBsaW5lc3R5bGU9Jy0tJylcbmF4ZXNbMF0uc2V0X3hsYWJlbCgnRGlzdGFuY2lhIFByZWRpY2hhJylcbmF4ZXNbMF0uc2V0X3lsYWJlbCgnUmVzaWR1bycpXG5heGVzWzBdLnNldF90aXRsZSgnUmVzaWR1b3MgdnMgUHJlZGljY2nDs24nKVxuXG4jIEhpc3RvZ3JhbWEgZGUgcmVzaWR1b3NcbmF4ZXNbMV0uaGlzdChhdGxldGFzWydSZXNpZHVvJ10sIGJpbnM9MTIsIGVkZ2Vjb2xvcj0nd2hpdGUnLCBhbHBoYT0wLjcpXG5heGVzWzFdLmF4dmxpbmUoMCwgY29sb3I9J3JlZCcsIGxpbmVzdHlsZT0nLS0nKVxuYXhlc1sxXS5zZXRfeGxhYmVsKCdSZXNpZHVvJylcbmF4ZXNbMV0uc2V0X3lsYWJlbCgnRnJlY3VlbmNpYScpXG5heGVzWzFdLnNldF90aXRsZSgnRGlzdHJpYnVjacOzbiBkZSBSZXNpZHVvcycpXG5cbnBsdC50aWdodF9sYXlvdXQoKVxucGx0LnNob3coKVxuXG4jIFRlc3QgZGUgbm9ybWFsaWRhZCBkZSByZXNpZHVvc1xuc3RhdCwgcCA9IHN0YXRzLnNoYXBpcm8oYXRsZXRhc1snUmVzaWR1byddKVxucHJpbnQoZlwiVGVzdCBTaGFwaXJvLVdpbGsgcGFyYSByZXNpZHVvczogcCA9IHtwOi40Zn1cIilcbnByaW50KGZcIlJlc2lkdW9zIHsnc2lndWVuJyBpZiBwID4gMC4wNSBlbHNlICdOTyBzaWd1ZW4nfSBkaXN0cmlidWNpw7NuIG5vcm1hbFwiKSJ9
+</script>
+</div>
+<hr>
+</section>
+<section id="práctica-4.1-tu-propio-modelo" class="level3" data-number="12.5.5">
+<h3 data-number="12.5.5" class="anchored" data-anchor-id="práctica-4.1-tu-propio-modelo"><span class="header-section-number">12.5.5</span> 🧠 Práctica 4.1: Tu Propio Modelo</h3>
+<p>Construye un modelo para predecir HSR_Partido_m a partir de Sprint_m. ¿Tiene sentido esta relación?</p>
+<div>
+<div id="pyodide-19" class="exercise-cell">
+
+</div>
+<script type="pyodide-19-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>slope, intercept, r, p, se <span class="op">=</span> linregress(atletas[<span class="st">'Sprint_m'</span>], atletas[<span class="st">'HSR_Partido_m'</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Modelo: HSR = </span><span class="sc">{</span>intercept<span class="sc">:.1f}</span><span class="ss"> + </span><span class="sc">{</span>slope<span class="sc">:.2f}</span><span class="ss"> × Sprint"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² = </span><span class="sc">{</span>r<span class="op">**</span><span class="dv">2</span><span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"p-valor = </span><span class="sc">{</span>p<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>ax.scatter(atletas[<span class="st">'Sprint_m'</span>], atletas[<span class="st">'HSR_Partido_m'</span>], s<span class="op">=</span><span class="dv">50</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>x_line <span class="op">=</span> np.linspace(atletas[<span class="st">'Sprint_m'</span>].<span class="bu">min</span>(), atletas[<span class="st">'Sprint_m'</span>].<span class="bu">max</span>(), <span class="dv">100</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ax.plot(x_line, intercept <span class="op">+</span> slope <span class="op">*</span> x_line, <span class="st">'r-'</span>, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Sprint (m)'</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'HSR (m)'</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f'Sprint vs HSR (R² = </span><span class="sc">{</span>r<span class="op">**</span><span class="dv">2</span><span class="sc">:.2f}</span><span class="ss">)'</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="expected-goals-xg-modelo-completo" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="expected-goals-xg-modelo-completo"><span class="header-section-number">12.6</span> 5. Expected Goals (xG): Modelo Completo</h2>
+<section id="análisis-exploratorio-de-tiros" class="level3" data-number="12.6.1">
+<h3 data-number="12.6.1" class="anchored" data-anchor-id="análisis-exploratorio-de-tiros"><span class="header-section-number">12.6.1</span> 5.1 Análisis Exploratorio de Tiros</h3>
+<div>
+<div id="pyodide-20" class="exercise-cell">
+
+</div>
+<script type="pyodide-20-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoicHJpbnQoXCI9PT0gQU7DgUxJU0lTIERFIFRJUk9TID09PVwiKVxucHJpbnQoZlwiVG90YWwgZGUgdGlyb3M6IHtsZW4odGlyb3MpfVwiKVxucHJpbnQoZlwiR29sZXM6IHt0aXJvc1snR29sJ10uc3VtKCl9ICh7dGlyb3NbJ0dvbCddLm1lYW4oKSoxMDA6LjFmfSUpXCIpXG5wcmludChmXCJcXG5Qb3IgdGlwbyBkZSB0aXJvOlwiKVxucHJpbnQoZlwiICAtIFBpZToge2xlbih0aXJvc1t0aXJvc1snQ2FiZXphJ109PTBdKX0gdGlyb3MsIHt0aXJvc1t0aXJvc1snQ2FiZXphJ109PTBdWydHb2wnXS5tZWFuKCkqMTAwOi4xZn0lIGdvbGVzXCIpXG5wcmludChmXCIgIC0gQ2FiZXphOiB7bGVuKHRpcm9zW3Rpcm9zWydDYWJlemEnXT09MV0pfSB0aXJvcywge3Rpcm9zW3Rpcm9zWydDYWJlemEnXT09MV1bJ0dvbCddLm1lYW4oKSoxMDA6LjFmfSUgZ29sZXNcIilcbnByaW50KGZcIlxcblBvciBzaXR1YWNpw7NuOlwiKVxucHJpbnQoZlwiICAtIEp1Z2FkYSBub3JtYWw6IHt0aXJvc1t0aXJvc1snQ29udHJhYXRhcXVlJ109PTBdWydHb2wnXS5tZWFuKCkqMTAwOi4xZn0lIGdvbGVzXCIpXG5wcmludChmXCIgIC0gQ29udHJhYXRhcXVlOiB7dGlyb3NbdGlyb3NbJ0NvbnRyYWF0YXF1ZSddPT0xXVsnR29sJ10ubWVhbigpKjEwMDouMWZ9JSBnb2xlc1wiKVxucHJpbnQoZlwiICAtIFBlbmFsdGk6IHt0aXJvc1t0aXJvc1snUGVuYWx0aSddPT0xXVsnR29sJ10ubWVhbigpKjEwMDouMWZ9JSBnb2xlc1wiKSJ9
+</script>
+</div>
+</section>
+<section id="probabilidad-de-gol-por-distancia" class="level3" data-number="12.6.2">
+<h3 data-number="12.6.2" class="anchored" data-anchor-id="probabilidad-de-gol-por-distancia"><span class="header-section-number">12.6.2</span> 5.2 Probabilidad de Gol por Distancia</h3>
+<div>
+<div id="pyodide-21" class="exercise-cell">
+
+</div>
+<script type="pyodide-21-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBDcmVhciBiaW5zIGRlIGRpc3RhbmNpYVxudGlyb3NbJ1pvbmFfRGlzdCddID0gcGQuY3V0KHRpcm9zWydEaXN0YW5jaWFfbSddLCBcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYmlucz1bMCwgNiwgMTEsIDE4LCAyNSwgNTBdLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbHM9WycwLTZtJywgJzYtMTFtJywgJzExLTE4bScsICcxOC0yNW0nLCAnPjI1bSddKVxuXG5wcm9iX3Bvcl96b25hID0gdGlyb3MuZ3JvdXBieSgnWm9uYV9EaXN0JykuYWdnKHtcbiAgICAnR29sJzogWydzdW0nLCAnY291bnQnLCAnbWVhbiddLFxuICAgICd4R19SZWFsJzogJ21lYW4nXG59KVxucHJvYl9wb3Jfem9uYS5jb2x1bW5zID0gWydHb2xlcycsICdUaXJvcycsICdDb252ZXJzaW9uJywgJ3hHX01lZGlvJ11cblxucHJpbnQoXCLwn5OKIFByb2JhYmlsaWRhZCBkZSBHb2wgcG9yIFpvbmEgZGUgRGlzdGFuY2lhOlwiKVxucHJpbnQocHJvYl9wb3Jfem9uYS5yb3VuZCgzKSlcblxuIyBWaXN1YWxpemFyXG5maWcsIGF4ID0gcGx0LnN1YnBsb3RzKGZpZ3NpemU9KDEwLCA2KSlcbnhfcG9zID0gcmFuZ2UobGVuKHByb2JfcG9yX3pvbmEpKVxud2lkdGggPSAwLjM1XG5cbmJhcnMxID0gYXguYmFyKFt4IC0gd2lkdGgvMiBmb3IgeCBpbiB4X3Bvc10sIHByb2JfcG9yX3pvbmFbJ0NvbnZlcnNpb24nXSoxMDAsIFxuICAgICAgICAgICAgICAgd2lkdGgsIGxhYmVsPSdDb252ZXJzacOzbiBSZWFsJywgY29sb3I9J3N0ZWVsYmx1ZScpXG5iYXJzMiA9IGF4LmJhcihbeCArIHdpZHRoLzIgZm9yIHggaW4geF9wb3NdLCBwcm9iX3Bvcl96b25hWyd4R19NZWRpbyddKjEwMCwgXG4gICAgICAgICAgICAgICB3aWR0aCwgbGFiZWw9J3hHIE1lZGlvJywgY29sb3I9J2NvcmFsJylcblxuYXguc2V0X3hsYWJlbCgnWm9uYSBkZSBEaXN0YW5jaWEnKVxuYXguc2V0X3lsYWJlbCgnUHJvYmFiaWxpZGFkIGRlIEdvbCAoJSknKVxuYXguc2V0X3RpdGxlKCd4RyB2cyBDb252ZXJzacOzbiBSZWFsIHBvciBab25hJylcbmF4LnNldF94dGlja3MoeF9wb3MpXG5heC5zZXRfeHRpY2tsYWJlbHMocHJvYl9wb3Jfem9uYS5pbmRleClcbmF4LmxlZ2VuZCgpXG5cbiMgQcOxYWRpciB2YWxvcmVzXG5mb3IgYmFyIGluIGJhcnMxOlxuICAgIGhlaWdodCA9IGJhci5nZXRfaGVpZ2h0KClcbiAgICBheC50ZXh0KGJhci5nZXRfeCgpICsgYmFyLmdldF93aWR0aCgpLzIuLCBoZWlnaHQsIGYne2hlaWdodDouMWZ9JScsXG4gICAgICAgICAgICBoYT0nY2VudGVyJywgdmE9J2JvdHRvbScsIGZvbnRzaXplPTkpXG5cbnBsdC50aWdodF9sYXlvdXQoKVxucGx0LnNob3coKSJ9
+</script>
+</div>
+</section>
+<section id="modelo-xg-con-regresión-logística" class="level3" data-number="12.6.3">
+<h3 data-number="12.6.3" class="anchored" data-anchor-id="modelo-xg-con-regresión-logística"><span class="header-section-number">12.6.3</span> 5.3 Modelo xG con Regresión Logística</h3>
+<p>Para un modelo xG real, necesitamos regresión logística (la probabilidad debe estar entre 0 y 1).</p>
+<div>
+<div id="pyodide-22" class="exercise-cell">
+
+</div>
+<script type="pyodide-22-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiZnJvbSBza2xlYXJuLmxpbmVhcl9tb2RlbCBpbXBvcnQgTG9naXN0aWNSZWdyZXNzaW9uXG5mcm9tIHNrbGVhcm4ubW9kZWxfc2VsZWN0aW9uIGltcG9ydCB0cmFpbl90ZXN0X3NwbGl0XG5mcm9tIHNrbGVhcm4ubWV0cmljcyBpbXBvcnQgYWNjdXJhY3lfc2NvcmUsIHJvY19hdWNfc2NvcmUsIGNvbmZ1c2lvbl9tYXRyaXhcblxuIyBQcmVwYXJhciBmZWF0dXJlc1xuWCA9IHRpcm9zW1snRGlzdGFuY2lhX20nLCAnQW5ndWxvX2dyYWRvcycsICdDYWJlemEnLCAnQ29udHJhYXRhcXVlJywgJ1BlbmFsdGknXV0uY29weSgpXG5YWydQcmVzaW9uX051bSddID0gdGlyb3NbJ1ByZXNpb25EZWZlbnNpdmEnXS5tYXAoeydCYWphJzogMCwgJ01lZGlhJzogMSwgJ0FsdGEnOiAyfSlcbnkgPSB0aXJvc1snR29sJ11cblxuIyBEaXZpZGlyIGVuIHRyYWluL3Rlc3RcblhfdHJhaW4sIFhfdGVzdCwgeV90cmFpbiwgeV90ZXN0ID0gdHJhaW5fdGVzdF9zcGxpdChYLCB5LCB0ZXN0X3NpemU9MC4yNSwgcmFuZG9tX3N0YXRlPTQyKVxuXG4jIEVudHJlbmFyIG1vZGVsb1xubW9kZWxvX3hnID0gTG9naXN0aWNSZWdyZXNzaW9uKG1heF9pdGVyPTEwMDApXG5tb2RlbG9feGcuZml0KFhfdHJhaW4sIHlfdHJhaW4pXG5cbiMgUHJlZGVjaXIgcHJvYmFiaWxpZGFkZXMgKHhHKVxueGdfcHJlZCA9IG1vZGVsb194Zy5wcmVkaWN0X3Byb2JhKFhfdGVzdClbOiwgMV1cblxucHJpbnQoXCLwn5OKIE1vZGVsbyB4RyBFbnRyZW5hZG9cIilcbnByaW50KGZcIiAgIEFjY3VyYWN5OiB7YWNjdXJhY3lfc2NvcmUoeV90ZXN0LCBtb2RlbG9feGcucHJlZGljdChYX3Rlc3QpKTouM2Z9XCIpXG5wcmludChmXCIgICBBVUMtUk9DOiB7cm9jX2F1Y19zY29yZSh5X3Rlc3QsIHhnX3ByZWQpOi4zZn1cIilcblxuIyBDb2VmaWNpZW50ZXNcbnByaW50KFwiXFxu8J+TiCBDb2VmaWNpZW50ZXMgZGVsIE1vZGVsbzpcIilcbmZvciBmZWF0LCBjb2VmIGluIHppcChYLmNvbHVtbnMsIG1vZGVsb194Zy5jb2VmX1swXSk6XG4gICAgZGlyZWNjaW9uID0gXCLihpMgcmVkdWNlXCIgaWYgY29lZiA8IDAgZWxzZSBcIuKGkSBhdW1lbnRhXCJcbiAgICBwcmludChmXCIgICB7ZmVhdH06IHtjb2VmOi4zZn0gKHtkaXJlY2Npb259IHByb2IgZGUgZ29sKVwiKSJ9
+</script>
+</div>
+</section>
+<section id="validación-del-modelo-xg" class="level3" data-number="12.6.4">
+<h3 data-number="12.6.4" class="anchored" data-anchor-id="validación-del-modelo-xg"><span class="header-section-number">12.6.4</span> 5.4 Validación del Modelo xG</h3>
+<div>
+<div id="pyodide-23" class="exercise-cell">
+
+</div>
+<script type="pyodide-23-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBBw7FhZGlyIHByZWRpY2Npb25lcyBhbCB0ZXN0IHNldFxucmVzdWx0YWRvc190ZXN0ID0gWF90ZXN0LmNvcHkoKVxucmVzdWx0YWRvc190ZXN0WydHb2xfUmVhbCddID0geV90ZXN0XG5yZXN1bHRhZG9zX3Rlc3RbJ3hHX01vZGVsbyddID0geGdfcHJlZFxuXG4jIENhbGlicmFjacOzbjogY29tcGFyYXIgeEcgYWN1bXVsYWRvIHZzIGdvbGVzIHJlYWxlcyBwb3IgZGVjaWxcbnJlc3VsdGFkb3NfdGVzdFsnRGVjaWxfeEcnXSA9IHBkLnFjdXQocmVzdWx0YWRvc190ZXN0Wyd4R19Nb2RlbG8nXSwgcT0xMCwgbGFiZWxzPUZhbHNlKVxuXG5jYWxpYnJhY2lvbiA9IHJlc3VsdGFkb3NfdGVzdC5ncm91cGJ5KCdEZWNpbF94RycpLmFnZyh7XG4gICAgJ3hHX01vZGVsbyc6ICdtZWFuJyxcbiAgICAnR29sX1JlYWwnOiAnbWVhbidcbn0pXG5cbnByaW50KFwi8J+TiiBDYWxpYnJhY2nDs24gZGVsIE1vZGVsbyAoeEcgbWVkaW8gdnMgJSBnb2xlcyk6XCIpXG5wcmludChjYWxpYnJhY2lvbi5yb3VuZCgzKSlcblxuIyBWaXN1YWxpemFyIGNhbGlicmFjacOzblxuZmlnLCBheCA9IHBsdC5zdWJwbG90cyhmaWdzaXplPSg4LCA2KSlcbmF4LnNjYXR0ZXIoY2FsaWJyYWNpb25bJ3hHX01vZGVsbyddLCBjYWxpYnJhY2lvblsnR29sX1JlYWwnXSwgcz0xMDAsIGM9J3N0ZWVsYmx1ZScpXG5heC5wbG90KFswLCAxXSwgWzAsIDFdLCAnci0tJywgbGFiZWw9J0NhbGlicmFjacOzbiBQZXJmZWN0YScpXG5heC5zZXRfeGxhYmVsKCd4RyBQcmVkaWNobyAoTWVkaWEgcG9yIERlY2lsKScpXG5heC5zZXRfeWxhYmVsKCclIEdvbGVzIFJlYWxlcycpXG5heC5zZXRfdGl0bGUoJ0N1cnZhIGRlIENhbGlicmFjacOzbiBkZWwgTW9kZWxvIHhHJylcbmF4LmxlZ2VuZCgpXG5heC5zZXRfeGxpbSgwLCAwLjYpXG5heC5zZXRfeWxpbSgwLCAwLjYpXG5wbHQudGlnaHRfbGF5b3V0KClcbnBsdC5zaG93KCkifQ==
+</script>
+</div>
+<hr>
+</section>
+<section id="práctica-5.1-análisis-de-xg" class="level3" data-number="12.6.5">
+<h3 data-number="12.6.5" class="anchored" data-anchor-id="práctica-5.1-análisis-de-xg"><span class="header-section-number">12.6.5</span> 🧠 Práctica 5.1: Análisis de xG</h3>
+<p>Calcula el xG acumulado y los goles reales para los top 5 jugadores. ¿Quién supera las expectativas?</p>
+<div>
+<div id="pyodide-24" class="exercise-cell">
+
+</div>
+<script type="pyodide-24-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YTogQWdydXBhIHRpcm9zIHBvciBKdWdhZG9ySUQsIHN1bWEgeEcgeSBnb2xlc1xuXG4jIEVzY3JpYmUgdHUgY8OzZGlnbyBhcXXDrTpcbiJ9
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Añadir xG a todos los tiros</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tiros[<span class="st">'xG_Modelo'</span>] <span class="op">=</span> modelo_xg.predict_proba(tiros[[<span class="st">'Distancia_m'</span>, <span class="st">'Angulo_grados'</span>, <span class="st">'Cabeza'</span>, <span class="st">'Contraataque'</span>, <span class="st">'Penalti'</span>]].assign(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    Presion_Num<span class="op">=</span>tiros[<span class="st">'PresionDefensiva'</span>].<span class="bu">map</span>({<span class="st">'Baja'</span>: <span class="dv">0</span>, <span class="st">'Media'</span>: <span class="dv">1</span>, <span class="st">'Alta'</span>: <span class="dv">2</span>})</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>))[:, <span class="dv">1</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Agregar por jugador</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>resumen_jugadores <span class="op">=</span> tiros.groupby(<span class="st">'JugadorID'</span>).agg({</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'xG_Modelo'</span>: <span class="st">'sum'</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Gol'</span>: <span class="st">'sum'</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>}).rename(columns<span class="op">=</span>{<span class="st">'xG_Modelo'</span>: <span class="st">'xG_Total'</span>, <span class="st">'Gol'</span>: <span class="st">'Goles'</span>})</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>resumen_jugadores[<span class="st">'Diferencia'</span>] <span class="op">=</span> resumen_jugadores[<span class="st">'Goles'</span>] <span class="op">-</span> resumen_jugadores[<span class="st">'xG_Total'</span>]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>resumen_jugadores <span class="op">=</span> resumen_jugadores.sort_values(<span class="st">'Goles'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Top 5 Goleadores:"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resumen_jugadores.head(<span class="dv">5</span>).<span class="bu">round</span>(<span class="dv">2</span>))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Jugadores que superan expectativas (Goles - xG &gt; 0):"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resumen_jugadores[resumen_jugadores[<span class="st">'Diferencia'</span>] <span class="op">&gt;</span> <span class="dv">1</span>].head(<span class="dv">5</span>).<span class="bu">round</span>(<span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="mini-proyecto-final-análisis-estadístico-completo" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="mini-proyecto-final-análisis-estadístico-completo"><span class="header-section-number">12.7</span> 🏆 Mini-Proyecto Final: Análisis Estadístico Completo</h2>
+<p>Realiza un análisis completo respondiendo a estas preguntas:</p>
+<section id="pregunta-1-perfil-físico-por-posición" class="level3" data-number="12.7.1">
+<h3 data-number="12.7.1" class="anchored" data-anchor-id="pregunta-1-perfil-físico-por-posición"><span class="header-section-number">12.7.1</span> Pregunta 1: Perfil Físico por Posición</h3>
+<p>¿Qué posición tiene el mejor perfil físico promedio? Crea un índice compuesto.</p>
+<div>
+<div id="pyodide-25" class="exercise-cell">
+
+</div>
+<script type="pyodide-25-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> normalizar(col):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (col <span class="op">-</span> col.<span class="bu">min</span>()) <span class="op">/</span> (col.<span class="bu">max</span>() <span class="op">-</span> col.<span class="bu">min</span>())</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>atletas[<span class="st">'Indice_Fisico'</span>] <span class="op">=</span> (</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    normalizar(atletas[<span class="st">'VO2max'</span>]) <span class="op">*</span> <span class="fl">0.3</span> <span class="op">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    normalizar(atletas[<span class="st">'Distancia_Partido_m'</span>]) <span class="op">*</span> <span class="fl">0.25</span> <span class="op">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    normalizar(atletas[<span class="st">'HSR_Partido_m'</span>]) <span class="op">*</span> <span class="fl">0.25</span> <span class="op">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    normalizar(atletas[<span class="st">'Sprint_m'</span>]) <span class="op">*</span> <span class="fl">0.2</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>perfil_posicion <span class="op">=</span> atletas.groupby(<span class="st">'Posicion'</span>)[<span class="st">'Indice_Fisico'</span>].agg([<span class="st">'mean'</span>, <span class="st">'std'</span>]).sort_values(<span class="st">'mean'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Índice Físico por Posición:"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(perfil_posicion.<span class="bu">round</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-2-predicción-de-lesiones" class="level3" data-number="12.7.2">
+<h3 data-number="12.7.2" class="anchored" data-anchor-id="pregunta-2-predicción-de-lesiones"><span class="header-section-number">12.7.2</span> Pregunta 2: Predicción de Lesiones</h3>
+<p>¿Qué variables predicen mejor el historial de lesiones? Usa correlación.</p>
+<div>
+<div id="pyodide-26" class="exercise-cell">
+
+</div>
+<script type="pyodide-26-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>vars_predictoras <span class="op">=</span> [<span class="st">'Edad'</span>, <span class="st">'Peso_kg'</span>, <span class="st">'VO2max'</span>, <span class="st">'HSR_Partido_m'</span>, <span class="st">'Sprint_m'</span>, <span class="st">'Aceleraciones'</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>correlaciones <span class="op">=</span> []</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> var <span class="kw">in</span> vars_predictoras:</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    corr, p <span class="op">=</span> pearsonr(atletas[var], atletas[<span class="st">'Lesiones_Historial'</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    correlaciones.append({<span class="st">'Variable'</span>: var, <span class="st">'Correlación'</span>: corr, <span class="st">'p-valor'</span>: p})</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>corr_df <span class="op">=</span> pd.DataFrame(correlaciones).sort_values(<span class="st">'Correlación'</span>, key<span class="op">=</span><span class="bu">abs</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Correlaciones con Historial de Lesiones:"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corr_df.<span class="bu">round</span>(<span class="dv">3</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-3-modelo-predictivo" class="level3" data-number="12.7.3">
+<h3 data-number="12.7.3" class="anchored" data-anchor-id="pregunta-3-modelo-predictivo"><span class="header-section-number">12.7.3</span> Pregunta 3: Modelo Predictivo</h3>
+<p>Usando la variable más correlacionada, ¿puedes predecir lesiones con regresión?</p>
+<div>
+<div id="pyodide-27" class="exercise-cell">
+
+</div>
+<script type="pyodide-27-contents">
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+</script>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver solución
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Usar la variable más correlacionada</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mejor_predictor <span class="op">=</span> corr_df.iloc[<span class="dv">0</span>][<span class="st">'Variable'</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mejor predictor: </span><span class="sc">{</span>mejor_predictor<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>slope, intercept, r, p, se <span class="op">=</span> linregress(atletas[mejor_predictor], atletas[<span class="st">'Lesiones_Historial'</span>])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Modelo: Lesiones = </span><span class="sc">{</span>intercept<span class="sc">:.2f}</span><span class="ss"> + </span><span class="sc">{</span>slope<span class="sc">:.4f}</span><span class="ss"> × </span><span class="sc">{</span>mejor_predictor<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"R² = </span><span class="sc">{</span>r<span class="op">**</span><span class="dv">2</span><span class="sc">:.3f}</span><span class="ss">"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"p-valor = </span><span class="sc">{</span>p<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota: R² bajo indica que las lesiones son multifactoriales</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="resumen-del-capítulo" class="level2" data-number="12.8">
+<h2 data-number="12.8" class="anchored" data-anchor-id="resumen-del-capítulo"><span class="header-section-number">12.8</span> Resumen del Capítulo</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 16%">
+<col style="width: 53%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Técnica</th>
+<th>Uso</th>
+<th>Función Python</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Pearson</strong></td>
+<td>Correlación lineal (continuas)</td>
+<td><code>stats.pearsonr(x, y)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Spearman</strong></td>
+<td>Correlación no lineal/ordinal</td>
+<td><code>stats.spearmanr(x, y)</code></td>
+</tr>
+<tr class="odd">
+<td><strong>T-test</strong></td>
+<td>Comparar 2 grupos</td>
+<td><code>stats.ttest_ind(g1, g2)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Mann-Whitney</strong></td>
+<td>Comparar 2 grupos (no paramétrico)</td>
+<td><code>stats.mannwhitneyu(g1, g2)</code></td>
+</tr>
+<tr class="odd">
+<td><strong>ANOVA</strong></td>
+<td>Comparar 3+ grupos</td>
+<td><code>stats.f_oneway(g1, g2, g3)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Chi-cuadrado</strong></td>
+<td>Asociación categóricas</td>
+<td><code>stats.chi2_contingency(tabla)</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Regresión lineal</strong></td>
+<td>Predecir continua</td>
+<td><code>stats.linregress(x, y)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Regresión logística</strong></td>
+<td>Predecir probabilidad</td>
+<td><code>LogisticRegression()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Cohen’s d</strong></td>
+<td>Tamaño del efecto</td>
+<td>Función personalizada</td>
+</tr>
+<tr class="even">
+<td><strong>Shapiro-Wilk</strong></td>
+<td>Test de normalidad</td>
+<td><code>stats.shapiro(data)</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>[!TIP] <strong>Regla de oro:</strong> Siempre reporta: 1. El estadístico del test (t, F, χ², r) 2. El p-valor 3. El tamaño del efecto (Cohen’s d, R², etc.) 4. Una frase de interpretación en lenguaje claro</p>
+</blockquote>
+
+
+<script type="pyodide-data">
+eyJvcHRpb25zIjp7ImVudiI6eyJQTE9UTFlfUkVOREVSRVIiOiJwbG90bHlfbWltZXR5cGUifSwiaW5kZXhVUkwiOiJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvcHlvZGlkZS92MC4yOC4xL2Z1bGwvIn0sInBhY2thZ2VzIjp7InBrZ3MiOlsicHlvZGlkZV9odHRwIiwibWljcm9waXAiLCJpcHl0aG9uIiwicGFuZGFzIiwibnVtcHkiLCJtYXRwbG90bGliIiwicGxvdG5pbmUiLCJzZWFib3JuIiwic2Npa2l0LWxlYXJuIl19fQ==
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3siY2VsbE5hbWUiOiJweW9kaWRlLTI3IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjcgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTI3LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjctY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yNyA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjcsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTI2IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjYgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTI2LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjYtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yNiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjYsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTI1IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjUgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTI1LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjUtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yNSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjUsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTI0IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjQgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTI0LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjQtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yNCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIzIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjMgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTIzLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjMtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yMyA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjMsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjIgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTIyLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjItY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yMiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjIsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIxIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjEgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTIxLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjEtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yMSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIwIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMjAgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTIwLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMjAtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8yMCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMjAsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTE5IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTkgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE5LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTktY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xOSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTksIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTE4IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTggPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE4LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTgtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xOCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTgsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTE3IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTcgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE3LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTctY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xNyA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTcsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTE2IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTYgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE2LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTYtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xNiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTYsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTE1IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTUgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE1LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTUtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xNSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTUsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTE0IiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTQgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTE0LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTQtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xNCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEzIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTMgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEzLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTMtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMyA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTMsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEyIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTIgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEyLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTItY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMiA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTIsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTExIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTEgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTExLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTEtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMSA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEwIiwiaW5saW5lIjpmYWxzZSwibWV0aG9kTmFtZSI6ImludGVycHJldCIsInNvdXJjZSI6InZpZXdvZiBfcHlvZGlkZV9lZGl0b3JfMTAgPSB7XG4gIGNvbnN0IHsgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yLCBiNjREZWNvZGUgfSA9IHdpbmRvdy5fZXhlcmNpc2Vfb2pzX3J1bnRpbWU7XG5cbiAgY29uc3Qgc2NyaXB0Q29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLTEwLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMTAtY29udGVudHNgIH0sIGJsb2NrLmF0dHIpO1xuICBjb25zdCBlZGl0b3IgPSBuZXcgUHlvZGlkZUV4ZXJjaXNlRWRpdG9yKFxuICAgIHB5b2RpZGVPanMucHlvZGlkZVByb21pc2UsXG4gICAgYmxvY2suY29kZSxcbiAgICBvcHRpb25zXG4gICk7XG5cbiAgcmV0dXJuIGVkaXRvci5jb250YWluZXI7XG59XG5fcHlvZGlkZV92YWx1ZV8xMCA9IHB5b2RpZGVPanMucHJvY2VzcyhfcHlvZGlkZV9lZGl0b3JfMTAsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTkiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl85ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS05LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtOS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzkgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzksIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTgiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl84ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS04LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtOC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzggPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzgsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTciLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl83ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS03LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzcgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzcsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTYiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl82ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS02LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzYgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzYsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl81ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS01LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzUgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzUsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTQiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl80ID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS00LWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtNC1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzQgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzQsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTMiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8zID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0zLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMy1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzMgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzMsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTIiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8yID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0yLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMi1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzIgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzIsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLTEiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0Iiwic291cmNlIjoidmlld29mIF9weW9kaWRlX2VkaXRvcl8xID0ge1xuICBjb25zdCB7IFB5b2RpZGVFeGVyY2lzZUVkaXRvciwgYjY0RGVjb2RlIH0gPSB3aW5kb3cuX2V4ZXJjaXNlX29qc19ydW50aW1lO1xuXG4gIGNvbnN0IHNjcmlwdENvbnRlbnQgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKGBzY3JpcHRbdHlwZT1cXFwicHlvZGlkZS0xLWNvbnRlbnRzXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgYmxvY2sgPSBKU09OLnBhcnNlKGI2NERlY29kZShzY3JpcHRDb250ZW50KSk7XG5cbiAgY29uc3Qgb3B0aW9ucyA9IE9iamVjdC5hc3NpZ24oeyBpZDogYHB5b2RpZGUtMS1jb250ZW50c2AgfSwgYmxvY2suYXR0cik7XG4gIGNvbnN0IGVkaXRvciA9IG5ldyBQeW9kaWRlRXhlcmNpc2VFZGl0b3IoXG4gICAgcHlvZGlkZU9qcy5weW9kaWRlUHJvbWlzZSxcbiAgICBibG9jay5jb2RlLFxuICAgIG9wdGlvbnNcbiAgKTtcblxuICByZXR1cm4gZWRpdG9yLmNvbnRhaW5lcjtcbn1cbl9weW9kaWRlX3ZhbHVlXzEgPSBweW9kaWRlT2pzLnByb2Nlc3MoX3B5b2RpZGVfZWRpdG9yXzEsIHt9KTtcbiJ9LHsiY2VsbE5hbWUiOiJweW9kaWRlLXByZWx1ZGUiLCJpbmxpbmUiOmZhbHNlLCJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJweW9kaWRlT2pzID0ge1xuICBjb25zdCB7XG4gICAgUHlvZGlkZUV2YWx1YXRvcixcbiAgICBQeW9kaWRlRW52aXJvbm1lbnRNYW5hZ2VyLFxuICAgIHNldHVwUHl0aG9uLFxuICAgIHN0YXJ0UHlvZGlkZVdvcmtlcixcbiAgICBiNjREZWNvZGUsXG4gICAgY29sbGFwc2VQYXRoLFxuICB9ID0gd2luZG93Ll9leGVyY2lzZV9vanNfcnVudGltZTtcblxuICBjb25zdCBzdGF0dXNDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctc3RhdHVzXCIpO1xuICBjb25zdCBpbmRpY2F0b3JDb250YWluZXIgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZChcImV4ZXJjaXNlLWxvYWRpbmctaW5kaWNhdG9yXCIpO1xuICBpbmRpY2F0b3JDb250YWluZXIuY2xhc3NMaXN0LnJlbW92ZShcImQtbm9uZVwiKTtcblxuICBsZXQgc3RhdHVzVGV4dCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJkaXZcIilcbiAgc3RhdHVzVGV4dC5jbGFzc0xpc3QgPSBcImV4ZXJjaXNlLWxvYWRpbmctZGV0YWlsc1wiO1xuICBzdGF0dXNUZXh0ID0gc3RhdHVzQ29udGFpbmVyLmFwcGVuZENoaWxkKHN0YXR1c1RleHQpO1xuICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYEluaXRpYWxpc2VgO1xuXG4gIC8vIEhvaXN0IGluZGljYXRvciBvdXQgZnJvbSBmaW5hbCBzbGlkZSB3aGVuIHJ1bm5pbmcgdW5kZXIgcmV2ZWFsXG4gIGNvbnN0IHJldmVhbFN0YXR1cyA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoXCIucmV2ZWFsIC5leGVyY2lzZS1sb2FkaW5nLWluZGljYXRvclwiKTtcbiAgaWYgKHJldmVhbFN0YXR1cykge1xuICAgIHJldmVhbFN0YXR1cy5yZW1vdmUoKTtcbiAgICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yKFwiLnJldmVhbCA+IC5zbGlkZXNcIikuYXBwZW5kQ2hpbGQocmV2ZWFsU3RhdHVzKTtcbiAgfVxuXG4gIC8vIE1ha2UgYW55IHJldmVhbCBzbGlkZXMgd2l0aCBsaXZlIGNlbGxzIHNjcm9sbGFibGVcbiAgZG9jdW1lbnQucXVlcnlTZWxlY3RvckFsbChcIi5yZXZlYWwgLmV4ZXJjaXNlLWNlbGxcIikuZm9yRWFjaCgoZWwpID0+IHtcbiAgICBlbC5jbG9zZXN0KCdzZWN0aW9uLnNsaWRlJykuY2xhc3NMaXN0LmFkZChcInNjcm9sbGFibGVcIik7XG4gIH0pXG5cbiAgLy8gUHlvZGlkZSBzdXBwbGVtZW50YWwgZGF0YSBhbmQgb3B0aW9uc1xuICBjb25zdCBkYXRhQ29udGVudCA9IGRvY3VtZW50LnF1ZXJ5U2VsZWN0b3IoYHNjcmlwdFt0eXBlPVxcXCJweW9kaWRlLWRhdGFcXFwiXWApLnRleHRDb250ZW50O1xuICBjb25zdCBkYXRhID0gSlNPTi5wYXJzZShiNjREZWNvZGUoZGF0YUNvbnRlbnQpKTtcblxuICAvLyBHcmFiIGxpc3Qgb2YgcmVzb3VyY2VzIHRvIGJlIGRvd25sb2FkZWRcbiAgY29uc3QgZmlsZXNDb250ZW50ID0gZG9jdW1lbnQucXVlcnlTZWxlY3Rvcihgc2NyaXB0W3R5cGU9XFxcInZmcy1maWxlXFxcIl1gKS50ZXh0Q29udGVudDtcbiAgY29uc3QgZmlsZXMgPSBKU09OLnBhcnNlKGI2NERlY29kZShmaWxlc0NvbnRlbnQpKTtcblxuICBsZXQgcHlvZGlkZVByb21pc2UgPSAoYXN5bmMgKCkgPT4ge1xuICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgUHlvZGlkZWA7XG4gICAgY29uc3QgcHlvZGlkZSA9IGF3YWl0IHN0YXJ0UHlvZGlkZVdvcmtlcihkYXRhLm9wdGlvbnMpO1xuXG4gICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiBtaWNyb3BpcGA7XG4gICAgYXdhaXQgcHlvZGlkZS5sb2FkUGFja2FnZShcIm1pY3JvcGlwXCIpO1xuICAgIGNvbnN0IG1pY3JvcGlwID0gYXdhaXQgcHlvZGlkZS5weWltcG9ydChcIm1pY3JvcGlwXCIpO1xuICAgIGF3YWl0IGRhdGEucGFja2FnZXMucGtncy5tYXAoKHBrZykgPT4gKCkgPT4ge1xuICAgICAgc3RhdHVzVGV4dC50ZXh0Q29udGVudCA9IGBEb3dubG9hZGluZyBwYWNrYWdlOiAke3BrZ31gO1xuICAgICAgcmV0dXJuIG1pY3JvcGlwLmluc3RhbGwocGtnKTtcbiAgICB9KS5yZWR1Y2UoKGN1ciwgbmV4dCkgPT4gY3VyLnRoZW4obmV4dCksIFByb21pc2UucmVzb2x2ZSgpKTtcbiAgICBhd2FpdCBtaWNyb3BpcC5kZXN0cm95KCk7XG5cbiAgICAvLyBEb3dubG9hZCBhbmQgaW5zdGFsbCByZXNvdXJjZXNcbiAgICBhd2FpdCBmaWxlcy5tYXAoKGZpbGUpID0+IGFzeW5jICgpID0+IHtcbiAgICAgIGNvbnN0IG5hbWUgPSBmaWxlLnN1YnN0cmluZyhmaWxlLmxhc3RJbmRleE9mKCcvJykgKyAxKTtcbiAgICAgIHN0YXR1c1RleHQudGV4dENvbnRlbnQgPSBgRG93bmxvYWRpbmcgcmVzb3VyY2U6ICR7bmFtZX1gO1xuICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaChmaWxlKTtcbiAgICAgIGlmICghcmVzcG9uc2Uub2spIHtcbiAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBDYW4ndCBkb3dubG9hZCBcXGAke2ZpbGV9XFxgLiBFcnJvciAke3Jlc3BvbnNlLnN0YXR1c306IFwiJHtyZXNwb25zZS5zdGF0dXNUZXh0fVwiLmApO1xuICAgICAgfVxuICAgICAgY29uc3QgZGF0YSA9IGF3YWl0IHJlc3BvbnNlLmFycmF5QnVmZmVyKCk7XG5cbiAgICAgIC8vIFN0b3JlIFVSTHMgaW4gdGhlIGN3ZCB3aXRob3V0IGFueSBzdWJkaXJlY3Rvcnkgc3RydWN0dXJlXG4gICAgICBpZiAoZmlsZS5pbmNsdWRlcyhcIjovL1wiKSkge1xuICAgICAgICBmaWxlID0gbmFtZTtcbiAgICAgIH1cblxuICAgICAgLy8gQ29sbGFwc2UgaGlnaGVyIGRpcmVjdG9yeSBzdHJ1Y3R1cmVcbiAgICAgIGZpbGUgPSBjb2xsYXBzZVBhdGgoZmlsZSk7XG5cbiAgICAgIC8vIENyZWF0ZSBkaXJlY3RvcnkgdHJlZSwgaWdub3JpbmcgXCJkaXJlY3RvcnkgZXhpc3RzXCIgVkZTIGVycm9yc1xuICAgICAgY29uc3QgcGFydHMgPSBmaWxlLnNwbGl0KCcvJykuc2xpY2UoMCwgLTEpO1xuICAgICAgbGV0IHBhdGggPSAnJztcbiAgICAgIHdoaWxlIChwYXJ0cy5sZW5ndGggPiAwKSB7XG4gICAgICAgIHBhdGggKz0gcGFydHMuc2hpZnQoKSArICcvJztcbiAgICAgICAgdHJ5IHtcbiAgICAgICAgICBhd2FpdCBweW9kaWRlLkZTLm1rZGlyKHBhdGgpO1xuICAgICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgICAgaWYgKGUubmFtZSAhPT0gXCJFcnJub0Vycm9yXCIpIHRocm93IGU7XG4gICAgICAgICAgaWYgKGUuZXJybm8gIT09IDIwKSB7XG4gICAgICAgICAgICBjb25zdCBlcnJvclRleHRQdHIgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuX3N0cmVycm9yKGUuZXJybm8pO1xuICAgICAgICAgICAgY29uc3QgZXJyb3JUZXh0ID0gYXdhaXQgcHlvZGlkZS5fbW9kdWxlLlVURjhUb1N0cmluZyhlcnJvclRleHRQdHIpO1xuICAgICAgICAgICAgdGhyb3cgbmV3IEVycm9yKGBGaWxlc3lzdGVtIEVycm9yICR7ZS5lcnJub30gXCIke2Vycm9yVGV4dH1cIi5gKTtcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH1cblxuICAgICAgLy8gV3JpdGUgdGhpcyBmaWxlIHRvIHRoZSBWRlNcbiAgICAgIHRyeSB7XG4gICAgICAgIHJldHVybiBhd2FpdCBweW9kaWRlLkZTLndyaXRlRmlsZShmaWxlLCBuZXcgVWludDhBcnJheShkYXRhKSk7XG4gICAgICB9IGNhdGNoIChlKSB7XG4gICAgICAgIGlmIChlLm5hbWUgIT09IFwiRXJybm9FcnJvclwiKSB0aHJvdyBlO1xuICAgICAgICBjb25zdCBlcnJvclRleHRQdHIgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuX3N0cmVycm9yKGUuZXJybm8pO1xuICAgICAgICBjb25zdCBlcnJvclRleHQgPSBhd2FpdCBweW9kaWRlLl9tb2R1bGUuVVRGOFRvU3RyaW5nKGVycm9yVGV4dFB0cik7XG4gICAgICAgIHRocm93IG5ldyBFcnJvcihgRmlsZXN5c3RlbSBFcnJvciAke2UuZXJybm99IFwiJHtlcnJvclRleHR9XCIuYCk7XG4gICAgICB9XG4gICAgfSkucmVkdWNlKChjdXIsIG5leHQpID0+IGN1ci50aGVuKG5leHQpLCBQcm9taXNlLnJlc29sdmUoKSk7XG5cbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gYFB5b2RpZGUgZW52aXJvbm1lbnQgc2V0dXBgO1xuICAgIGF3YWl0IHNldHVwUHl0aG9uKHB5b2RpZGUpO1xuXG4gICAgc3RhdHVzVGV4dC5yZW1vdmUoKTtcbiAgICBpZiAoc3RhdHVzQ29udGFpbmVyLmNoaWxkcmVuLmxlbmd0aCA9PSAwKSB7XG4gICAgICBzdGF0dXNDb250YWluZXIucGFyZW50Tm9kZS5yZW1vdmUoKTtcbiAgICB9XG4gICAgcmV0dXJuIHB5b2RpZGU7XG4gIH0pKCkuY2F0Y2goKGVycikgPT4ge1xuICAgIHN0YXR1c1RleHQuc3R5bGUuY29sb3IgPSBcInZhcigtLWV4ZXJjaXNlLWVkaXRvci1obC1lciwgI0FEMDAwMClcIjtcbiAgICBzdGF0dXNUZXh0LnRleHRDb250ZW50ID0gZXJyLm1lc3NhZ2U7XG4gICAgLy9pbmRpY2F0b3JDb250YWluZXIucXVlcnlTZWxlY3RvcihcIi5zcGlubmVyLWdyb3dcIikuY2xhc3NMaXN0LmFkZChcImQtbm9uZVwiKTtcbiAgICB0aHJvdyBlcnI7XG4gIH0pO1xuXG4gIC8vIEtlZXAgdHJhY2sgb2YgaW5pdGlhbCBPSlMgYmxvY2sgcmVuZGVyXG4gIGNvbnN0IHJlbmRlcmVkT2pzID0ge307XG5cbiAgY29uc3QgcHJvY2VzcyA9IGFzeW5jIChjb250ZXh0LCBpbnB1dHMpID0+IHtcbiAgICBjb25zdCBweW9kaWRlID0gYXdhaXQgcHlvZGlkZVByb21pc2U7XG4gICAgY29uc3QgZXZhbHVhdG9yID0gbmV3IFB5b2RpZGVFdmFsdWF0b3IocHlvZGlkZSwgY29udGV4dCk7XG4gICAgYXdhaXQgZXZhbHVhdG9yLnByb2Nlc3MoaW5wdXRzKTtcbiAgICByZXR1cm4gZXZhbHVhdG9yLmNvbnRhaW5lcjtcbiAgfVxuXG4gIHJldHVybiB7XG4gICAgcHlvZGlkZVByb21pc2UsXG4gICAgcmVuZGVyZWRPanMsXG4gICAgcHJvY2VzcyxcbiAgfTtcbn1cbiJ9XX0=
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<div id="exercise-loading-indicator" class="exercise-loading-indicator d-none d-flex align-items-center gap-2">
+<div id="exercise-loading-status" class="d-flex gap-2">
+
+</div>
+<div class="spinner-grow spinner-grow-sm">
+
+</div>
+</div>
+<script type="vfs-file">
+W10=
+</script>
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W119
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./11_visualizacion_avanzada.html" class="pagination-link" aria-label="Visualización Avanzada para Fútbol">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Visualización Avanzada para Fútbol</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./13_apis_datos.html" class="pagination-link" aria-label="APIs y Fuentes de Datos">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">APIs y Fuentes de Datos</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
