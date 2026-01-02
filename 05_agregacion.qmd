@@ -1,0 +1,244 @@
+# Agregación y Window Functions
+
+Este capítulo traduce `group_by() %>% summarise()` y funciones de ventana.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+
+# ============================================
+# DATOS GPS ENRIQUECIDOS
+# ============================================
+np.random.seed(42)
+
+gps = pd.DataFrame({
+    'JugadorID': ['ATL_001', 'ATL_002', 'ATL_001', 'ATL_003', 'ATL_002', 
+                 'ATL_001', 'ATL_003', 'ATL_002', 'ATL_001', 'ATL_004'] * 3,
+    'Nombre': ['García', 'López', 'García', 'Martínez', 'López',
+               'García', 'Martínez', 'López', 'García', 'Sánchez'] * 3,
+    'Posicion': ['Delantero', 'Mediocentro', 'Delantero', 'Defensa', 'Mediocentro',
+                 'Delantero', 'Defensa', 'Mediocentro', 'Delantero', 'Portero'] * 3,
+    'TipoSesion': ['Entrenamiento', 'Partido', 'Partido', 'Entrenamiento', 'Entrenamiento',
+                  'Entrenamiento', 'Partido', 'Partido', 'Partido', 'Entrenamiento'] * 3,
+    'Distancia_Total_m': [4500, 10200, 9800, 3200, 4100, 5600, 11500, 10800, 11000, 3000] * 3,
+    'HSR_m': [150, 800, 750, 50, 120, 300, 950, 880, 900, 20] * 3,
+    'Sprint_m': [45, 280, 250, 15, 35, 90, 320, 300, 310, 5] * 3,
+    'RPE': [3, 8, 9, 2, 4, 5, 10, 8, 9, 2] * 3,
+    'Duracion_min': [60, 95, 95, 45, 60, 75, 98, 96, 95, 40] * 3,
+    'HR_Media': [135, 165, 168, 125, 140, 145, 172, 167, 170, 120] * 3,
+    'Fecha': pd.date_range(start='2024-01-01', periods=30).strftime('%Y-%m-%d').tolist()
+})
+
+print("✅ Datos GPS cargados:", gps.shape)
+print(f"   Columnas: {', '.join(gps.columns[:6])}...")
+```
+
+***
+
+## 1. GroupBy + Agregación
+
+### Ejemplo 1.1: Agregación simple
+
+**En R:** `gps %>% group_by(JugadorID) %>% summarise(Media = mean(Distancia_Total_m))`
+
+**En Pandas:**
+```{pyodide}
+gps.groupby('JugadorID')['Distancia_Total_m'].mean()
+```
+
+### Ejemplo 1.2: Múltiples agregaciones
+
+**En R:** `summarise(Media = mean(x), Total = sum(y), Max = max(z))`
+
+```{pyodide}
+(
+    gps
+    .groupby('JugadorID')
+    .agg(
+        Media_Dist = ('Distancia_Total_m', 'mean'),
+        Total_HSR = ('HSR_m', 'sum'),
+        RPE_Max = ('RPE', 'max'),
+        N_Sesiones = ('RPE', 'count')
+    )
+)
+```
+
+---
+
+### 🧠 Práctica 1.1
+
+Agrupa por TipoSesion y calcula: media de Distancia, suma de HSR, conteo.
+
+```{pyodide}
+# Pista: .groupby('col').agg(nombre = ('col', 'func'))
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps.groupby('TipoSesion').agg(
+    Media_Dist = ('Distancia_Total_m', 'mean'),
+    Total_HSR = ('HSR_m', 'sum'),
+    N = ('RPE', 'count')
+)
+```
+:::
+
+***
+
+## 2. Window Functions
+
+### Ejemplo 2.1: Rolling (Media Móvil)
+
+**En R:** `mutate(Rolling = slide_dbl(x, mean, .before = 2))`
+
+```{pyodide}
+gps_copy = gps.copy()
+gps_copy['Dist_Rolling_3'] = gps_copy['Distancia_Total_m'].rolling(window=3).mean()
+gps_copy[['JugadorID', 'Distancia_Total_m', 'Dist_Rolling_3']].head(10)
+```
+
+### Ejemplo 2.2: shift (lag/lead)
+
+**En R:** `mutate(Anterior = lag(x))`
+
+```{pyodide}
+gps_copy = gps.copy()
+gps_copy['Dist_Anterior'] = gps_copy['Distancia_Total_m'].shift(1)
+gps_copy[['Distancia_Total_m', 'Dist_Anterior']].head()
+```
+
+### Ejemplo 2.3: transform (agregar sin colapsar)
+
+**En R:** `group_by() %>% mutate(Media_Grupo = mean(x))`
+
+```{pyodide}
+gps_copy = gps.copy()
+gps_copy['Media_Jugador'] = gps_copy.groupby('JugadorID')['Distancia_Total_m'].transform('mean')
+gps_copy[['JugadorID', 'Distancia_Total_m', 'Media_Jugador']].head()
+```
+
+---
+
+### 🧠 Práctica 2.1
+
+Crea una columna 'Ranking' que ordene las sesiones por Distancia (1 = mayor).
+
+```{pyodide}
+# Pista: .rank(ascending=False)
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps_copy = gps.copy()
+gps_copy['Ranking'] = gps_copy['Distancia_Total_m'].rank(ascending=False).astype(int)
+gps_copy.nsmallest(5, 'Ranking')[['JugadorID', 'Distancia_Total_m', 'Ranking']]
+```
+:::
+
+***
+
+## 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento
+
+### Pregunta 1: Carga Acumulada por Jugador
+¿Qué jugador ha acumulado más metros en sprint? Muestra el top 3.
+
+```{pyodide}
+# Pista: groupby + sum + nlargest
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps.groupby('Nombre')['Sprint_m'].sum().nlargest(3)
+```
+:::
+
+### Pregunta 2: Perfil de Carga por Posición
+¿Cuál es la distancia media en partidos para cada posición? ¿Quién corre más?
+
+```{pyodide}
+# Pista: Filtra primero por TipoSesion, luego agrupa
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    gps
+    .query("TipoSesion == 'Partido'")
+    .groupby('Posicion')['Distancia_Total_m']
+    .mean()
+    .sort_values(ascending=False)
+)
+```
+:::
+
+### Pregunta 3: Media Móvil de Carga Semanal
+Calcula la media móvil de 3 días del RPE para el jugador García. Esto ayuda a detectar fatiga acumulada.
+
+```{pyodide}
+# Pista: Filtra por nombre, ordena por fecha, aplica rolling
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+garcia = gps.query("Nombre == 'García'").sort_values('Fecha').copy()
+garcia['RPE_Rolling_3'] = garcia['RPE'].rolling(window=3).mean()
+garcia[['Fecha', 'TipoSesion', 'RPE', 'RPE_Rolling_3']]
+```
+:::
+
+### Pregunta 4: Comparar Rendimiento Individual vs Grupo
+Para cada sesión, calcula cuánto difiere la distancia del jugador respecto a la media del grupo ese día.
+
+```{pyodide}
+# Pista: Usa transform para agregar sin colapsar
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps_copy = gps.copy()
+gps_copy['Media_Dia'] = gps_copy.groupby('Fecha')['Distancia_Total_m'].transform('mean')
+gps_copy['Diff_vs_Grupo'] = gps_copy['Distancia_Total_m'] - gps_copy['Media_Dia']
+gps_copy[['Nombre', 'Fecha', 'Distancia_Total_m', 'Media_Dia', 'Diff_vs_Grupo']].head(10)
+```
+:::
+
+---
+
+## Resumen
+
+| Operación | R (Tidyverse) | Python (Pandas) |
+|-----------|---------------|-----------------|
+| Agrupar + resumir | `group_by() %>% summarise()` | `.groupby().agg()` |
+| Media móvil | `slide_dbl(..., mean)` | `.rolling(n).mean()` |
+| Lag | `lag(x)` | `.shift(1)` |
+| Agregar sin colapsar | `mutate()` en group_by | `.transform()` |

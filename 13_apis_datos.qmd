@@ -1,0 +1,392 @@
+# APIs y Fuentes de Datos
+
+Este capítulo cubre cómo acceder a datos profesionales de fútbol usando APIs.
+
+::: {.callout-note}
+## Librería necesaria
+Para acceder a datos de StatsBomb: `pip install statsbombpy`
+Este capítulo muestra ejemplos que funcionan fuera del navegador.
+:::
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+
+print("✅ Pandas cargado")
+print("📌 Este capítulo contiene ejemplos para ejecutar localmente")
+```
+
+***
+
+## 1. Fuentes de Datos de Fútbol
+
+### Principales proveedores
+
+| Proveedor | Tipo de Datos | Acceso |
+|-----------|---------------|--------|
+| **StatsBomb** | Eventos detallados | Gratis (Open Data) |
+| **Wyscout** | Eventos + Video | De pago |
+| **Opta** | Eventos | De pago (clubes) |
+| **Metrica Sports** | Tracking | Sample gratis |
+| **SkillCorner** | Tracking (broadcast) | De pago |
+| **FBREF** | Estadísticas agregadas | Scraping (gratis) |
+
+---
+
+## 2. StatsBomb Open Data
+
+StatsBomb ofrece datos gratuitos de partidos selectos:
+- Champions League (varias ediciones)
+- La Liga (temporadas históricas)
+- Copa del Mundo 2018, 2022
+- Messi: datos completos de su carrera
+
+### Ejemplo 2.1: Estructura de datos StatsBomb
+
+Los datos de StatsBomb vienen en formato JSON anidado. Las columnas principales son:
+
+```python
+# Columnas principales de eventos StatsBomb
+columnas = [
+    'id',              # ID único del evento
+    'index',           # Orden cronológico
+    'period',          # Período (1, 2, extra)
+    'timestamp',       # Tiempo en formato HH:MM:SS.sss
+    'minute',          # Minuto del partido
+    'second',          # Segundo
+    'type',            # Tipo: Pass, Shot, Duel, etc.
+    'possession',      # Número de posesión
+    'possession_team', # Equipo con balón
+    'play_pattern',    # Patrón: Regular Play, Counter, etc.
+    'team',            # Equipo que hace la acción
+    'player',          # Jugador
+    'position',        # Posición en el campo
+    'location',        # Coordenadas [x, y]
+    'duration'         # Duración del evento
+]
+```
+
+### Ejemplo 2.2: Código para acceder a StatsBomb
+
+::: {.callout-warning}
+## Ejecutar localmente
+Este código requiere la librería statsbombpy. 
+Instalar: `pip install statsbombpy`
+:::
+
+```python
+# === CÓDIGO PARA EJECUTAR LOCALMENTE ===
+from statsbombpy import sb
+
+# Ver competiciones disponibles
+competiciones = sb.competitions()
+print(competiciones[['competition_name', 'season_name']].head(10))
+
+# Cargar partidos de una competición
+# Ejemplo: La Liga 2020/21 (competition_id=11, season_id=90)
+partidos = sb.matches(competition_id=11, season_id=90)
+print(f"Partidos disponibles: {len(partidos)}")
+
+# Cargar eventos de un partido específico
+match_id = 3773585  # Ejemplo: Barcelona vs Real Madrid
+eventos = sb.events(match_id=match_id)
+print(f"Eventos en el partido: {len(eventos)}")
+print(eventos[['minute', 'type', 'player', 'team']].head(10))
+```
+
+---
+
+### 🧠 Práctica 2.1 (Conceptual)
+
+¿Qué competiciones del Mundial 2022 estarían disponibles en StatsBomb Open Data?
+
+::: {.callout-tip collapse="true"}
+## Ver respuesta
+StatsBomb ofrece datos gratuitos del Mundial 2022, incluyendo:
+- Todos los partidos de fase de grupos
+- Octavos, cuartos, semifinales y final
+- Eventos detallados (pases, tiros, duelos)
+- Datos de presión y posesión
+
+Para acceder: `sb.matches(competition_id=43, season_id=106)`
+:::
+
+***
+
+## 3. Procesamiento de Eventos
+
+### Ejemplo 3.1: Datos de ejemplo (simulados)
+
+Para practicar sin conexión, usamos datos simulados con la misma estructura:
+
+```{pyodide}
+# Simular estructura de datos StatsBomb
+np.random.seed(42)
+
+eventos_simulados = pd.DataFrame({
+    'id': [f'evt_{i}' for i in range(100)],
+    'minute': sorted(np.random.randint(1, 90, 100)),
+    'second': np.random.randint(0, 60, 100),
+    'type': np.random.choice(['Pass', 'Carry', 'Shot', 'Duel', 'Ball Receipt'], 100, 
+                              p=[0.5, 0.2, 0.05, 0.15, 0.1]),
+    'team': np.random.choice(['Barcelona', 'Real Madrid'], 100),
+    'player': np.random.choice(['Messi', 'Benzema', 'Pedri', 'Modric', 'Vinicius'], 100),
+    'location_x': np.random.uniform(0, 120, 100),
+    'location_y': np.random.uniform(0, 80, 100),
+    'pass_end_x': np.random.uniform(0, 120, 100),
+    'pass_end_y': np.random.uniform(0, 80, 100),
+    'pass_outcome': np.random.choice(['Complete', 'Incomplete', None], 100, p=[0.7, 0.2, 0.1])
+})
+
+# Añadir xG a los tiros
+eventos_simulados.loc[eventos_simulados['type'] == 'Shot', 'shot_xg'] = np.random.uniform(0.02, 0.5, 
+    (eventos_simulados['type'] == 'Shot').sum())
+
+print("Eventos simulados (estructura StatsBomb):")
+print(eventos_simulados.head(10))
+```
+
+### Ejemplo 3.2: Análisis de pases
+
+```{pyodide}
+# Filtrar solo pases
+pases = eventos_simulados.query("type == 'Pass'")
+
+# Resumen por equipo
+resumen_pases = pases.groupby('team').agg({
+    'id': 'count',
+    'pass_outcome': lambda x: (x == 'Complete').mean()
+}).rename(columns={'id': 'Total_Pases', 'pass_outcome': 'Pct_Completados'})
+
+resumen_pases['Pct_Completados'] = (resumen_pases['Pct_Completados'] * 100).round(1)
+print("Resumen de Pases por Equipo:")
+print(resumen_pases)
+```
+
+### Ejemplo 3.3: Análisis de tiros y xG
+
+```{pyodide}
+# Filtrar tiros
+tiros = eventos_simulados.query("type == 'Shot'").copy()
+
+if len(tiros) > 0:
+    # Resumen por jugador
+    xg_jugador = tiros.groupby('player')['shot_xg'].agg(['sum', 'count', 'mean'])
+    xg_jugador.columns = ['xG_Total', 'Tiros', 'xG_Promedio']
+    xg_jugador = xg_jugador.sort_values('xG_Total', ascending=False)
+    
+    print("xG por Jugador:")
+    print(xg_jugador.round(2))
+else:
+    print("No hay tiros en esta muestra")
+```
+
+---
+
+### 🧠 Práctica 3.1
+
+Calcula la distancia media de los pases por equipo (usando location_x, pass_end_x).
+
+```{pyodide}
+# Pista: Distancia = abs(pass_end_x - location_x)
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pases = eventos_simulados.query("type == 'Pass'").copy()
+pases['distancia_pase'] = abs(pases['pass_end_x'] - pases['location_x'])
+
+print("Distancia media de pases por equipo:")
+print(pases.groupby('team')['distancia_pase'].mean().round(1))
+```
+:::
+
+***
+
+## 4. Otras Fuentes de Datos
+
+### 4.1 Metrica Sports (Tracking Data)
+
+Metrica ofrece datos de tracking de ejemplo:
+- Posiciones de 22 jugadores + balón
+- 25 frames por segundo
+- Eventos sincronizados
+
+```python
+# Ejemplo de carga de tracking Metrica (ejecutar localmente)
+import pandas as pd
+
+# Descargar de: https://github.com/metrica-sports/sample-data
+tracking_home = pd.read_csv('Sample_Game_1_RawTrackingData_Home_Team.csv')
+tracking_away = pd.read_csv('Sample_Game_1_RawTrackingData_Away_Team.csv')
+
+print(f"Frames: {len(tracking_home)}")
+print(f"Columnas por jugador: x, y para cada uno")
+```
+
+### 4.2 FBREF (Web Scraping)
+
+FBREF ofrece estadísticas agregadas que se pueden scrapear:
+
+```python
+# Ejemplo conceptual de scraping FBREF
+import pandas as pd
+
+# FBREF permite leer tablas HTML directamente
+url = "https://fbref.com/en/comps/12/La-Liga-Stats"
+tablas = pd.read_html(url)
+
+# La primera tabla suele ser la clasificación
+clasificacion = tablas[0]
+print(clasificacion.head())
+```
+
+::: {.callout-warning}
+## Nota sobre scraping
+- Revisa los términos de servicio antes de scrapear
+- Respeta los rate limits
+- Considera usar APIs oficiales cuando estén disponibles
+:::
+
+***
+
+## 🏆 Mini-Proyecto: Análisis de un Partido
+
+Usando los datos simulados, realiza un análisis completo:
+
+### Pregunta 1: Posesión por Equipo
+Calcula el porcentaje aproximado de posesión (número de eventos por equipo).
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+posesion = eventos_simulados.groupby('team').size()
+posesion_pct = (posesion / posesion.sum() * 100).round(1)
+
+print("Posesión aproximada:")
+for equipo, pct in posesion_pct.items():
+    print(f"  {equipo}: {pct}%")
+```
+:::
+
+### Pregunta 2: Jugadores Más Activos
+¿Qué 3 jugadores tuvieron más eventos?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+jugadores_activos = eventos_simulados.groupby('player').size().nlargest(3)
+print("Jugadores más activos:")
+print(jugadores_activos)
+```
+:::
+
+### Pregunta 3: Mapa de Calor de Eventos
+Crea un histograma 2D de las ubicaciones de los eventos.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(12, 8))
+
+ax.hist2d(eventos_simulados['location_x'], eventos_simulados['location_y'], 
+          bins=20, cmap='hot')
+
+ax.set_xlabel('X (largo del campo)')
+ax.set_ylabel('Y (ancho del campo)')
+ax.set_title('Densidad de Eventos en el Campo')
+ax.set_xlim(0, 120)
+ax.set_ylim(0, 80)
+plt.colorbar(ax.collections[0], label='Frecuencia')
+plt.tight_layout()
+plt.show()
+```
+:::
+
+### Pregunta 4: Resumen Ejecutivo
+Crea un DataFrame resumen del partido con métricas clave por equipo.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+resumen = eventos_simulados.groupby('team').agg({
+    'id': 'count',
+    'type': lambda x: (x == 'Pass').sum(),
+    'shot_xg': 'sum'
+}).rename(columns={
+    'id': 'Total_Eventos',
+    'type': 'Pases',
+    'shot_xg': 'xG_Total'
+})
+
+# Añadir porcentaje de posesión
+total = resumen['Total_Eventos'].sum()
+resumen['Posesion_Pct'] = (resumen['Total_Eventos'] / total * 100).round(1)
+
+print("=== RESUMEN DEL PARTIDO ===")
+print(resumen.fillna(0).round(2))
+```
+:::
+
+---
+
+## Resumen
+
+| Fuente | Tipo | Acceso | URL |
+|--------|------|--------|-----|
+| StatsBomb | Eventos | Gratis (Open Data) | github.com/statsbomb |
+| Metrica | Tracking | Sample gratis | github.com/metrica-sports |
+| FBREF | Estadísticas | Scraping | fbref.com |
+| Wyscout | Eventos + Video | De pago | wyscout.com |
+
+### Código de referencia para StatsBomb
+
+```python
+# Instalación
+# pip install statsbombpy
+
+from statsbombpy import sb
+
+# Lista de competiciones
+comps = sb.competitions()
+
+# Partidos de una competición
+matches = sb.matches(competition_id=43, season_id=106)  # Mundial 2022
+
+# Eventos de un partido
+events = sb.events(match_id=3869685)  # Final Argentina vs Francia
+
+# Filtrar pases de Messi
+messi_pases = events.query("player == 'Lionel Andrés Messi Cuccittini' and type == 'Pass'")
+```

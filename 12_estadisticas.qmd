@@ -1,0 +1,942 @@
+# Estadísticas Aplicadas al Deporte: Guía Completa
+
+Este capítulo es una guía exhaustiva de estadística aplicada al análisis deportivo. Cubrimos desde conceptos fundamentales hasta técnicas avanzadas usadas por analistas profesionales.
+
+## Introducción: ¿Por qué Estadística en Deporte?
+
+La estadística en el deporte nos permite:
+
+1. **Medir** el rendimiento de forma objetiva
+2. **Comparar** jugadores y equipos con rigor
+3. **Predecir** resultados y rendimiento futuro
+4. **Identificar** patrones ocultos en los datos
+5. **Tomar decisiones** basadas en evidencia, no en intuición
+
+> [!IMPORTANT]
+> La diferencia entre un buen analista y uno mediocre es saber **cuándo** usar cada técnica y **cómo interpretar** los resultados correctamente.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from scipy.stats import pearsonr, spearmanr, linregress, ttest_ind, mannwhitneyu, f_oneway, chi2_contingency
+
+# ============================================
+# DATASETS COMPLETOS PARA ANÁLISIS ESTADÍSTICO
+# ============================================
+np.random.seed(42)
+
+# 1. Dataset de atletas con métricas de rendimiento
+posiciones = ['Portero', 'Defensa', 'Mediocentro', 'Extremo', 'Delantero']
+n_atletas = 50
+
+atletas = pd.DataFrame({
+    'JugadorID': [f'ATL_{i:03d}' for i in range(1, n_atletas + 1)],
+    'Nombre': [f'Jugador_{i}' for i in range(1, n_atletas + 1)],
+    'Posicion': np.random.choice(posiciones, n_atletas),
+    'Edad': np.random.randint(18, 36, n_atletas),
+    'Altura_cm': np.random.randint(165, 200, n_atletas),
+    'Peso_kg': np.random.randint(60, 95, n_atletas),
+    'VO2max': np.random.uniform(42, 68, n_atletas),
+    'FC_Max': np.random.randint(175, 205, n_atletas),
+    'Distancia_Partido_m': np.random.randint(7500, 13000, n_atletas),
+    'HSR_Partido_m': np.random.randint(200, 1200, n_atletas),
+    'Sprint_m': np.random.randint(100, 500, n_atletas),
+    'Aceleraciones': np.random.randint(30, 120, n_atletas),
+    'Goles_Temporada': np.random.randint(0, 25, n_atletas),
+    'Asistencias_Temporada': np.random.randint(0, 18, n_atletas),
+    'Lesiones_Historial': np.random.randint(0, 8, n_atletas)
+})
+
+# Ajustar datos para que sean más realistas por posición
+for idx, row in atletas.iterrows():
+    if row['Posicion'] == 'Portero':
+        atletas.loc[idx, 'Distancia_Partido_m'] = np.random.randint(5000, 7000)
+        atletas.loc[idx, 'HSR_Partido_m'] = np.random.randint(50, 200)
+        atletas.loc[idx, 'VO2max'] = np.random.uniform(42, 52)
+    elif row['Posicion'] == 'Mediocentro':
+        atletas.loc[idx, 'Distancia_Partido_m'] = np.random.randint(10500, 13000)
+        atletas.loc[idx, 'VO2max'] = np.random.uniform(55, 68)
+    elif row['Posicion'] == 'Delantero':
+        atletas.loc[idx, 'Sprint_m'] = np.random.randint(300, 500)
+        atletas.loc[idx, 'Goles_Temporada'] = np.random.randint(5, 25)
+
+# Hacer que VO2max correlacione con Distancia
+atletas['Distancia_Partido_m'] = (
+    atletas['VO2max'] * 150 + 
+    np.random.normal(0, 800, n_atletas)
+).astype(int).clip(5000, 14000)
+
+# 2. Dataset de tiros para modelos xG (más grande y detallado)
+n_tiros = 500
+tiros = pd.DataFrame({
+    'TiroID': range(1, n_tiros + 1),
+    'PartidoID': np.random.randint(1, 51, n_tiros),
+    'JugadorID': np.random.choice(atletas['JugadorID'].values, n_tiros),
+    'Minuto': np.random.randint(1, 91, n_tiros),
+    'Distancia_m': np.random.uniform(3, 40, n_tiros),
+    'Angulo_grados': np.random.uniform(3, 85, n_tiros),
+    'Cabeza': np.random.choice([0, 1], n_tiros, p=[0.82, 0.18]),
+    'PresionDefensiva': np.random.choice(['Baja', 'Media', 'Alta'], n_tiros, p=[0.25, 0.50, 0.25]),
+    'Contraataque': np.random.choice([0, 1], n_tiros, p=[0.85, 0.15]),
+    'Penalti': np.random.choice([0, 1], n_tiros, p=[0.95, 0.05])
+})
+
+# Calcular probabilidad real de gol para simular etiquetas
+def calcular_prob_gol(row):
+    base = 0.35
+    # Distancia: cada metro reduce probabilidad
+    dist_effect = -0.012 * row['Distancia_m']
+    # Ángulo: mayor ángulo = mejor oportunidad
+    ang_effect = 0.003 * row['Angulo_grados']
+    # Cabeza: ligeramente más difícil
+    head_effect = -0.08 if row['Cabeza'] == 1 else 0
+    # Presión defensiva
+    press_effect = {'Baja': 0.05, 'Media': 0, 'Alta': -0.08}[row['PresionDefensiva']]
+    # Contraataque: mejor oportunidad
+    counter_effect = 0.10 if row['Contraataque'] == 1 else 0
+    # Penalti: muy alta probabilidad
+    penalty_effect = 0.45 if row['Penalti'] == 1 else 0
+    
+    prob = base + dist_effect + ang_effect + head_effect + press_effect + counter_effect + penalty_effect
+    return np.clip(prob + np.random.normal(0, 0.03), 0.02, 0.95)
+
+tiros['xG_Real'] = tiros.apply(calcular_prob_gol, axis=1)
+tiros['Gol'] = (np.random.random(n_tiros) < tiros['xG_Real']).astype(int)
+
+print("✅ Datos cargados para análisis estadístico")
+print(f"   Atletas: {len(atletas)} jugadores en {atletas['Posicion'].nunique()} posiciones")
+print(f"   Tiros: {len(tiros)} registros, {tiros['Gol'].sum()} goles ({tiros['Gol'].mean()*100:.1f}%)")
+```
+
+***
+
+## 1. Estadística Descriptiva: Conoce Tus Datos
+
+Antes de cualquier análisis, debemos entender la distribución de nuestros datos.
+
+### 1.1 Medidas de Tendencia Central
+
+```{pyodide}
+# Calcular estadísticas descriptivas para VO2max por posición
+desc_vo2 = atletas.groupby('Posicion')['VO2max'].agg(['count', 'mean', 'median', 'std', 'min', 'max'])
+desc_vo2.columns = ['N', 'Media', 'Mediana', 'Desv.Std', 'Mín', 'Máx']
+
+print("📊 Estadísticas Descriptivas de VO2max por Posición:")
+print(desc_vo2.round(1))
+```
+
+### 1.2 Visualización de Distribuciones
+
+```{pyodide}
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+# 1. Histograma de VO2max
+axes[0, 0].hist(atletas['VO2max'], bins=15, edgecolor='white', color='steelblue', alpha=0.7)
+axes[0, 0].axvline(atletas['VO2max'].mean(), color='red', linestyle='--', label=f'Media: {atletas["VO2max"].mean():.1f}')
+axes[0, 0].axvline(atletas['VO2max'].median(), color='green', linestyle='--', label=f'Mediana: {atletas["VO2max"].median():.1f}')
+axes[0, 0].set_xlabel('VO2max (ml/kg/min)')
+axes[0, 0].set_ylabel('Frecuencia')
+axes[0, 0].set_title('Distribución de VO2max')
+axes[0, 0].legend()
+
+# 2. Boxplot por posición
+atletas.boxplot(column='Distancia_Partido_m', by='Posicion', ax=axes[0, 1])
+axes[0, 1].set_xlabel('Posición')
+axes[0, 1].set_ylabel('Distancia (m)')
+axes[0, 1].set_title('Distancia por Posición')
+plt.suptitle('')  # Eliminar título automático
+
+# 3. Scatter con tendencia
+axes[1, 0].scatter(atletas['VO2max'], atletas['Distancia_Partido_m'], 
+                   c='steelblue', s=50, alpha=0.6, edgecolors='white')
+# Línea de tendencia
+z = np.polyfit(atletas['VO2max'], atletas['Distancia_Partido_m'], 1)
+p = np.poly1d(z)
+axes[1, 0].plot(atletas['VO2max'].sort_values(), p(atletas['VO2max'].sort_values()), 
+                'r--', linewidth=2, label='Tendencia')
+axes[1, 0].set_xlabel('VO2max')
+axes[1, 0].set_ylabel('Distancia Partido (m)')
+axes[1, 0].set_title('VO2max vs Distancia')
+axes[1, 0].legend()
+
+# 4. Distribución de goles
+tiros_por_jugador = tiros.groupby('JugadorID')['Gol'].sum()
+axes[1, 1].hist(tiros_por_jugador, bins=12, edgecolor='white', color='coral', alpha=0.7)
+axes[1, 1].set_xlabel('Goles Marcados')
+axes[1, 1].set_ylabel('Número de Jugadores')
+axes[1, 1].set_title('Distribución de Goles por Jugador')
+
+plt.tight_layout()
+plt.show()
+```
+
+### 1.3 Detectar Outliers con IQR
+
+```{pyodide}
+def detectar_outliers(df, columna):
+    """Detecta outliers usando el método IQR"""
+    Q1 = df[columna].quantile(0.25)
+    Q3 = df[columna].quantile(0.75)
+    IQR = Q3 - Q1
+    
+    limite_inferior = Q1 - 1.5 * IQR
+    limite_superior = Q3 + 1.5 * IQR
+    
+    outliers = df[(df[columna] < limite_inferior) | (df[columna] > limite_superior)]
+    
+    print(f"📈 Análisis de Outliers para '{columna}':")
+    print(f"   Q1: {Q1:.1f}, Q3: {Q3:.1f}, IQR: {IQR:.1f}")
+    print(f"   Límites: [{limite_inferior:.1f}, {limite_superior:.1f}]")
+    print(f"   Outliers detectados: {len(outliers)}")
+    
+    return outliers
+
+outliers_vo2 = detectar_outliers(atletas, 'VO2max')
+if len(outliers_vo2) > 0:
+    print("\n   Jugadores outliers:")
+    print(outliers_vo2[['Nombre', 'Posicion', 'VO2max']])
+```
+
+***
+
+## 2. Correlación: Midiendo Relaciones
+
+### 2.1 Correlación de Pearson (Variables Continuas)
+
+La correlación de Pearson mide la **relación lineal** entre dos variables. Va de -1 a +1.
+
+| Valor | Interpretación |
+|-------|----------------|
+| 0.9 a 1.0 | Correlación muy fuerte |
+| 0.7 a 0.9 | Correlación fuerte |
+| 0.4 a 0.7 | Correlación moderada |
+| 0.2 a 0.4 | Correlación débil |
+| 0.0 a 0.2 | Correlación muy débil o nula |
+
+```{pyodide}
+# Correlación VO2max vs Distancia
+corr_pearson, p_value = pearsonr(atletas['VO2max'], atletas['Distancia_Partido_m'])
+
+print("🔗 Correlación de Pearson: VO2max vs Distancia")
+print(f"   r = {corr_pearson:.3f}")
+print(f"   p-valor = {p_value:.4f}")
+print(f"   R² = {corr_pearson**2:.3f} (varianza explicada)")
+
+# Interpretación automática
+if abs(corr_pearson) >= 0.7:
+    fuerza = "FUERTE"
+elif abs(corr_pearson) >= 0.4:
+    fuerza = "MODERADA"
+else:
+    fuerza = "DÉBIL"
+    
+direccion = "positiva" if corr_pearson > 0 else "negativa"
+sig = "significativa (p<0.05)" if p_value < 0.05 else "NO significativa"
+
+print(f"\n   ✅ Correlación {fuerza} {direccion}, {sig}")
+```
+
+### 2.2 Correlación de Spearman (Variables Ordinales o No Lineales)
+
+Cuando la relación no es lineal o tenemos variables ordinales, usamos Spearman.
+
+```{pyodide}
+# Comparar Pearson vs Spearman para Edad vs VO2max
+corr_pearson, p_pearson = pearsonr(atletas['Edad'], atletas['VO2max'])
+corr_spearman, p_spearman = spearmanr(atletas['Edad'], atletas['VO2max'])
+
+print("📊 Comparación Pearson vs Spearman (Edad vs VO2max):")
+print(f"   Pearson:  r = {corr_pearson:.3f}, p = {p_pearson:.4f}")
+print(f"   Spearman: ρ = {corr_spearman:.3f}, p = {p_spearman:.4f}")
+
+# Si difieren mucho, la relación puede ser no lineal
+if abs(corr_pearson - corr_spearman) > 0.1:
+    print("\n   ⚠️ Diferencia notable: la relación puede ser NO LINEAL")
+```
+
+### 2.3 Matriz de Correlación Completa
+
+```{pyodide}
+# Seleccionar variables de interés
+vars_fisicas = ['Edad', 'VO2max', 'Distancia_Partido_m', 'HSR_Partido_m', 'Sprint_m', 'Aceleraciones']
+matriz_corr = atletas[vars_fisicas].corr()
+
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# Heatmap mejorado
+im = ax.imshow(matriz_corr, cmap='RdBu_r', vmin=-1, vmax=1, aspect='auto')
+
+# Configuración de ejes
+ax.set_xticks(range(len(vars_fisicas)))
+ax.set_yticks(range(len(vars_fisicas)))
+ax.set_xticklabels(vars_fisicas, rotation=45, ha='right', fontsize=10)
+ax.set_yticklabels(vars_fisicas, fontsize=10)
+
+# Añadir valores en cada celda
+for i in range(len(vars_fisicas)):
+    for j in range(len(vars_fisicas)):
+        valor = matriz_corr.iloc[i, j]
+        color = 'white' if abs(valor) > 0.5 else 'black'
+        ax.text(j, i, f'{valor:.2f}', ha='center', va='center', color=color, fontsize=9)
+
+# Barra de color
+cbar = plt.colorbar(im, ax=ax, shrink=0.8)
+cbar.set_label('Coeficiente de Correlación', fontsize=10)
+
+ax.set_title('Matriz de Correlación - Variables Físicas', fontsize=12, fontweight='bold')
+plt.tight_layout()
+plt.show()
+
+# Encontrar las correlaciones más fuertes (excluyendo diagonal)
+print("\n🔝 Top 5 Correlaciones más Fuertes:")
+corr_pairs = []
+for i, col1 in enumerate(vars_fisicas):
+    for j, col2 in enumerate(vars_fisicas):
+        if i < j:  # Solo triángulo superior
+            corr_pairs.append((col1, col2, abs(matriz_corr.loc[col1, col2]), matriz_corr.loc[col1, col2]))
+
+corr_pairs.sort(key=lambda x: x[2], reverse=True)
+for col1, col2, abs_corr, corr in corr_pairs[:5]:
+    print(f"   {col1} vs {col2}: r = {corr:.3f}")
+```
+
+---
+
+### 🧠 Práctica 2.1: Análisis de Correlación
+
+Calcula la correlación entre el número de Lesiones en el historial y la Edad. ¿Los jugadores mayores tienen más lesiones?
+
+```{pyodide}
+# Pista: Usa pearsonr() o spearmanr()
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+corr, p = pearsonr(atletas['Edad'], atletas['Lesiones_Historial'])
+print(f"Correlación Edad vs Lesiones: r = {corr:.3f}, p = {p:.4f}")
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.scatter(atletas['Edad'], atletas['Lesiones_Historial'], s=60, alpha=0.6)
+ax.set_xlabel('Edad')
+ax.set_ylabel('Lesiones en Historial')
+ax.set_title(f'Edad vs Lesiones (r = {corr:.2f})')
+plt.show()
+```
+:::
+
+***
+
+## 3. Tests de Hipótesis: Comparando Grupos
+
+### 3.1 Conceptos Fundamentales
+
+| Término | Definición |
+|---------|------------|
+| **H₀ (Hipótesis Nula)** | No hay diferencia entre grupos |
+| **H₁ (Hipótesis Alternativa)** | Sí hay diferencia significativa |
+| **p-valor** | Probabilidad de observar estos datos si H₀ fuera cierta |
+| **α (Nivel de significancia)** | Umbral para rechazar H₀ (típicamente 0.05) |
+| **Error Tipo I** | Rechazar H₀ cuando es verdadera (falso positivo) |
+| **Error Tipo II** | No rechazar H₀ cuando es falsa (falso negativo) |
+
+> [!WARNING]
+> Un p-valor < 0.05 NO significa que el efecto sea importante. Solo indica que es improbable que sea por azar. Siempre calcula el **tamaño del efecto**.
+
+### 3.2 T-Test: Comparar 2 Grupos
+
+¿Los delanteros tienen más goles que los mediocampistas?
+
+```{pyodide}
+# Separar grupos
+goles_delanteros = atletas[atletas['Posicion'] == 'Delantero']['Goles_Temporada']
+goles_medios = atletas[atletas['Posicion'] == 'Mediocentro']['Goles_Temporada']
+
+print(f"Delanteros (n={len(goles_delanteros)}): Media = {goles_delanteros.mean():.1f}, Std = {goles_delanteros.std():.1f}")
+print(f"Mediocentros (n={len(goles_medios)}): Media = {goles_medios.mean():.1f}, Std = {goles_medios.std():.1f}")
+
+# T-test independiente
+t_stat, p_value = ttest_ind(goles_delanteros, goles_medios)
+
+print(f"\n📊 T-Test Independiente:")
+print(f"   t = {t_stat:.3f}")
+print(f"   p-valor = {p_value:.4f}")
+
+if p_value < 0.05:
+    print("   ✅ Diferencia SIGNIFICATIVA (p < 0.05)")
+else:
+    print("   ❌ Diferencia NO significativa")
+```
+
+### 3.3 Tamaño del Efecto (Cohen's d)
+
+El p-valor nos dice si hay diferencia, pero no cuán grande es. Para eso usamos Cohen's d.
+
+| Cohen's d | Interpretación |
+|-----------|----------------|
+| 0.2 | Efecto pequeño |
+| 0.5 | Efecto medio |
+| 0.8 | Efecto grande |
+
+```{pyodide}
+def cohens_d(group1, group2):
+    """Calcula el tamaño del efecto Cohen's d"""
+    n1, n2 = len(group1), len(group2)
+    var1, var2 = group1.var(), group2.var()
+    
+    # Pooled standard deviation
+    pooled_std = np.sqrt(((n1 - 1) * var1 + (n2 - 1) * var2) / (n1 + n2 - 2))
+    
+    return (group1.mean() - group2.mean()) / pooled_std
+
+d = cohens_d(goles_delanteros, goles_medios)
+
+print(f"📏 Tamaño del Efecto:")
+print(f"   Cohen's d = {d:.3f}")
+
+if abs(d) >= 0.8:
+    print("   → Efecto GRANDE")
+elif abs(d) >= 0.5:
+    print("   → Efecto MEDIO")
+else:
+    print("   → Efecto PEQUEÑO")
+```
+
+### 3.4 Mann-Whitney U: Alternativa No Paramétrica
+
+Cuando los datos no siguen una distribución normal, usamos Mann-Whitney U.
+
+```{pyodide}
+# Verificar normalidad con Shapiro-Wilk
+stat_del, p_del = stats.shapiro(goles_delanteros)
+stat_med, p_med = stats.shapiro(goles_medios)
+
+print("🔍 Test de Normalidad (Shapiro-Wilk):")
+print(f"   Delanteros: p = {p_del:.4f} {'(Normal)' if p_del > 0.05 else '(NO Normal)'}")
+print(f"   Mediocentros: p = {p_med:.4f} {'(Normal)' if p_med > 0.05 else '(NO Normal)'}")
+
+# Mann-Whitney U (no paramétrico)
+u_stat, p_mw = mannwhitneyu(goles_delanteros, goles_medios, alternative='two-sided')
+
+print(f"\n📊 Mann-Whitney U Test:")
+print(f"   U = {u_stat:.1f}")
+print(f"   p-valor = {p_mw:.4f}")
+```
+
+### 3.5 ANOVA: Comparar 3+ Grupos
+
+¿Hay diferencias en distancia recorrida entre TODAS las posiciones?
+
+```{pyodide}
+# Separar por posición
+grupos_dist = [atletas[atletas['Posicion'] == pos]['Distancia_Partido_m'] for pos in posiciones]
+
+# ANOVA de una vía
+f_stat, p_anova = f_oneway(*grupos_dist)
+
+print("📊 ANOVA - Distancia por Posición:")
+print(f"   F = {f_stat:.3f}")
+print(f"   p-valor = {p_anova:.6f}")
+
+if p_anova < 0.05:
+    print("   ✅ Hay diferencias SIGNIFICATIVAS entre posiciones")
+else:
+    print("   ❌ No hay diferencias significativas")
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(10, 6))
+atletas.boxplot(column='Distancia_Partido_m', by='Posicion', ax=ax)
+ax.set_xlabel('Posición')
+ax.set_ylabel('Distancia en Partido (m)')
+ax.set_title(f'Distancia por Posición (ANOVA p = {p_anova:.4f})')
+plt.suptitle('')
+plt.tight_layout()
+plt.show()
+```
+
+### 3.6 Chi-Cuadrado: Variables Categóricas
+
+¿Los contraataques terminan en gol más frecuentemente?
+
+```{pyodide}
+# Tabla de contingencia
+tabla = pd.crosstab(tiros['Contraataque'], tiros['Gol'])
+tabla.index = ['Jugada Normal', 'Contraataque']
+tabla.columns = ['No Gol', 'Gol']
+
+print("📊 Tabla de Contingencia:")
+print(tabla)
+
+# Añadir porcentajes
+tabla_pct = tabla.div(tabla.sum(axis=1), axis=0) * 100
+print("\n📊 Porcentajes:")
+print(tabla_pct.round(1))
+
+# Test Chi-cuadrado
+chi2, p_chi, dof, expected = chi2_contingency(tabla)
+
+print(f"\n📊 Test Chi-Cuadrado:")
+print(f"   χ² = {chi2:.3f}")
+print(f"   p-valor = {p_chi:.4f}")
+print(f"   Grados de libertad = {dof}")
+
+if p_chi < 0.05:
+    print("   ✅ Asociación SIGNIFICATIVA entre contraataque y gol")
+```
+
+---
+
+### 🧠 Práctica 3.1: Comparación de Grupos
+
+Compara el VO2max entre jugadores jóvenes (<25 años) y veteranos (>=30 años). ¿Hay diferencia significativa?
+
+```{pyodide}
+# Pista: Crea dos grupos, aplica t-test y calcula Cohen's d
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+jovenes = atletas[atletas['Edad'] < 25]['VO2max']
+veteranos = atletas[atletas['Edad'] >= 30]['VO2max']
+
+print(f"Jóvenes (n={len(jovenes)}): Media = {jovenes.mean():.1f}")
+print(f"Veteranos (n={len(veteranos)}): Media = {veteranos.mean():.1f}")
+
+t, p = ttest_ind(jovenes, veteranos)
+d = cohens_d(jovenes, veteranos)
+
+print(f"\nT-test: t = {t:.3f}, p = {p:.4f}")
+print(f"Cohen's d = {d:.3f}")
+```
+:::
+
+***
+
+## 4. Regresión Lineal: Predicción
+
+### 4.1 Regresión Simple
+
+Predecir Distancia a partir de VO2max.
+
+```{pyodide}
+# Variables
+x = atletas['VO2max']
+y = atletas['Distancia_Partido_m']
+
+# Regresión
+slope, intercept, r_value, p_value, std_err = linregress(x, y)
+
+print("📈 Modelo de Regresión Lineal:")
+print(f"   Distancia = {intercept:.1f} + {slope:.1f} × VO2max")
+print(f"\n📊 Métricas del Modelo:")
+print(f"   R² = {r_value**2:.3f} ({r_value**2*100:.1f}% de varianza explicada)")
+print(f"   p-valor = {p_value:.6f}")
+print(f"   Error estándar = {std_err:.2f}")
+
+# Interpretación de la pendiente
+print(f"\n📖 Interpretación:")
+print(f"   Por cada 1 ml/kg/min de aumento en VO2max,")
+print(f"   la distancia aumenta en promedio {slope:.0f} metros.")
+```
+
+### 4.2 Visualización con Intervalos de Confianza
+
+```{pyodide}
+fig, ax = plt.subplots(figsize=(12, 7))
+
+# Datos
+ax.scatter(x, y, s=60, alpha=0.6, c='steelblue', edgecolors='white', label='Datos')
+
+# Línea de regresión
+x_line = np.linspace(x.min(), x.max(), 100)
+y_line = intercept + slope * x_line
+ax.plot(x_line, y_line, 'r-', linewidth=2.5, label=f'Regresión (R²={r_value**2:.2f})')
+
+# Intervalo de confianza aproximado (± 2 SE)
+n = len(x)
+x_mean = x.mean()
+se_y = std_err * np.sqrt(1/n + (x_line - x_mean)**2 / ((x - x_mean)**2).sum()) * (y.max() - y.min()) / 10
+
+ax.fill_between(x_line, y_line - 2*se_y, y_line + 2*se_y, 
+                alpha=0.2, color='red', label='IC 95%')
+
+ax.set_xlabel('VO2max (ml/kg/min)', fontsize=12)
+ax.set_ylabel('Distancia en Partido (m)', fontsize=12)
+ax.set_title('Regresión: VO2max → Distancia', fontsize=14, fontweight='bold')
+ax.legend(fontsize=10)
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+### 4.3 Predicción con Nuevos Datos
+
+```{pyodide}
+# Predecir para nuevos jugadores
+nuevos_jugadores = pd.DataFrame({
+    'Nombre': ['Nuevo_A', 'Nuevo_B', 'Nuevo_C'],
+    'VO2max': [50, 58, 65]
+})
+
+nuevos_jugadores['Distancia_Predicha'] = intercept + slope * nuevos_jugadores['VO2max']
+
+print("🔮 Predicciones para Nuevos Jugadores:")
+print(nuevos_jugadores)
+```
+
+### 4.4 Análisis de Residuos
+
+Los residuos deben ser aleatorios. Si hay patrones, el modelo puede ser inadecuado.
+
+```{pyodide}
+# Calcular residuos
+atletas['Prediccion'] = intercept + slope * atletas['VO2max']
+atletas['Residuo'] = atletas['Distancia_Partido_m'] - atletas['Prediccion']
+
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+# Residuos vs Predicción
+axes[0].scatter(atletas['Prediccion'], atletas['Residuo'], s=50, alpha=0.6)
+axes[0].axhline(0, color='red', linestyle='--')
+axes[0].set_xlabel('Distancia Predicha')
+axes[0].set_ylabel('Residuo')
+axes[0].set_title('Residuos vs Predicción')
+
+# Histograma de residuos
+axes[1].hist(atletas['Residuo'], bins=12, edgecolor='white', alpha=0.7)
+axes[1].axvline(0, color='red', linestyle='--')
+axes[1].set_xlabel('Residuo')
+axes[1].set_ylabel('Frecuencia')
+axes[1].set_title('Distribución de Residuos')
+
+plt.tight_layout()
+plt.show()
+
+# Test de normalidad de residuos
+stat, p = stats.shapiro(atletas['Residuo'])
+print(f"Test Shapiro-Wilk para residuos: p = {p:.4f}")
+print(f"Residuos {'siguen' if p > 0.05 else 'NO siguen'} distribución normal")
+```
+
+---
+
+### 🧠 Práctica 4.1: Tu Propio Modelo
+
+Construye un modelo para predecir HSR_Partido_m a partir de Sprint_m. ¿Tiene sentido esta relación?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+slope, intercept, r, p, se = linregress(atletas['Sprint_m'], atletas['HSR_Partido_m'])
+
+print(f"Modelo: HSR = {intercept:.1f} + {slope:.2f} × Sprint")
+print(f"R² = {r**2:.3f}")
+print(f"p-valor = {p:.4f}")
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(8, 5))
+ax.scatter(atletas['Sprint_m'], atletas['HSR_Partido_m'], s=50, alpha=0.6)
+x_line = np.linspace(atletas['Sprint_m'].min(), atletas['Sprint_m'].max(), 100)
+ax.plot(x_line, intercept + slope * x_line, 'r-', linewidth=2)
+ax.set_xlabel('Sprint (m)')
+ax.set_ylabel('HSR (m)')
+ax.set_title(f'Sprint vs HSR (R² = {r**2:.2f})')
+plt.show()
+```
+:::
+
+***
+
+## 5. Expected Goals (xG): Modelo Completo
+
+### 5.1 Análisis Exploratorio de Tiros
+
+```{pyodide}
+print("=== ANÁLISIS DE TIROS ===")
+print(f"Total de tiros: {len(tiros)}")
+print(f"Goles: {tiros['Gol'].sum()} ({tiros['Gol'].mean()*100:.1f}%)")
+print(f"\nPor tipo de tiro:")
+print(f"  - Pie: {len(tiros[tiros['Cabeza']==0])} tiros, {tiros[tiros['Cabeza']==0]['Gol'].mean()*100:.1f}% goles")
+print(f"  - Cabeza: {len(tiros[tiros['Cabeza']==1])} tiros, {tiros[tiros['Cabeza']==1]['Gol'].mean()*100:.1f}% goles")
+print(f"\nPor situación:")
+print(f"  - Jugada normal: {tiros[tiros['Contraataque']==0]['Gol'].mean()*100:.1f}% goles")
+print(f"  - Contraataque: {tiros[tiros['Contraataque']==1]['Gol'].mean()*100:.1f}% goles")
+print(f"  - Penalti: {tiros[tiros['Penalti']==1]['Gol'].mean()*100:.1f}% goles")
+```
+
+### 5.2 Probabilidad de Gol por Distancia
+
+```{pyodide}
+# Crear bins de distancia
+tiros['Zona_Dist'] = pd.cut(tiros['Distancia_m'], 
+                             bins=[0, 6, 11, 18, 25, 50],
+                             labels=['0-6m', '6-11m', '11-18m', '18-25m', '>25m'])
+
+prob_por_zona = tiros.groupby('Zona_Dist').agg({
+    'Gol': ['sum', 'count', 'mean'],
+    'xG_Real': 'mean'
+})
+prob_por_zona.columns = ['Goles', 'Tiros', 'Conversion', 'xG_Medio']
+
+print("📊 Probabilidad de Gol por Zona de Distancia:")
+print(prob_por_zona.round(3))
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(10, 6))
+x_pos = range(len(prob_por_zona))
+width = 0.35
+
+bars1 = ax.bar([x - width/2 for x in x_pos], prob_por_zona['Conversion']*100, 
+               width, label='Conversión Real', color='steelblue')
+bars2 = ax.bar([x + width/2 for x in x_pos], prob_por_zona['xG_Medio']*100, 
+               width, label='xG Medio', color='coral')
+
+ax.set_xlabel('Zona de Distancia')
+ax.set_ylabel('Probabilidad de Gol (%)')
+ax.set_title('xG vs Conversión Real por Zona')
+ax.set_xticks(x_pos)
+ax.set_xticklabels(prob_por_zona.index)
+ax.legend()
+
+# Añadir valores
+for bar in bars1:
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width()/2., height, f'{height:.1f}%',
+            ha='center', va='bottom', fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+
+### 5.3 Modelo xG con Regresión Logística
+
+Para un modelo xG real, necesitamos regresión logística (la probabilidad debe estar entre 0 y 1).
+
+```{pyodide}
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix
+
+# Preparar features
+X = tiros[['Distancia_m', 'Angulo_grados', 'Cabeza', 'Contraataque', 'Penalti']].copy()
+X['Presion_Num'] = tiros['PresionDefensiva'].map({'Baja': 0, 'Media': 1, 'Alta': 2})
+y = tiros['Gol']
+
+# Dividir en train/test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=42)
+
+# Entrenar modelo
+modelo_xg = LogisticRegression(max_iter=1000)
+modelo_xg.fit(X_train, y_train)
+
+# Predecir probabilidades (xG)
+xg_pred = modelo_xg.predict_proba(X_test)[:, 1]
+
+print("📊 Modelo xG Entrenado")
+print(f"   Accuracy: {accuracy_score(y_test, modelo_xg.predict(X_test)):.3f}")
+print(f"   AUC-ROC: {roc_auc_score(y_test, xg_pred):.3f}")
+
+# Coeficientes
+print("\n📈 Coeficientes del Modelo:")
+for feat, coef in zip(X.columns, modelo_xg.coef_[0]):
+    direccion = "↓ reduce" if coef < 0 else "↑ aumenta"
+    print(f"   {feat}: {coef:.3f} ({direccion} prob de gol)")
+```
+
+### 5.4 Validación del Modelo xG
+
+```{pyodide}
+# Añadir predicciones al test set
+resultados_test = X_test.copy()
+resultados_test['Gol_Real'] = y_test
+resultados_test['xG_Modelo'] = xg_pred
+
+# Calibración: comparar xG acumulado vs goles reales por decil
+resultados_test['Decil_xG'] = pd.qcut(resultados_test['xG_Modelo'], q=10, labels=False)
+
+calibracion = resultados_test.groupby('Decil_xG').agg({
+    'xG_Modelo': 'mean',
+    'Gol_Real': 'mean'
+})
+
+print("📊 Calibración del Modelo (xG medio vs % goles):")
+print(calibracion.round(3))
+
+# Visualizar calibración
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.scatter(calibracion['xG_Modelo'], calibracion['Gol_Real'], s=100, c='steelblue')
+ax.plot([0, 1], [0, 1], 'r--', label='Calibración Perfecta')
+ax.set_xlabel('xG Predicho (Media por Decil)')
+ax.set_ylabel('% Goles Reales')
+ax.set_title('Curva de Calibración del Modelo xG')
+ax.legend()
+ax.set_xlim(0, 0.6)
+ax.set_ylim(0, 0.6)
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+### 🧠 Práctica 5.1: Análisis de xG
+
+Calcula el xG acumulado y los goles reales para los top 5 jugadores. ¿Quién supera las expectativas?
+
+```{pyodide}
+# Pista: Agrupa tiros por JugadorID, suma xG y goles
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Añadir xG a todos los tiros
+tiros['xG_Modelo'] = modelo_xg.predict_proba(tiros[['Distancia_m', 'Angulo_grados', 'Cabeza', 'Contraataque', 'Penalti']].assign(
+    Presion_Num=tiros['PresionDefensiva'].map({'Baja': 0, 'Media': 1, 'Alta': 2})
+))[:, 1]
+
+# Agregar por jugador
+resumen_jugadores = tiros.groupby('JugadorID').agg({
+    'xG_Modelo': 'sum',
+    'Gol': 'sum'
+}).rename(columns={'xG_Modelo': 'xG_Total', 'Gol': 'Goles'})
+
+resumen_jugadores['Diferencia'] = resumen_jugadores['Goles'] - resumen_jugadores['xG_Total']
+resumen_jugadores = resumen_jugadores.sort_values('Goles', ascending=False)
+
+print("Top 5 Goleadores:")
+print(resumen_jugadores.head(5).round(2))
+
+print("\nJugadores que superan expectativas (Goles - xG > 0):")
+print(resumen_jugadores[resumen_jugadores['Diferencia'] > 1].head(5).round(2))
+```
+:::
+
+***
+
+## 🏆 Mini-Proyecto Final: Análisis Estadístico Completo
+
+Realiza un análisis completo respondiendo a estas preguntas:
+
+### Pregunta 1: Perfil Físico por Posición
+¿Qué posición tiene el mejor perfil físico promedio? Crea un índice compuesto.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+def normalizar(col):
+    return (col - col.min()) / (col.max() - col.min())
+
+atletas['Indice_Fisico'] = (
+    normalizar(atletas['VO2max']) * 0.3 +
+    normalizar(atletas['Distancia_Partido_m']) * 0.25 +
+    normalizar(atletas['HSR_Partido_m']) * 0.25 +
+    normalizar(atletas['Sprint_m']) * 0.2
+)
+
+perfil_posicion = atletas.groupby('Posicion')['Indice_Fisico'].agg(['mean', 'std']).sort_values('mean', ascending=False)
+print("Índice Físico por Posición:")
+print(perfil_posicion.round(3))
+```
+:::
+
+### Pregunta 2: Predicción de Lesiones
+¿Qué variables predicen mejor el historial de lesiones? Usa correlación.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+vars_predictoras = ['Edad', 'Peso_kg', 'VO2max', 'HSR_Partido_m', 'Sprint_m', 'Aceleraciones']
+
+correlaciones = []
+for var in vars_predictoras:
+    corr, p = pearsonr(atletas[var], atletas['Lesiones_Historial'])
+    correlaciones.append({'Variable': var, 'Correlación': corr, 'p-valor': p})
+
+corr_df = pd.DataFrame(correlaciones).sort_values('Correlación', key=abs, ascending=False)
+print("Correlaciones con Historial de Lesiones:")
+print(corr_df.round(3))
+```
+:::
+
+### Pregunta 3: Modelo Predictivo
+Usando la variable más correlacionada, ¿puedes predecir lesiones con regresión?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Usar la variable más correlacionada
+mejor_predictor = corr_df.iloc[0]['Variable']
+print(f"Mejor predictor: {mejor_predictor}")
+
+slope, intercept, r, p, se = linregress(atletas[mejor_predictor], atletas['Lesiones_Historial'])
+print(f"Modelo: Lesiones = {intercept:.2f} + {slope:.4f} × {mejor_predictor}")
+print(f"R² = {r**2:.3f}")
+print(f"p-valor = {p:.4f}")
+
+# Nota: R² bajo indica que las lesiones son multifactoriales
+```
+:::
+
+---
+
+## Resumen del Capítulo
+
+| Técnica | Uso | Función Python |
+|---------|-----|----------------|
+| **Pearson** | Correlación lineal (continuas) | `stats.pearsonr(x, y)` |
+| **Spearman** | Correlación no lineal/ordinal | `stats.spearmanr(x, y)` |
+| **T-test** | Comparar 2 grupos | `stats.ttest_ind(g1, g2)` |
+| **Mann-Whitney** | Comparar 2 grupos (no paramétrico) | `stats.mannwhitneyu(g1, g2)` |
+| **ANOVA** | Comparar 3+ grupos | `stats.f_oneway(g1, g2, g3)` |
+| **Chi-cuadrado** | Asociación categóricas | `stats.chi2_contingency(tabla)` |
+| **Regresión lineal** | Predecir continua | `stats.linregress(x, y)` |
+| **Regresión logística** | Predecir probabilidad | `LogisticRegression()` |
+| **Cohen's d** | Tamaño del efecto | Función personalizada |
+| **Shapiro-Wilk** | Test de normalidad | `stats.shapiro(data)` |
+
+> [!TIP]
+> **Regla de oro:** Siempre reporta:
+> 1. El estadístico del test (t, F, χ², r)
+> 2. El p-valor
+> 3. El tamaño del efecto (Cohen's d, R², etc.)
+> 4. Una frase de interpretación en lenguaje claro

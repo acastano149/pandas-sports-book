@@ -1,0 +1,234 @@
+# Joins: Combinando Múltiples Tablas
+
+Este capítulo traduce `left_join()`, `inner_join()`, etc. de dplyr.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+
+# ============================================
+# MÚLTIPLES TABLAS PARA JOINS
+# ============================================
+# Tabla 1: Atletas (datos básicos)
+atletas = pd.DataFrame({
+    'JugadorID': ['ATL_001', 'ATL_002', 'ATL_003', 'ATL_004', 'ATL_005', 'ATL_008'],
+    'Nombre': ['García', 'López', 'Martínez', 'Sánchez', 'Fernández', 'Pérez'],
+    'Posicion': ['Delantero', 'Mediocentro', 'Defensa', 'Portero', 'Delantero', 'Delantero'],
+    'Edad': [25, 28, 23, 31, 22, 24]
+})
+
+# Tabla 2: Sesiones GPS (incluye ATL_006 que NO existe en atletas)
+sesiones = pd.DataFrame({
+    'JugadorID': ['ATL_001', 'ATL_002', 'ATL_001', 'ATL_003', 'ATL_002', 'ATL_006', 'ATL_008'],
+    'Fecha': ['2024-01-10', '2024-01-10', '2024-01-11', '2024-01-11', '2024-01-12', '2024-01-12', '2024-01-10'],
+    'Distancia_m': [10200, 9800, 4500, 11000, 8500, 9200, 10500],
+    'TipoSesion': ['Partido', 'Partido', 'Entrenamiento', 'Partido', 'Entrenamiento', 'Partido', 'Partido']
+})
+
+# Tabla 3: Bienestar (cuestionarios diarios)
+bienestar = pd.DataFrame({
+    'JugadorID': ['ATL_001', 'ATL_002', 'ATL_003', 'ATL_001', 'ATL_005'],
+    'Fecha': ['2024-01-10', '2024-01-10', '2024-01-10', '2024-01-11', '2024-01-10'],
+    'Sueno_Calidad': [4, 3, 5, 4, 2],
+    'Fatiga': [2, 4, 1, 3, 5]
+})
+
+print("✅ Datos cargados")
+print(f"\nAtletas: {len(atletas)} jugadores")
+print(f"Sesiones: {len(sesiones)} registros (incluye ATL_006 que no está en atletas)")
+print(f"Bienestar: {len(bienestar)} registros")
+```
+
+***
+
+## 1. Los 4 Joins Básicos
+
+### Ejemplo 1.1: Left Join
+
+**En R:** `sesiones %>% left_join(atletas, by = "JugadorID")`
+
+```{pyodide}
+# Mantiene TODAS las filas de la izquierda
+sesiones.merge(atletas, on='JugadorID', how='left')
+```
+
+**Observa:** ATL_006 aparece con NaN porque no existe en `atletas`.
+
+### Ejemplo 1.2: Inner Join
+
+```{pyodide}
+# Solo filas que existen en AMBAS tablas
+sesiones.merge(atletas, on='JugadorID', how='inner')
+```
+
+**Observa:** ATL_006 desaparece.
+
+### Ejemplo 1.3: Outer Join
+
+```{pyodide}
+# TODAS las filas de AMBAS tablas
+sesiones.merge(atletas, on='JugadorID', how='outer')
+```
+
+---
+
+### 🧠 Práctica 1.1
+
+Haz un left_join y filtra las filas donde Nombre es NaN (jugadores sin registro).
+
+```{pyodide}
+# Pista: .merge(..., how='left').query("Nombre.isna()")
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+sesiones.merge(atletas, on='JugadorID', how='left').query("Nombre.isna()")
+```
+:::
+
+***
+
+## 2. Concatenación
+
+### Ejemplo 2.1: Apilar filas (bind_rows)
+
+**En R:** `bind_rows(df1, df2)`
+
+```{pyodide}
+df1 = atletas.head(2)
+df2 = atletas.tail(2)
+pd.concat([df1, df2], ignore_index=True)
+```
+
+---
+
+### 🧠 Práctica 2.1
+
+Crea dos DataFrames pequeños y concaténalos verticalmente.
+
+```{pyodide}
+# Pista: pd.concat([df1, df2], ignore_index=True)
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+a = pd.DataFrame({'Col': [1, 2]})
+b = pd.DataFrame({'Col': [3, 4]})
+pd.concat([a, b], ignore_index=True)
+```
+:::
+
+***
+
+## 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente
+
+### Pregunta 1: Jugadores Sin Actividad GPS
+¿Cuántos jugadores del plantel NO tienen ninguna sesión GPS registrada?
+
+```{pyodide}
+# Pista: Left join atletas con sesiones, buscar NaN
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+merged = atletas.merge(sesiones, on='JugadorID', how='left')
+sin_sesiones = merged[merged['Distancia_m'].isna()]['JugadorID'].unique()
+print(f"Jugadores sin sesiones: {len(sin_sesiones)}")
+print(sin_sesiones)
+```
+:::
+
+### Pregunta 2: Combinar GPS + Bienestar
+Une las sesiones GPS con los datos de bienestar del mismo día. ¿Cuántas sesiones tienen datos de bienestar?
+
+```{pyodide}
+# Pista: Necesitas hacer join por JugadorID Y Fecha
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='left')
+con_wellness = gps_wellness['Sueno_Calidad'].notna().sum()
+print(f"Sesiones con datos de bienestar: {con_wellness} de {len(gps_wellness)}")
+gps_wellness.head()
+```
+:::
+
+### Pregunta 3: Informe Completo por Jugador
+Crea un informe con: Nombre, Posición, Edad, Distancia total, Número de sesiones.
+
+```{pyodide}
+# Pista: Agrupa sesiones, luego merge con atletas
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+resumen_sesiones = (
+    sesiones
+    .groupby('JugadorID')
+    .agg(Distancia_Total=('Distancia_m', 'sum'), N_Sesiones=('Distancia_m', 'count'))
+    .reset_index()
+)
+
+informe = atletas.merge(resumen_sesiones, on='JugadorID', how='left')
+informe[['Nombre', 'Posicion', 'Edad', 'Distancia_Total', 'N_Sesiones']].fillna(0)
+```
+:::
+
+### Pregunta 4: ¿Afecta el Sueño al Rendimiento?
+Para las sesiones con datos de bienestar, ¿hay diferencia en distancia entre los que durmieron bien (Sueno >= 4) vs mal (< 4)?
+
+```{pyodide}
+# Pista: Combina tablas, filtra por sueño, agrupa
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='inner')
+gps_wellness['Durmio_Bien'] = gps_wellness['Sueno_Calidad'] >= 4
+
+print("Distancia media según calidad de sueño:")
+print(gps_wellness.groupby('Durmio_Bien')['Distancia_m'].mean())
+```
+:::
+
+---
+
+## Resumen
+
+| Operación | R (Tidyverse) | Python (Pandas) |
+|-----------|---------------|-----------------|
+| Left join | `left_join(df1, df2, by="key")` | `df1.merge(df2, on='key', how='left')` |
+| Inner join | `inner_join(...)` | `...how='inner'` |
+| Outer join | `full_join(...)` | `...how='outer'` |
+| Apilar | `bind_rows()` | `pd.concat([...])` |

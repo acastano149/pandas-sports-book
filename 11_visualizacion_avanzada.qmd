@@ -1,0 +1,345 @@
+# Visualización Avanzada para Fútbol
+
+Este capítulo cubre visualizaciones profesionales: campos de fútbol, shotmaps, passmaps y heatmaps.
+
+::: {.callout-note}
+## Librerías necesarias
+Este capítulo usa `mplsoccer`, una librería especializada para visualización de fútbol. 
+
+```{pyodide}
+import micropip
+await micropip.install("mplsoccer")
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from mplsoccer import Pitch
+
+# ============================================
+# DATOS DE EVENTOS (Estilo StatsBomb)
+# ============================================
+np.random.seed(42)
+
+# Tiros de un partido
+tiros = pd.DataFrame({
+    'JugadorID': ['ATL_001', 'ATL_002', 'ATL_008', 'ATL_012', 'ATL_001', 
+                  'ATL_005', 'ATL_008', 'ATL_001', 'ATL_012', 'ATL_002'],
+    'Nombre': ['García', 'López', 'Pérez', 'Moreno', 'García',
+               'Fernández', 'Pérez', 'García', 'Moreno', 'López'],
+    'X': [92, 88, 95, 85, 102, 78, 98, 90, 82, 94],  # Coordenadas (0-105)
+    'Y': [35, 42, 30, 50, 34, 38, 45, 28, 55, 40],   # Coordenadas (0-68)
+    'xG': [0.12, 0.08, 0.25, 0.05, 0.42, 0.03, 0.18, 0.15, 0.04, 0.09],
+    'Resultado': ['Fuera', 'A puerta', 'Gol', 'Bloqueado', 'Gol', 
+                  'Fuera', 'A puerta', 'Fuera', 'Bloqueado', 'A puerta'],
+    'Minuto': [12, 23, 34, 41, 52, 58, 67, 73, 81, 88]
+})
+
+# Pases de un jugador
+pases = pd.DataFrame({
+    'JugadorID': ['ATL_002'] * 20,
+    'X_Inicio': np.random.uniform(30, 80, 20),
+    'Y_Inicio': np.random.uniform(10, 58, 20),
+    'X_Fin': np.random.uniform(40, 100, 20),
+    'Y_Fin': np.random.uniform(15, 53, 20),
+    'Exitoso': np.random.choice([True, False], 20, p=[0.85, 0.15])
+})
+
+# Posiciones para heatmap
+posiciones = pd.DataFrame({
+    'X': np.random.normal(55, 20, 500).clip(0, 105),
+    'Y': np.random.normal(34, 12, 500).clip(0, 68)
+})
+
+print("✅ Datos cargados")
+print(f"   Tiros: {len(tiros)}")
+print(f"   Pases: {len(pases)}")
+print(f"   Posiciones: {len(posiciones)}")
+```
+
+***
+
+## 1. Dibujar un Campo de Fútbol con mplsoccer
+
+La librería `mplsoccer` facilita enormemente la creación de campos profesionales.
+
+### Ejemplo 1.1: Campo básico
+
+Declaramos un objeto `Pitch`. Como nuestros datos están en 105x68 (similar a StatsBomb/UEFAt), usamos `pitch_type='custom'`.
+
+```{pyodide}
+# Crear el objeto Pitch
+# pitch_type='custom' permite definir nuestras propias dimensiones
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='grass', line_color='white', stripe=True)
+
+fig, ax = pitch.draw(figsize=(10, 6))
+ax.set_title('Campo con mplsoccer (Estilo Césped)', fontsize=14, fontweight='bold')
+plt.show()
+```
+
+---
+
+### 🧠 Práctica 1.1
+
+Crea un campo con estilo "táctico": fondo negro y líneas blancas.
+
+```{pyodide}
+# Pista: Usa pitch_color='black' y line_color='white' en la creación del Pitch
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='black', line_color='white')
+fig, ax = pitch.draw(figsize=(10, 6))
+plt.show()
+```
+:::
+
+***
+
+## 2. Shotmap (Mapa de Tiros)
+
+### Ejemplo 2.1: Visualizar tiros con xG
+
+`mplsoccer` tiene métodos integrados como `scatter` que funcionan igual que en matplotlib pero adaptados al objeto `Pitch`.
+
+```{pyodide}
+# Definir campo oscuro
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='#1b1b1b', line_color='#c7d5cc')
+
+fig, ax = pitch.draw(figsize=(12, 8))
+
+# Colorear según resultado
+colores = {'Gol': '#e74c3c', 'A puerta': '#f1c40f', 'Fuera': '#95a5a6', 'Bloqueado': '#34495e'}
+
+for _, tiro in tiros.iterrows():
+    color = colores.get(tiro['Resultado'], 'white')
+    # Tamaño proporcional al xG
+    size = tiro['xG'] * 500 + 50
+    
+    # Usamos pitch.scatter en lugar de ax.scatter
+    pitch.scatter(tiro['X'], tiro['Y'], s=size, c=color, edgecolors='white', 
+                  linewidth=1.5, alpha=0.9, ax=ax)
+
+# Leyenda manual
+from matplotlib.lines import Line2D
+legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=c, 
+                          markersize=10, label=r) for r, c in colores.items()]
+ax.legend(handles=legend_elements, loc='upper left', fontsize=10)
+
+ax.set_title('Shotmap - mplsoccer', fontsize=14, color='white')
+plt.show()
+```
+
+### Ejemplo 2.2: Shotmap solo mitad ofensiva
+
+Podemos usar `view='half'` (si el pitch fuera vertical) o simplemente ajustar los límites del eje con `set_xlim` estándar, pero mejor usamos la funcionalidad de recortar al hacer `draw`. Sin embargo, con `custom` pitch, lo más fácil a veces es hacer zoom.
+
+```{pyodide}
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='#22312b', line_color='#c7d5cc')
+
+# Dibujamos todo el campo
+fig, ax = pitch.draw(figsize=(10, 6))
+
+# Filtramos tiros y dibujamos
+for _, tiro in tiros.iterrows():
+    color = 'red' if tiro['Resultado'] == 'Gol' else 'lightblue'
+    size = tiro['xG'] * 800 + 80
+    pitch.scatter(tiro['X'], tiro['Y'], s=size, c=color, edgecolors='white', ax=ax)
+    
+    # Anotación
+    ax.text(tiro['X'], tiro['Y']-2, f"{tiro['xG']:.2f}", 
+            color='white', fontsize=8, ha='center')
+
+# Hacemos "Zoom" a la mitad ofensiva
+ax.set_xlim(52.5, 108)
+ax.set_ylim(-1, 69)
+
+ax.set_title('Shotmap - Zona Ofensiva', fontsize=14, color='white')
+plt.show()
+```
+
+---
+
+### 🧠 Práctica 2.1
+
+Crea un shotmap de los tiros de García usando `mplsoccer`.
+
+```{pyodide}
+# Pista: pitch.scatter(...)
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+tiros_garcia = tiros.query("JugadorID == 'ATL_001'")
+
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='#22312b', line_color='#c7d5cc')
+fig, ax = pitch.draw(figsize=(10, 6))
+
+pitch.scatter(tiros_garcia['X'], tiros_garcia['Y'], ax=ax, c='red', s=200)
+
+ax.set_title(f"Tiros de García", fontsize=14, color='white')
+plt.show()
+```
+:::
+
+***
+
+## 3. Heatmap de Posiciones
+
+### Ejemplo 3.1: Heatmap con bin_statistic (Estilo Grid)
+
+`mplsoccer` ofrece `bin_statistic` para calcular estadísticas en grillas, que luego se dibujan con `heatmap`.
+
+```{pyodide}
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              line_zorder=2, pitch_color='#22312b', line_color='white')
+
+fig, ax = pitch.draw(figsize=(12, 8))
+
+# Calcular estadística de conteo en una grilla de 20x20
+bin_statistic = pitch.bin_statistic(posiciones['X'], posiciones['Y'], 
+                                    statistic='count', bins=(25, 20))
+
+# Dibujar heatmap
+pcm = pitch.heatmap(bin_statistic, ax=ax, cmap='hot', edgecolors='#22312b')
+
+# Barra de color
+plt.colorbar(pcm, ax=ax, label='Frecuencia', shrink=0.6)
+ax.set_title('Heatmap de Posiciones (Bins)', fontsize=14, color='white')
+plt.show()
+```
+
+### Ejemplo 3.2: Heatmap KDE (Densidad)
+
+```{pyodide}
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='#22312b', line_color='white')
+
+fig, ax = pitch.draw(figsize=(12, 8))
+
+# KDE plot nativo de mplsoccer
+# shade=True llena el contorno, n_levels controla suavidad
+pitch.kdeplot(posiciones['X'], posiciones['Y'], ax=ax, 
+              shade=True, levels=100, cmap='Reds', alpha=0.8)
+
+ax.set_title('Heatmap de Densidad (KDE)', fontsize=14, color='white')
+plt.show()
+```
+
+***
+
+## 🏆 Mini-Proyecto: Dashboard de Análisis de Tiros
+
+### Pregunta 1: Análisis de xG
+Calcula el xG total del equipo y el xG promedio por tiro. ¿Cuántos goles "esperaba" el equipo?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+xg_total = tiros['xG'].sum()
+xg_promedio = tiros['xG'].mean()
+goles_reales = len(tiros.query("Resultado == 'Gol'"))
+
+print(f"xG Total: {xg_total:.2f} goles esperados")
+print(f"xG Promedio por tiro: {xg_promedio:.2f}")
+print(f"Goles reales: {goles_reales}")
+print(f"Diferencia: {goles_reales - xg_total:+.2f} sobre/bajo expectativa")
+```
+:::
+
+### Pregunta 2: Dashboard con Subplots
+Crea una figura con 2 subplots: izquierda = shotmap con `mplsoccer`, derecha = barplot de xG por jugador.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Crear layout
+fig = plt.figure(figsize=(16, 6))
+ax1 = fig.add_subplot(1, 2, 1)
+ax2 = fig.add_subplot(1, 2, 2)
+
+# Subplot 1: Shotmap mplsoccer
+pitch = Pitch(pitch_type='custom', pitch_length=105, pitch_width=68,
+              pitch_color='#2d2d2d', line_color='white')
+pitch.draw(ax=ax1)
+
+for _, tiro in tiros.iterrows():
+    color = 'red' if tiro['Resultado'] == 'Gol' else 'lightblue'
+    pitch.scatter(tiro['X'], tiro['Y'], s=tiro['xG']*500+50, c=color, ax=ax1)
+ax1.set_title('Shotmap', color='white')
+
+# Subplot 2: xG por jugador
+xg_jugador = tiros.groupby('Nombre')['xG'].sum().sort_values()
+xg_jugador.plot(kind='barh', ax=ax2, color='steelblue', edgecolor='white')
+ax2.set_xlabel('xG Total')
+ax2.set_title('xG por Jugador')
+ax2.set_facecolor('#f0f0f0')
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+### Pregunta 3: Eficiencia de Conversión
+¿Qué jugador tiene la mejor eficiencia (Goles / xG)? Solo considera jugadores con xG > 0.2.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Agrupar por jugador
+analisis = tiros.groupby('Nombre').agg({
+    'xG': 'sum',
+    'Resultado': lambda x: (x == 'Gol').sum()
+}).rename(columns={'Resultado': 'Goles'})
+
+# Filtrar y calcular eficiencia
+analisis = analisis.query("xG > 0.2")
+analisis['Eficiencia'] = analisis['Goles'] / analisis['xG']
+
+print(analisis.sort_values('Eficiencia', ascending=False))
+```
+:::
+
+---
+
+## Resumen
+
+| Tipo de Visualización | Uso con `mplsoccer` |
+|-----------------------|---------------------|
+| Campo | `Pitch(...)` y `pitch.draw()` |
+| Shotmap | `pitch.scatter(...)` |
+| Heatmap (bins) | `pitch.bin_statistic(...)` + `pitch.heatmap(...)` |
+| Heatmap (KDE) | `pitch.kdeplot(...)` |

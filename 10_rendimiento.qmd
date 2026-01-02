@@ -1,0 +1,240 @@
+# Rendimiento y Optimización
+
+Este capítulo cubre técnicas para trabajar eficientemente.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+
+# ============================================
+# DATASET GRANDE PARA OPTIMIZACIÓN
+# ============================================
+np.random.seed(42)
+n = 5000  # 5000 sesiones simuladas
+
+jugadores = [f'ATL_{i:03d}' for i in range(1, 51)]
+posiciones = ['Delantero', 'Mediocentro', 'Defensa', 'Portero', 'Extremo']
+
+gps = pd.DataFrame({
+    'JugadorID': np.random.choice(jugadores, n),
+    'Posicion': np.random.choice(posiciones, n),
+    'TipoSesion': np.random.choice(['Entrenamiento', 'Partido', 'Recuperación'], n, p=[0.6, 0.25, 0.15]),
+    'Distancia_m': np.random.randint(2000, 15000, n),
+    'HSR_m': np.random.randint(50, 1500, n),
+    'Sprint_m': np.random.randint(10, 500, n),
+    'RPE': np.random.randint(1, 11, n),
+    'HR_Media': np.random.randint(120, 180, n),
+    'Fecha': pd.date_range('2023-01-01', periods=n, freq='H').strftime('%Y-%m-%d')
+})
+
+print(f"✅ Dataset grande: {n:,} filas x {gps.shape[1]} columnas")
+print(f"Memoria: {gps.memory_usage(deep=True).sum() / 1024:.1f} KB")
+```
+
+***
+
+## 1. Optimización de Tipos
+
+### Ejemplo 1.1: Inspeccionar memoria
+
+```{pyodide}
+print("Tipos actuales:")
+print(gps.dtypes)
+print(f"\nMemoria total: {gps.memory_usage(deep=True).sum() / 1024:.2f} KB")
+```
+
+### Ejemplo 1.2: Convertir a category
+
+**¿Cuándo?** Columnas con pocos valores únicos (como 'TipoSesion').
+
+```{pyodide}
+gps_opt = gps.copy()
+gps_opt['TipoSesion'] = gps_opt['TipoSesion'].astype('category')
+gps_opt['JugadorID'] = gps_opt['JugadorID'].astype('category')
+
+print(f"Original: {gps.memory_usage(deep=True).sum() / 1024:.2f} KB")
+print(f"Optimizado: {gps_opt.memory_usage(deep=True).sum() / 1024:.2f} KB")
+```
+
+---
+
+### 🧠 Práctica 1.1
+
+¿Cuántos valores únicos tiene 'TipoSesion'? ¿Es buena candidata para category?
+
+```{pyodide}
+# Pista: df['col'].nunique()
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+print(f"Valores únicos: {gps['TipoSesion'].nunique()}")
+print("Sí, es buena candidata porque tiene pocos valores únicos")
+```
+:::
+
+***
+
+## 2. Operaciones Eficientes
+
+### Ejemplo 2.1: Evitar apply()
+
+**❌ LENTO:**
+```python
+df.apply(lambda row: row['a'] / row['b'], axis=1)
+```
+
+**✅ RÁPIDO (vectorizado):**
+```{pyodide}
+# Las operaciones vectorizadas son 10-100x más rápidas
+gps['Intensidad'] = gps['HSR_m'] / gps['Distancia_m']
+gps[['HSR_m', 'Distancia_m', 'Intensidad']].head()
+```
+
+### Ejemplo 2.2: query() para filtros
+
+```{pyodide}
+# query() es más legible y eficiente para datasets grandes
+resultado = gps.query("TipoSesion == 'Partido' and RPE > 7")
+print(f"Sesiones filtradas: {len(resultado)}")
+```
+
+---
+
+### 🧠 Práctica 2.1
+
+Calcula de forma vectorizada: Carga = RPE × 10.
+
+```{pyodide}
+# Pista: df['Nueva'] = df['col'] * valor
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+gps['Carga'] = gps['RPE'] * 10
+gps[['RPE', 'Carga']].head()
+```
+:::
+
+***
+
+## 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis
+
+### Pregunta 1: Ahorro de Memoria con Categories
+¿Cuánta memoria se ahorra al convertir TODAS las columnas de texto (object) a category?
+
+```{pyodide}
+# Pista: memory_usage(deep=True).sum()
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+mem_antes = gps.memory_usage(deep=True).sum() / 1024
+
+gps_opt = gps.copy()
+for col in gps_opt.select_dtypes(include='object').columns:
+    gps_opt[col] = gps_opt[col].astype('category')
+
+mem_despues = gps_opt.memory_usage(deep=True).sum() / 1024
+
+print(f"Antes: {mem_antes:.1f} KB")
+print(f"Después: {mem_despues:.1f} KB")
+print(f"Ahorro: {(1 - mem_despues/mem_antes)*100:.1f}%")
+```
+:::
+
+### Pregunta 2: Filtrado Eficiente con query()
+Filtra todas las sesiones de Partido con Distancia > 10000 m, RPE >= 8, y HR_Media > 160.
+
+```{pyodide}
+# Pista: .query("cond1 and cond2 and cond3")
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+resultado = gps.query("TipoSesion == 'Partido' and Distancia_m > 10000 and RPE >= 8 and HR_Media > 160")
+print(f"Sesiones de alta intensidad: {len(resultado)}")
+resultado.head()
+```
+:::
+
+### Pregunta 3: Cálculo Vectorizado de Intensidad
+Calcula de forma vectorizada: Intensidad = HSR_m / Distancia_m × 100. Evita usar apply().
+
+```{pyodide}
+# Pista: Operaciones directas entre columnas
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Vectorizado (rápido)
+gps['Intensidad_Pct'] = (gps['HSR_m'] / gps['Distancia_m']) * 100
+
+# Ver resultado
+gps[['JugadorID', 'HSR_m', 'Distancia_m', 'Intensidad_Pct']].head()
+```
+:::
+
+### Pregunta 4: Top Jugadores con Pipeline Eficiente
+Encuentra los 5 jugadores con mayor distancia total en Partidos. Usa un pipeline completo.
+
+```{pyodide}
+# Pista: query + groupby + sum + nlargest
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    gps
+    .query("TipoSesion == 'Partido'")
+    .groupby('JugadorID')['Distancia_m']
+    .sum()
+    .nlargest(5)
+)
+```
+:::
+
+---
+
+## Resumen
+
+| Problema | Solución |
+|----------|----------|
+| Columnas de texto repetitivas | `.astype('category')` |
+| Filtros complejos lentos | `.query()` |
+| apply() lento | Operaciones vectorizadas |
+| Cargar CSV grande | `usecols=`, `dtype=`, `nrows=` |
+
+---
+
+**¡Felicidades!** 🎉 Has completado la Parte 3. Continúa con la **Parte 4: Análisis Avanzado** para aprender visualización de fútbol, estadísticas aplicadas y uso de APIs profesionales.

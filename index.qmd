@@ -1,0 +1,79 @@
+# Bienvenido {.unnumbered}
+
+Este libro es una **guía completa de 0 a experto** para aprender **Pandas (Python)**, diseñada específicamente para **Sport Scientists** que ya tienen experiencia con **R y el Tidyverse**.
+
+## 🎯 Filosofía del Libro
+
+No enseñamos a programar desde cero. Ya sabes qué es un dataframe, qué es filtrar, qué es agrupar. Lo que necesitas es **traducción** y **profundización**.
+
+**Para cada concepto aprenderás:**
+
+1.  **Cómo se dice en Pandas** — equivalencia directa con dplyr/tidyr
+2.  **Por qué Pandas lo hace así** — filosofía subyacente
+3.  **Múltiples formas de hacerlo** — básica, intermedia, avanzada
+4.  **Práctica inmediata** — bloques de código editables en el navegador
+5.  **Mini-proyectos** — preguntas reales de análisis deportivo
+
+## 📊 Los Datos
+
+Todos los ejemplos usan datos realistas de **Ciencias del Deporte**:
+
+| Dataset | Descripción | Variables |
+|--------------------|----------------------------|------------------------|
+| `atletas` | Perfil físico del plantel | VO2max, FC, potencia, velocidad, salto |
+| `gps_sesiones` | Sesiones de entrenamiento/partido | Distancia, HSR, sprints, RPE, HR |
+| `tracking` | Datos de tracking 10Hz | Posición x/y, velocidad, aceleración |
+| `eventos` | Eventos de partido (estilo StatsBomb) | Pases, tiros, xG |
+| `bienestar` | Cuestionarios wellness | Sueño, fatiga, HRV |
+
+## 🗺️ Estructura del Libro
+
+| Parte | Capítulos | Contenido |
+|------------------|---------------------------|---------------------------|
+| **Fundamentos** | 1-2 | Series, DataFrames, Method Chaining |
+| **Data Wrangling** | 3-7 | Select, Filter, Mutate, GroupBy, Reshaping, Joins |
+| **Producción** | 8-10 | Visualización, Missing Data, Rendimiento |
+| **Análisis Avanzado** | 11-14 | Shotmaps, Estadísticas, APIs, Machine Learning |
+| **Producción** | 15 + App | Web Apps (Streamlit) y Gestión de Entornos |
+
+## ⚡ Interactividad
+
+Este libro usa **Quarto Live** con **Pyodide**. Puedes:
+
+-   ✅ **Ejecutar código** directamente en el navegador
+-   ✅ **Modificar los ejemplos** y ver resultados inmediatos
+-   ✅ **Resolver ejercicios** sin instalar nada
+-   ✅ **Ver soluciones** desplegables para comprobar tu trabajo
+
+::: callout-tip
+## Cómo usar los bloques de código
+
+Cada bloque tiene un botón **Run Code**. Haz clic para ejecutar. Puedes editar el código antes de ejecutar.
+:::
+
+## 📚 Tabla de Equivalencias Rápida
+
+| Concepto      | R (Tidyverse)                | Python (Pandas)         |
+|---------------|------------------------------|-------------------------|
+| Pipe          | `%>%`                        | Method chaining con `.` |
+| Filtrar       | `filter()`                   | `.query()`              |
+| Seleccionar   | `select()`                   | `df[['col1', 'col2']]`  |
+| Crear columna | `mutate()`                   | `.assign()`             |
+| Agrupar       | `group_by() %>% summarise()` | `.groupby().agg()`      |
+| Ordenar       | `arrange()`                  | `.sort_values()`        |
+| Ancho → Largo | `pivot_longer()`             | `.melt()`               |
+| Largo → Ancho | `pivot_wider()`              | `.pivot_table()`        |
+| Join          | `left_join()`                | `.merge(how='left')`    |
+
+## 🆕 Nuevo en esta Edición
+
+-   **Capítulo 11**: Visualización de campos de fútbol, shotmaps y heatmaps
+-   **Capítulo 12**: Estadísticas aplicadas, correlación, regresión y xG
+-   **Capítulo 13**: APIs de datos (StatsBomb, Metrica)
+-   **Capítulo 14**: Introducción a Machine Learning (Clustering y modelos xG)
+-   **Capítulo 15**: Creación de Web Apps interactivas con Streamlit
+-   **Datasets enriquecidos**: Tracking 10Hz, eventos de partido, bienestar
+
+------------------------------------------------------------------------
+
+**¡Empecemos!** 👉 Continúa al [Capítulo 1: Introducción](01_intro.qmd)

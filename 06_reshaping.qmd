@@ -1,0 +1,205 @@
+# Reshaping: Transformar la Forma de los Datos
+
+Este capítulo traduce `pivot_longer()` y `pivot_wider()` de tidyr.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+
+# ============================================
+# DATOS DE CARGA SEMANAL (Formato WIDE)
+# ============================================
+# Datos típicos de monitorización: distancia por semana
+carga_semanal = pd.DataFrame({
+    'Nombre': ['García', 'López', 'Martínez', 'Pérez', 'Moreno'],
+    'Posicion': ['Delantero', 'Mediocentro', 'Defensa', 'Delantero', 'Delantero'],
+    'Semana_1_Dist': [32500, 35200, 28800, 31500, 29800],
+    'Semana_2_Dist': [34100, 33800, 30200, 33200, 31500],
+    'Semana_3_Dist': [28700, 31500, 27000, 29100, 27800],
+    'Semana_4_Dist': [35300, 36100, 31500, 34800, 33200],
+    'Semana_5_Dist': [33200, 34500, 29800, 32100, 30500]
+})
+
+# Datos en formato LONG (sesiones individuales)
+sesiones = pd.DataFrame({
+    'Nombre': ['García', 'López', 'García', 'Martínez', 'López', 'Pérez'],
+    'TipoSesion': ['Partido', 'Partido', 'Entrenamiento', 'Partido', 'Entrenamiento', 'Partido'],
+    'Distancia_m': [10200, 9800, 4500, 11000, 4100, 9500],
+    'RPE': [8, 9, 5, 7, 4, 8]
+})
+
+print("✅ Datos de carga semanal cargados")
+print("\nDatos WIDE (carga por semana):")
+print(carga_semanal[['Nombre', 'Semana_1_Dist', 'Semana_2_Dist']])
+```
+
+***
+
+## 1. Melt: De Ancho a Largo
+
+### Ejemplo 1.1: melt básico
+
+**En R:** `pivot_longer(cols = starts_with("Semana"), names_to = "Semana", values_to = "Distancia")`
+
+**En Pandas:**
+```{pyodide}
+datos_long = pd.melt(
+    datos_wide,
+    id_vars=['JugadorID', 'Posicion'],  # Columnas que NO cambian
+    var_name='Semana',                   # Nombre para los headers
+    value_name='Distancia'               # Nombre para los valores
+)
+datos_long
+```
+
+**¿Qué hace `melt()`?** "Derrite" las columnas anchas (Semana_1, Semana_2...) en filas largas.
+
+---
+
+### 🧠 Práctica 1.1
+
+Tienes estos datos. Conviértelos a formato largo con columnas: Jugador, Dia, RPE.
+
+```{pyodide}
+rpe_wide = pd.DataFrame({
+    'Jugador': ['García', 'López'],
+    'Lunes': [7, 8],
+    'Martes': [6, 7],
+    'Miércoles': [8, 9]
+})
+
+# Pista: pd.melt(df, id_vars=['Jugador'], var_name='Dia', value_name='RPE')
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pd.melt(rpe_wide, id_vars=['Jugador'], var_name='Dia', value_name='RPE')
+```
+:::
+
+***
+
+## 2. Pivot: De Largo a Ancho
+
+### Ejemplo 2.1: pivot_table
+
+**En R:** `pivot_wider(names_from = TipoSesion, values_from = Distancia_m)`
+
+```{pyodide}
+pd.pivot_table(
+    gps,
+    values='Distancia_m',
+    index='JugadorID',
+    columns='TipoSesion',
+    aggfunc='mean'
+)
+```
+
+---
+
+### 🧠 Práctica 2.1
+
+Crea una tabla pivote donde: filas = JugadorID, columnas = TipoSesion, valores = conteo de sesiones.
+
+```{pyodide}
+# Pista: pd.pivot_table(..., aggfunc='count') o pd.crosstab()
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pd.crosstab(gps['JugadorID'], gps['TipoSesion'])
+```
+:::
+
+***
+
+## 🏆 Mini-Proyecto: Análisis de Carga Semanal
+
+Usando `datos_wide`:
+
+### Pregunta 1
+Convierte los datos a formato largo. ¿Cuántas observaciones hay en total?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+largo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')
+print(f"Observaciones: {len(largo)}")
+```
+:::
+
+### Pregunta 2
+En formato largo, ¿cuál es la distancia media por semana?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+largo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')
+largo.groupby('Semana')['Dist'].mean()
+```
+:::
+
+### Pregunta 3
+¿Qué jugador tuvo la mayor distancia en la Semana_3?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+datos_wide.nlargest(1, 'Semana_3')[['JugadorID', 'Semana_3']]
+```
+:::
+
+### Pregunta 4
+Calcula la distancia TOTAL de cada jugador (suma de todas las semanas).
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+largo = pd.melt(datos_wide, id_vars=['JugadorID'], var_name='Semana', value_name='Dist')
+largo.groupby('JugadorID')['Dist'].sum()
+```
+:::
+
+---
+
+## Resumen
+
+| Operación | R (tidyr) | Python (Pandas) |
+|-----------|-----------|-----------------|
+| Ancho → Largo | `pivot_longer()` | `pd.melt()` |
+| Largo → Ancho | `pivot_wider()` | `pd.pivot_table()` |
+| Tabla conteos | `count() %>% pivot_wider()` | `pd.crosstab()` |

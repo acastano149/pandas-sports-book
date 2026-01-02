@@ -1,0 +1,241 @@
+# Machine Learning: Clustering y xG
+
+Este capítulo introduce el **Machine Learning** aplicado al fútbol usando `scikit-learn`. Veremos dos casos uso clásicos inspirados en *Soccermatics*: **Clustering** para definir roles de jugadores y **Regresión Logística** para crear un modelo de Expected Goals (xG).
+
+> [!NOTE]
+> En este entorno web usamos una versión ligera de scikit-learn. En un entorno local, instalarías con `pip install scikit-learn`.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# Cargar datos simulados
+atletas = pd.read_csv('data/atletas.csv')
+eventos = pd.read_csv('data/eventos.csv')
+
+print("✅ Librerías de ML cargadas")
+```
+
+***
+
+## 1. Aprendizaje No Supervisado: Clustering de Jugadores
+
+¿Podemos agrupar a los jugadores por sus características físicas sin saber su posición a priori? Usaremos **K-Means**.
+
+### Seleccionar Features y Normalizar
+
+El clustering funciona por distancia matemática, así que debemos "normalizar" los datos para que variables grandes (Potencia: 800W) no dominen a las pequeñas (Velocidad: 30km/h).
+
+```{pyodide}
+# 1. Seleccionar variables físicas
+features = ['VelocidadMax_kmh', 'Potencia_W', 'SaltoCMJ_cm', 'Grasa_Corporal_pct']
+X_fisico = atletas[features].dropna()
+
+# 2. Normalizar (Z-score estándar)
+# Equivalente a StandardScaler() de sklearn
+X_scaled = (X_fisico - X_fisico.mean()) / X_fisico.std()
+
+print("Datos normalizados (primeras 5 filas):")
+print(X_scaled.head())
+```
+
+### Aplicar K-Means
+
+Vamos a buscar 3 grupos (clusters) naturales en los datos.
+
+```{pyodide}
+# 3. Entrenar modelo
+kmeans = KMeans(n_clusters=3, random_state=42)
+grupos = kmeans.fit_predict(X_scaled)
+
+# 4. Añadir resultados al dataframe original
+atletas.loc[X_fisico.index, 'Cluster'] = grupos
+
+# Ver características promedio de cada cluster
+perfil_clusters = atletas.groupby('Cluster')[features].mean()
+print("\nPerfil promedio de cada cluster:")
+print(perfil_clusters)
+```
+
+**Interpretación típica:**
+- **Cluster 0:** ¿Quizás los velocistas/extremos?
+- **Cluster 1:** ¿Quizás los potentes/defensas?
+- **Cluster 2:** ¿Quizás los equilibrados/mediocentros?
+
+### Visualizar Clusters
+
+```{pyodide}
+plt.figure(figsize=(8, 6))
+# Plotear Velocidad vs Potencia coloreado por cluster
+plt.scatter(atletas['Potencia_W'], atletas['VelocidadMax_kmh'], 
+            c=atletas['Cluster'], cmap='viridis', s=100, edgecolors='black')
+plt.xlabel('Potencia (W)')
+plt.ylabel('Velocidad (km/h)')
+plt.title('Clustering de Jugadores (K-Means)')
+plt.colorbar(label='Cluster ID')
+plt.show()
+```
+
+***
+
+## 2. Aprendizaje Supervisado: Modelo de Expected Goals (xG)
+
+El xG es la probabilidad de que un tiro sea gol. Usaremos **Regresión Logística** para predecir `EsGol` (0 o 1) basándonos en la distancia y el ángulo.
+
+### Preparar Datos de Tiros
+
+Primero, simulemos un dataset de tiros más grande para entrenar, usando nuestro módulo `datasets`.
+
+```{pyodide}
+# Simulación de 500 tiros
+np.random.seed(123)
+n_tiros = 500
+tiros = pd.DataFrame({
+    'Distancia': np.random.uniform(5, 35, n_tiros),
+    'Angulo': np.random.uniform(15, 90, n_tiros) # Ángulo de visión a portería
+})
+
+# Lógica "real" de gol (para simular etiquetas): Cerca y Centrado = Gol más probable
+prob_gol_real = 1 / (1 + np.exp(0.15 * tiros['Distancia'] - 0.05 * tiros['Angulo']))
+tiros['EsGol'] = (np.random.uniform(0, 1, n_tiros) < prob_gol_real).astype(int)
+
+# Dividir en Train (entrenamiento) y Test (prueba)
+X = tiros[['Distancia', 'Angulo']]
+y = tiros['EsGol']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(f"Entrenamiento: {len(X_train)} tiros. Prueba: {len(X_test)} tiros.")
+print(f"Goles en el dataset: {y.sum()} ({y.mean()*100:.1f}%)")
+```
+
+### Entrenar Modelo
+
+```{pyodide}
+# Inicializar y entrenar
+modelo_xg = LogisticRegression()
+modelo_xg.fit(X_train, y_train)
+
+# Coeficientes aprendidos
+print("Intercepto:", modelo_xg.intercept_[0])
+print("Coeficiente Distancia:", modelo_xg.coef_[0][0])
+print("Coeficiente Angulo:", modelo_xg.coef_[0][1])
+```
+
+> [!TIP]
+> Un coeficiente **negativo** en Distancia significa que a mayor distancia, **menor** probabilidad de gol (lógico).
+> Un coeficiente **positivo** en Ángulo significa que a mayor ángulo (más visión), **mayor** probabilidad.
+
+### Evaluar y Predecir xG
+
+Probemos el modelo en los datos de test que nunca ha visto.
+
+```{pyodide}
+# Predecir probabilidades (xG)
+xg_predicho = modelo_xg.predict_proba(X_test)[:, 1]
+
+# Añadir a X_test para ver resultados
+resultados = X_test.copy()
+resultados['Gol_Real'] = y_test
+resultados['xG_Modelo'] = xg_predicho
+
+print(resultados.head(10))
+
+# Métrica simple: Accuracy (no es la mejor para xG, pero sirve de intro)
+print(f"\nExactitud del modelo: {modelo_xg.score(X_test, y_test):.2%}")
+```
+
+### Visualizar el Modelo de xG
+
+Vamos a ver cómo cae la probabilidad de gol con la distancia.
+
+```{pyodide}
+# Crear rango de distancias para visualizar la curva
+distancias = np.linspace(0, 40, 100)
+# Asumimos un ángulo fijo promedio de 45 grados para simplificar visualización 2D
+X_vis = pd.DataFrame({'Distancia': distancias, 'Angulo': 45})
+
+xg_vis = modelo_xg.predict_proba(X_vis)[:, 1]
+
+plt.figure(figsize=(10, 5))
+plt.plot(distancias, xg_vis, color='red', linewidth=3, label='Modelo xG (Angulo 45°)')
+plt.scatter(tiros['Distancia'], tiros['EsGol'], alpha=0.1, color='blue', label='Tiros Reales')
+plt.axhline(0.5, linestyle='--', color='gray', label='Umbral 50%')
+plt.xlabel('Distancia a Portería (m)')
+plt.ylabel('Probabilidad de Gol (xG)')
+plt.title('Curva de Probabilidad de Gol por Distancia')
+plt.legend()
+plt.show()
+```
+
+***
+
+## 🏆 Mini-Proyecto: Analista de Datos del Club
+
+### Pregunta 1: Clustering con 2 variables
+Haz un clustering K-Means (3 grupos) usando SOLO `Peso_kg` y `Altura_cm`. ¿Se separan bien los perfiles?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+X_simple = atletas[['Peso_kg', 'Altura_cm']].dropna()
+kmeans_simple = KMeans(n_clusters=3, random_state=0).fit(X_simple)
+ 
+plt.scatter(atletas['Peso_kg'], atletas['Altura_cm'], c=kmeans_simple.labels_)
+plt.xlabel('Peso')
+plt.ylabel('Altura')
+plt.title('Clustering por Antropometría')
+plt.show()
+```
+:::
+
+### Pregunta 2: ¿Quién tiene más xG acumulado?
+En el dataset de `resultados` (test set), suma el xG_Modelo. ¿Coincide más o menos con los goles reales totales?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+total_xg = resultados['xG_Modelo'].sum()
+total_goles = resultados['Gol_Real'].sum()
+print(f"xG Total Esperado: {total_xg:.2f}")
+print(f"Goles Reales Totales: {total_goles}")
+# Deberían estar cerca si el modelo está bien calibrado
+```
+:::
+
+### Pregunta 3: Predecir un tiro imposible
+Usa el modelo para predecir el xG de un tiro desde 50 metros con 5 grados de ángulo.
+
+```{pyodide}
+# Pista: modelo_xg.predict_proba([[50, 5]])
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+tiro_imposible = pd.DataFrame({'Distancia': [50], 'Angulo': [5]})
+xg_tiro = modelo_xg.predict_proba(tiro_imposible)[0, 1]
+print(f"xG del tiro imposible: {xg_tiro:.5f}")
+```
+:::

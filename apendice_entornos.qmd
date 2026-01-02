@@ -1,0 +1,97 @@
+# Apéndice A: Gestión de Entornos Python {.unnumbered}
+
+Si vienes de R, estás acostumbrado a que `install.packages("dplyr")` instala la librería para **todo** tu ordenador.
+
+En Python, esto es una **mala práctica**. Python prefiere crear "pequeños ordenadores virtuales" para cada proyecto, llamados **Entornos Virtuales**.
+
+## 1. ¿Por qué necesito esto?
+
+Imagina:
+- Proyecto A (2022): Usa pandas 1.3 (antiguo)
+- Proyecto B (2024): Usa pandas 2.1 (nuevo)
+
+Si instalas pandas globalmente, al actualizar para el Proyecto B, **romperás** el código del Proyecto A.
+
+La solución es crear una "caja" (entorno) para cada proyecto que contenga sus propias versiones de librerías.
+
+## 2. Guía Rápida: `venv` (Estándar)
+
+Esta es la forma oficial y viene instalada con Python.
+
+### Paso 1: Crear el entorno
+Abre tu terminal en la carpeta de tu proyecto y ejecuta:
+
+**Windows:**
+```bash
+python -m venv .venv
+```
+
+**Mac/Linux:**
+```bash
+python3 -m venv .venv
+```
+
+Esto creará una carpeta oculta llamada `.venv` que contiene una copia limpia de Python.
+
+### Paso 2: Activar el entorno
+Debes decirle a tu terminal que use este entorno en lugar del Python global.
+
+**Windows:**
+```bash
+.venv\Scripts\activate
+```
+
+**Mac/Linux:**
+```bash
+source .venv/bin/activate
+```
+
+Al hacerlo, verás que tu terminal muestra `(.venv)` al principio de la línea. ¡Estás dentro de la caja!
+
+### Paso 3: Instalar librerías
+Ahora puedes instalar lo que quieras sin miedo.
+
+```bash
+pip install pandas matplotlib scikit-learn streamlit
+```
+
+## 3. Reproducibilidad: `requirements.txt`
+
+En R, compartir qué librerías usas a veces es complejo (renv). En Python es muy estándar.
+
+Para guardar tu lista de librerías:
+```bash
+pip freeze > requirements.txt
+```
+
+Esto crea un archivo de texto con las versiones exactas, por ejemplo:
+```text
+pandas==2.1.0
+numpy==1.26.0
+streamlit==1.28.0
+```
+
+Cuando compartas tu código, otra persona solo tiene que hacer:
+```bash
+pip install -r requirements.txt
+```
+
+¡Y tendrá **exactamente** el mismo entorno que tú!
+
+## 4. Alternativa: Anaconda / Conda
+
+Posiblemente instalaste Python vía **Anaconda**. Conda es otro gestor de entornos, muy popular en Data Science porque gestiona librerías que no son puramente Python (como R o C++).
+
+```bash
+# Crear
+conda create --name mi_proyecto_futbol python=3.10
+
+# Activar
+conda activate mi_proyecto_futbol
+
+# Instalar
+conda install pandas
+```
+
+> [!TIP]
+> **Recomendación:** Si empiezas, usa `venv` (es más ligero y estándar). Si necesitas instalar cosas complejas de Deep Learning (GPU) o trabajar con R y Python a la vez, usa `conda`.

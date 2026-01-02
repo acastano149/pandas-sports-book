@@ -1,0 +1,571 @@
+# Pitch Control: Control del Espacio con Voronoi
+
+El **Pitch Control** (control del espacio) es una de las métricas más avanzadas del fútbol moderno. Responde a la pregunta: **¿Qué equipo controla cada zona del campo en un momento dado?**
+
+Este capítulo cubre:
+- Diagramas de Voronoi
+- Modelos de control espacial
+- Aplicaciones tácticas (pressing, transiciones)
+
+## 1. Introducción: ¿Qué es el Control del Espacio?
+
+En el fútbol moderno, el espacio es tan valioso como el balón. Un equipo que controla más espacio tiene más opciones de pase, más rutas de ataque y más facilidad para defender.
+
+> [!IMPORTANT]
+> El pitch control no es solo estar cerca del balón. Es controlar las **zonas donde el balón podría ir**.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from scipy.spatial import Voronoi, voronoi_plot_2d
+
+# ============================================
+# DATOS DE TRACKING SIMPLIFICADOS
+# ============================================
+# Posiciones de 22 jugadores en un instante del partido
+
+# Equipo Local (azul) - jugando de izquierda a derecha
+equipo_local = pd.DataFrame({
+    'JugadorID': ['L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11'],
+    'Nombre': ['GK', 'LB', 'CB1', 'CB2', 'RB', 'CDM', 'CM1', 'CM2', 'LW', 'ST', 'RW'],
+    'X': [5, 25, 22, 22, 25, 40, 45, 50, 55, 65, 58],
+    'Y': [34, 12, 28, 40, 56, 34, 22, 46, 10, 34, 58],
+    'Equipo': 'Local'
+})
+
+# Equipo Visitante (rojo) - jugando de derecha a izquierda
+equipo_visitante = pd.DataFrame({
+    'JugadorID': ['V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10', 'V11'],
+    'Nombre': ['GK', 'RB', 'CB1', 'CB2', 'LB', 'CDM', 'CM1', 'CM2', 'RW', 'ST', 'LW'],
+    'X': [100, 80, 78, 78, 80, 65, 60, 55, 50, 40, 48],
+    'Y': [34, 56, 40, 28, 12, 34, 46, 22, 58, 34, 10],
+    'Equipo': 'Visitante'
+})
+
+# Combinar
+todos_jugadores = pd.concat([equipo_local, equipo_visitante], ignore_index=True)
+
+# Posición del balón
+balon = {'X': 52, 'Y': 34}
+
+print("✅ Datos de tracking cargados")
+print(f"   Equipo Local: {len(equipo_local)} jugadores")
+print(f"   Equipo Visitante: {len(equipo_visitante)} jugadores")
+print(f"   Posición del balón: ({balon['X']}, {balon['Y']})")
+```
+
+***
+
+## 2. Diagramas de Voronoi: La Base del Pitch Control
+
+Un **diagrama de Voronoi** divide el espacio en regiones donde cada punto pertenece al jugador más cercano.
+
+### 2.1 Crear un Diagrama de Voronoi Básico
+
+```{pyodide}
+def dibujar_campo(ax, color='white', linewidth=2):
+    """Dibuja un campo de fútbol estándar (105x68m)"""
+    # Límites del campo
+    ax.plot([0, 0, 105, 105, 0], [0, 68, 68, 0, 0], color=color, linewidth=linewidth)
+    # Línea central
+    ax.plot([52.5, 52.5], [0, 68], color=color, linewidth=linewidth*0.7)
+    # Círculo central
+    circle = plt.Circle((52.5, 34), 9.15, fill=False, color=color, linewidth=linewidth*0.7)
+    ax.add_patch(circle)
+    # Área grande izquierda
+    ax.plot([0, 16.5, 16.5, 0], [13.84, 13.84, 54.16, 54.16], color=color, linewidth=linewidth*0.7)
+    # Área grande derecha
+    ax.plot([105, 88.5, 88.5, 105], [13.84, 13.84, 54.16, 54.16], color=color, linewidth=linewidth*0.7)
+    # Área pequeña izquierda
+    ax.plot([0, 5.5, 5.5, 0], [24.84, 24.84, 43.16, 43.16], color=color, linewidth=linewidth*0.5)
+    # Área pequeña derecha
+    ax.plot([105, 99.5, 99.5, 105], [24.84, 24.84, 43.16, 43.16], color=color, linewidth=linewidth*0.5)
+    
+    ax.set_facecolor('#1a472a')
+    ax.set_xlim(-2, 107)
+    ax.set_ylim(-2, 70)
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+# Crear Voronoi con todos los jugadores
+puntos = todos_jugadores[['X', 'Y']].values
+
+# Añadir puntos ficticios en los bordes para cerrar las regiones
+puntos_extendidos = np.vstack([
+    puntos,
+    [[-50, 34], [155, 34], [52.5, -50], [52.5, 118]]  # Puntos ficticios
+])
+
+vor = Voronoi(puntos_extendidos)
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(14, 9))
+dibujar_campo(ax)
+
+# Dibujar regiones de Voronoi
+for idx, region_idx in enumerate(vor.point_region[:22]):  # Solo los 22 jugadores reales
+    region = vor.regions[region_idx]
+    if -1 not in region and len(region) > 0:
+        polygon = [vor.vertices[i] for i in region]
+        # Recortar al campo
+        polygon = [(np.clip(p[0], 0, 105), np.clip(p[1], 0, 68)) for p in polygon]
+        
+        # Color según equipo
+        color = 'blue' if idx < 11 else 'red'
+        poly_patch = plt.Polygon(polygon, alpha=0.15, facecolor=color, edgecolor=color, linewidth=1)
+        ax.add_patch(poly_patch)
+
+# Dibujar jugadores
+ax.scatter(equipo_local['X'], equipo_local['Y'], s=200, c='blue', edgecolors='white', 
+           linewidth=2, zorder=5, label='Local')
+ax.scatter(equipo_visitante['X'], equipo_visitante['Y'], s=200, c='red', edgecolors='white', 
+           linewidth=2, zorder=5, label='Visitante')
+
+# Dibujar balón
+ax.scatter(balon['X'], balon['Y'], s=150, c='yellow', edgecolors='black', 
+           linewidth=2, zorder=6, marker='o', label='Balón')
+
+# Añadir nombres de jugadores
+for _, row in todos_jugadores.iterrows():
+    ax.annotate(row['Nombre'], (row['X'], row['Y'] + 3), ha='center', 
+                fontsize=7, color='white', fontweight='bold')
+
+ax.legend(loc='upper right', fontsize=10)
+ax.set_title('Diagrama de Voronoi - Control del Espacio', fontsize=14, color='white', fontweight='bold')
+plt.tight_layout()
+plt.show()
+```
+
+### 2.2 Calcular Área Controlada por Equipo
+
+```{pyodide}
+from matplotlib.path import Path
+
+def calcular_area_voronoi(vor, equipo_indices, limite_campo=(0, 105, 0, 68)):
+    """Calcula el área total controlada por un equipo"""
+    area_total = 0
+    
+    for idx in equipo_indices:
+        region_idx = vor.point_region[idx]
+        region = vor.regions[region_idx]
+        
+        if -1 not in region and len(region) > 2:
+            vertices = [vor.vertices[i] for i in region]
+            # Recortar al campo
+            vertices_clipped = []
+            for v in vertices:
+                x = np.clip(v[0], limite_campo[0], limite_campo[1])
+                y = np.clip(v[1], limite_campo[2], limite_campo[3])
+                vertices_clipped.append([x, y])
+            
+            # Calcular área con fórmula del shoelace
+            n = len(vertices_clipped)
+            if n >= 3:
+                x_coords = [v[0] for v in vertices_clipped]
+                y_coords = [v[1] for v in vertices_clipped]
+                area = 0.5 * abs(sum(x_coords[i]*y_coords[(i+1)%n] - x_coords[(i+1)%n]*y_coords[i] for i in range(n)))
+                area_total += area
+    
+    return area_total
+
+# Calcular áreas
+area_total_campo = 105 * 68  # 7140 m²
+area_local = calcular_area_voronoi(vor, range(0, 11), (0, 105, 0, 68))
+area_visitante = calcular_area_voronoi(vor, range(11, 22), (0, 105, 0, 68))
+
+print("📐 Control del Espacio (m²):")
+print(f"   Campo total: {area_total_campo} m²")
+print(f"   Equipo Local: {area_local:.0f} m² ({area_local/area_total_campo*100:.1f}%)")
+print(f"   Equipo Visitante: {area_visitante:.0f} m² ({area_visitante/area_total_campo*100:.1f}%)")
+```
+
+***
+
+## 3. Pitch Control Dinámico: Incorporar Velocidad
+
+El Voronoi básico asume que los jugadores están quietos. En realidad, debemos considerar:
+- **Velocidad actual** del jugador
+- **Tiempo de reacción**
+- **Aceleración máxima**
+
+### 3.1 Simular Velocidades
+
+```{pyodide}
+# Añadir velocidades a los jugadores (simuladas)
+np.random.seed(42)
+
+# Jugadores locales moviéndose hacia adelante
+equipo_local['Vx'] = np.random.uniform(1, 5, 11)  # m/s hacia la derecha
+equipo_local['Vy'] = np.random.uniform(-2, 2, 11)
+
+# Jugadores visitantes moviéndose hacia atrás
+equipo_visitante['Vx'] = np.random.uniform(-5, -1, 11)  # m/s hacia la izquierda
+equipo_visitante['Vy'] = np.random.uniform(-2, 2, 11)
+
+todos_jugadores = pd.concat([equipo_local, equipo_visitante], ignore_index=True)
+
+print("📊 Velocidades añadidas:")
+print(todos_jugadores[['Nombre', 'Equipo', 'X', 'Y', 'Vx', 'Vy']].head(6))
+```
+
+### 3.2 Modelo de Tiempo de Llegada
+
+¿Cuánto tarda cada jugador en llegar a un punto dado?
+
+```{pyodide}
+def tiempo_llegada(jugador, punto_x, punto_y, velocidad_max=8.0, aceleracion=3.0):
+    """
+    Estima el tiempo que tarda un jugador en llegar a un punto.
+    Modelo simplificado que considera posición y velocidad actual.
+    """
+    # Distancia al punto
+    dx = punto_x - jugador['X']
+    dy = punto_y - jugador['Y']
+    distancia = np.sqrt(dx**2 + dy**2)
+    
+    # Componente de velocidad en la dirección del punto
+    if distancia > 0:
+        velocidad_hacia_punto = (jugador['Vx'] * dx + jugador['Vy'] * dy) / distancia
+    else:
+        return 0
+    
+    # Tiempo de llegada (simplificado)
+    # t = d / v, ajustado por velocidad actual
+    velocidad_efectiva = max(1, velocidad_max + velocidad_hacia_punto * 0.3)
+    tiempo = distancia / velocidad_efectiva
+    
+    return tiempo
+
+# Ejemplo: ¿Quién llega primero al balón?
+for _, jugador in todos_jugadores.iterrows():
+    t = tiempo_llegada(jugador, balon['X'], balon['Y'])
+    if t < 2:  # Solo mostrar los más cercanos
+        print(f"{jugador['Nombre']} ({jugador['Equipo']}): {t:.2f} segundos")
+```
+
+### 3.3 Mapa de Probabilidad de Control
+
+Creamos un mapa de calor donde cada celda muestra la probabilidad de que un equipo llegue primero.
+
+```{pyodide}
+def calcular_probabilidad_control(jugadores_df, x, y, sigma=1.0):
+    """
+    Calcula la probabilidad de que cada equipo controle un punto (x, y).
+    Retorna probabilidad para equipo Local.
+    """
+    tiempos = []
+    equipos = []
+    
+    for _, jugador in jugadores_df.iterrows():
+        t = tiempo_llegada(jugador, x, y)
+        tiempos.append(t)
+        equipos.append(jugador['Equipo'])
+    
+    # Convertir tiempos a probabilidades usando softmax inverso
+    tiempos = np.array(tiempos)
+    tiempos_inv = np.exp(-tiempos / sigma)
+    
+    prob_local = sum(tiempos_inv[i] for i, e in enumerate(equipos) if e == 'Local')
+    prob_total = sum(tiempos_inv)
+    
+    return prob_local / prob_total if prob_total > 0 else 0.5
+
+# Crear grid de probabilidades
+n_x, n_y = 50, 30
+x_grid = np.linspace(2, 103, n_x)
+y_grid = np.linspace(2, 66, n_y)
+
+probabilidades = np.zeros((n_y, n_x))
+
+for i, y in enumerate(y_grid):
+    for j, x in enumerate(x_grid):
+        probabilidades[i, j] = calcular_probabilidad_control(todos_jugadores, x, y, sigma=0.8)
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(14, 9))
+dibujar_campo(ax, color='white', linewidth=1)
+
+# Heatmap de control
+im = ax.imshow(probabilidades, extent=[0, 105, 0, 68], origin='lower', 
+               cmap='RdBu', alpha=0.6, vmin=0, vmax=1, aspect='auto')
+
+# Jugadores
+ax.scatter(equipo_local['X'], equipo_local['Y'], s=150, c='blue', edgecolors='white', 
+           linewidth=2, zorder=5)
+ax.scatter(equipo_visitante['X'], equipo_visitante['Y'], s=150, c='red', edgecolors='white', 
+           linewidth=2, zorder=5)
+
+# Vectores de velocidad
+for _, row in todos_jugadores.iterrows():
+    color = 'lightblue' if row['Equipo'] == 'Local' else 'lightcoral'
+    ax.arrow(row['X'], row['Y'], row['Vx']*2, row['Vy']*2, 
+             head_width=1.5, head_length=0.8, fc=color, ec='white', linewidth=0.5, zorder=4)
+
+# Balón
+ax.scatter(balon['X'], balon['Y'], s=150, c='yellow', edgecolors='black', linewidth=2, zorder=6)
+
+# Colorbar
+cbar = plt.colorbar(im, ax=ax, shrink=0.7, pad=0.02)
+cbar.set_label('Probabilidad Control Local', fontsize=10)
+cbar.set_ticks([0, 0.25, 0.5, 0.75, 1.0])
+cbar.set_ticklabels(['100% Visitante', '75% Visitante', '50-50', '75% Local', '100% Local'])
+
+ax.set_title('Pitch Control Dinámico (con velocidades)', fontsize=14, color='white', fontweight='bold')
+plt.tight_layout()
+plt.show()
+
+# Calcular control total
+control_local = probabilidades.mean()
+print(f"\n📊 Control promedio del campo:")
+print(f"   Local: {control_local*100:.1f}%")
+print(f"   Visitante: {(1-control_local)*100:.1f}%")
+```
+
+***
+
+## 4. Aplicaciones Tácticas
+
+### 4.1 Análisis de Pressing
+
+¿Qué tan bien presiona el equipo local en campo rival?
+
+```{pyodide}
+# Definir zonas del campo
+def analizar_pressing(prob_grid, x_grid, limite_pressing=70):
+    """
+    Analiza el control del espacio en la zona de pressing (campo rival).
+    """
+    # Índices de la zona de pressing
+    idx_pressing = x_grid >= limite_pressing
+    
+    control_pressing = prob_grid[:, idx_pressing].mean()
+    control_propio = prob_grid[:, ~idx_pressing].mean()
+    
+    return control_pressing, control_propio
+
+control_pressing, control_propio = analizar_pressing(probabilidades, x_grid, limite_pressing=70)
+
+print("🔍 Análisis de Pressing (Equipo Local):")
+print(f"   Control en campo rival (>70m): {control_pressing*100:.1f}%")
+print(f"   Control en campo propio (<70m): {control_propio*100:.1f}%")
+
+if control_pressing > 0.55:
+    print("   ✅ Pressing alto efectivo")
+elif control_pressing > 0.45:
+    print("   ⚠️ Pressing equilibrado")
+else:
+    print("   ❌ Pressing bajo, domina el rival")
+```
+
+### 4.2 Zonas de Peligro
+
+¿Qué zonas controla cada equipo cerca de portería?
+
+```{pyodide}
+# Control en zonas críticas
+zonas = {
+    'Area_Local': (0, 16.5, 13.84, 54.16),       # Área propia del Local
+    'Area_Visitante': (88.5, 105, 13.84, 54.16), # Área del Visitante (objetivo)
+    'Centro_Campo': (35, 70, 20, 48),            # Centro del campo
+    'Banda_Izq': (0, 105, 0, 20),                # Banda izquierda
+    'Banda_Der': (0, 105, 48, 68)                # Banda derecha
+}
+
+print("📍 Control por Zona (Equipo Local):")
+
+for nombre_zona, (x1, x2, y1, y2) in zonas.items():
+    # Filtrar grid
+    mask_x = (x_grid >= x1) & (x_grid <= x2)
+    mask_y = (y_grid >= y1) & (y_grid <= y2)
+    
+    if mask_x.sum() > 0 and mask_y.sum() > 0:
+        control_zona = probabilidades[np.ix_(mask_y, mask_x)].mean()
+        barra = '█' * int(control_zona * 10) + '░' * (10 - int(control_zona * 10))
+        print(f"   {nombre_zona:20s}: {barra} {control_zona*100:.1f}%")
+```
+
+***
+
+## 5. Visualización Avanzada: Pitch Control Animado
+
+En la práctica, el pitch control se calcula frame a frame para crear animaciones.
+
+```{pyodide}
+def simular_movimiento(jugadores_df, dt=0.1, n_frames=10):
+    """Simula el movimiento de los jugadores durante varios frames"""
+    frames = []
+    jugadores = jugadores_df.copy()
+    
+    for frame in range(n_frames):
+        # Guardar estado actual
+        frames.append(jugadores.copy())
+        
+        # Actualizar posiciones
+        jugadores['X'] = (jugadores['X'] + jugadores['Vx'] * dt).clip(0, 105)
+        jugadores['Y'] = (jugadores['Y'] + jugadores['Vy'] * dt).clip(0, 68)
+        
+        # Añadir algo de aleatoriedad a las velocidades
+        jugadores['Vx'] += np.random.normal(0, 0.5, len(jugadores))
+        jugadores['Vy'] += np.random.normal(0, 0.5, len(jugadores))
+    
+    return frames
+
+# Simular 5 frames
+frames = simular_movimiento(todos_jugadores, dt=0.2, n_frames=5)
+
+# Visualizar primer y último frame
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+
+for i, (ax, frame_idx) in enumerate(zip(axes, [0, -1])):
+    frame = frames[frame_idx]
+    dibujar_campo(ax, color='white', linewidth=1)
+    
+    # Calcular control para este frame
+    probs = np.zeros((n_y, n_x))
+    for yi, y in enumerate(y_grid):
+        for xi, x in enumerate(x_grid):
+            probs[yi, xi] = calcular_probabilidad_control(frame, x, y, sigma=0.8)
+    
+    im = ax.imshow(probs, extent=[0, 105, 0, 68], origin='lower', 
+                   cmap='RdBu', alpha=0.6, vmin=0, vmax=1, aspect='auto')
+    
+    local = frame[frame['Equipo'] == 'Local']
+    visitante = frame[frame['Equipo'] == 'Visitante']
+    
+    ax.scatter(local['X'], local['Y'], s=120, c='blue', edgecolors='white', linewidth=2)
+    ax.scatter(visitante['X'], visitante['Y'], s=120, c='red', edgecolors='white', linewidth=2)
+    
+    control = probs.mean()
+    ax.set_title(f'Frame {frame_idx}: Control Local = {control*100:.1f}%', 
+                 fontsize=12, color='white', fontweight='bold')
+
+plt.tight_layout()
+plt.show()
+```
+
+***
+
+## 🏆 Mini-Proyecto: Análisis de Pitch Control
+
+### Pregunta 1: Mejor Opción de Pase
+
+El jugador con balón quiere pasar. ¿A quién debería pasar para maximizar el control del espacio?
+
+```{pyodide}
+# Pista: Calcula el control en la posición de cada compañero
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Posición actual del balón
+print(f"Balón en: ({balon['X']}, {balon['Y']})")
+
+# Calcular control en la posición de cada compañero local
+opciones_pase = []
+for _, jugador in equipo_local.iterrows():
+    if jugador['Nombre'] != 'GK':  # Excluir portero
+        control = calcular_probabilidad_control(todos_jugadores, jugador['X'], jugador['Y'])
+        opciones_pase.append({
+            'Jugador': jugador['Nombre'],
+            'X': jugador['X'],
+            'Y': jugador['Y'],
+            'Control': control
+        })
+
+opciones_df = pd.DataFrame(opciones_pase).sort_values('Control', ascending=False)
+print("\n🎯 Mejores opciones de pase:")
+print(opciones_df.head(5).round(3))
+```
+:::
+
+### Pregunta 2: Vulnerabilidad Defensiva
+
+¿En qué zona el equipo visitante tiene más control? Eso indica vulnerabilidad del equipo local.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Encontrar zonas donde el visitante domina (control local < 0.4)
+zonas_vulnerables = []
+
+for i, y in enumerate(y_grid):
+    for j, x in enumerate(x_grid):
+        if probabilidades[i, j] < 0.4:
+            zonas_vulnerables.append({'X': x, 'Y': y, 'Control_Visitante': 1 - probabilidades[i, j]})
+
+if zonas_vulnerables:
+    vuln_df = pd.DataFrame(zonas_vulnerables).sort_values('Control_Visitante', ascending=False)
+    print("⚠️ Zonas más vulnerables (dominadas por visitante):")
+    print(vuln_df.head(10).round(2))
+else:
+    print("✅ No hay zonas críticas dominadas por el visitante")
+```
+:::
+
+### Pregunta 3: Cambiar Formación
+
+Si el CM1 del equipo local se mueve de (45, 22) a (55, 30), ¿cómo cambia el control?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Copiar datos y modificar
+jugadores_nueva_formacion = todos_jugadores.copy()
+idx_cm1 = jugadores_nueva_formacion[(jugadores_nueva_formacion['Nombre'] == 'CM1') & 
+                                      (jugadores_nueva_formacion['Equipo'] == 'Local')].index[0]
+jugadores_nueva_formacion.loc[idx_cm1, 'X'] = 55
+jugadores_nueva_formacion.loc[idx_cm1, 'Y'] = 30
+
+# Calcular nuevo control
+control_antes = probabilidades.mean()
+
+probs_nueva = np.zeros((n_y, n_x))
+for i, y in enumerate(y_grid):
+    for j, x in enumerate(x_grid):
+        probs_nueva[i, j] = calcular_probabilidad_control(jugadores_nueva_formacion, x, y, sigma=0.8)
+
+control_despues = probs_nueva.mean()
+
+print(f"Control ANTES: {control_antes*100:.1f}%")
+print(f"Control DESPUÉS: {control_despues*100:.1f}%")
+print(f"Cambio: {(control_despues - control_antes)*100:+.1f}%")
+```
+:::
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Voronoi** | Divide el espacio según el jugador más cercano |
+| **Pitch Control** | Probabilidad de que un equipo controle cada zona |
+| **Tiempo de llegada** | Cuánto tarda un jugador en alcanzar un punto |
+| **Control dinámico** | Incorpora velocidad y dirección de movimiento |
+| **Zonas de pressing** | Análisis del control en campo rival |
+
+> [!TIP]
+> El pitch control es fundamental para evaluar:
+> - Calidad del pressing
+> - Opciones de pase
+> - Vulnerabilidades defensivas
+> - Transiciones ataque-defensa

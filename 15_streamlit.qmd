@@ -1,0 +1,142 @@
+# Web Apps con Streamlit: Tu Primer Dashboard
+
+Si vienes de R, probablemente amas **Shiny**. En Python, la respuesta moderna, rápida y amada por la comunidad es **Streamlit**.
+
+Streamlit permite convertir scripts de datos en aplicaciones web compartibles en **minutos**, sin saber HTML, CSS o JavaScript. Solo Python puro.
+
+> [!WARNING]
+> Streamlit requiere un servidor local. El código de este capítulo **NO se puede ejecutar aquí en el navegador**. Debes copiarlo a un archivo `.py` en tu ordenador (ej: `app.py`) y ejecutarlo en tu terminal con `streamlit run app.py`.
+
+## 1. Hola Mundo en Streamlit
+
+Crea un archivo llamado `app.py` y escribe esto:
+
+```python
+import streamlit as st
+import pandas as pd
+
+st.title("⚽ Mi Primer Dashboard de Fútbol")
+st.write("¡Bienvenido a mi aplicación de análisis!")
+
+# Crear un botón
+if st.button('Celebrar Gol'):
+    st.balloons()
+```
+
+Para correrlo, abre tu terminal (Anaconda Prompt o VS Code Terminal) y escribe:
+```bash
+pip install streamlit
+streamlit run app.py
+```
+
+***
+
+## 2. Estructura de una App de Análisis
+
+Vamos a construir un **Perfil de Jugador Interactivo**. La estructura típica usa la barra lateral (`st.sidebar`) para controles y el panel principal para gráficos.
+
+### Paso 1: Cargar Datos
+
+```python
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Título
+st.title("📊 Informe de Rendimiento Físico")
+
+# Cargar datos (puedes usar tu archivo local)
+@st.cache_data  # ¡Magia! Guarda los datos en caché para no recargar siempre
+def cargar_datos():
+    # Simulamos datos aquí para el ejemplo, tú cargarías 'data/atletas.csv'
+    df = pd.DataFrame({
+        'Nombre': ['García', 'López', 'Martínez', 'Sánchez'],
+        'Posicion': ['Delantero', 'Medio', 'Defensa', 'Portero'],
+        'Velocidad': [33, 31, 29, 25],
+        'Potencia': [800, 750, 900, 600]
+    })
+    return df
+
+df = cargar_datos()
+
+# Mostrar la tabla si el usuario quiere
+if st.checkbox("Mostrar Datos Crudos"):
+    st.dataframe(df)
+```
+
+### Paso 2: Filtros en la Sidebar
+
+```python
+# Barra lateral
+st.sidebar.header("Filtros")
+
+# Selector de Posición
+posiciones = df['Posicion'].unique()
+filtro_pos = st.sidebar.multiselect("Filtrar Posición", posiciones, default=posiciones)
+
+# Slider de Velocidad Mínima
+min_vel = st.sidebar.slider("Velocidad Mínima (km/h)", 0, 35, 20)
+
+# Aplicar filtros
+df_filtrado = df[
+    (df['Posicion'].isin(filtro_pos)) & 
+    (df['Velocidad'] >= min_vel)
+]
+
+st.write(f"Jugadores encontrados: {len(df_filtrado)}")
+```
+
+### Paso 3: Gráficos Interactivos
+
+Streamlit funciona nativamente con Matplotlib, Plotly, Altair y más.
+
+```python
+# Crear dos columnas
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("Velocidad por Jugador")
+    st.bar_chart(df_filtrado.set_index('Nombre')['Velocidad'])
+
+with col2:
+    st.subheader("Relación Potencia-Velocidad")
+    fig, ax = plt.subplots()
+    ax.scatter(df_filtrado['Potencia'], df_filtrado['Velocidad'], c='red', s=100)
+    ax.set_xlabel('Potencia')
+    ax.set_ylabel('Velocidad')
+    st.pyplot(fig)
+```
+
+***
+
+## 3. Despliegue (Deploy)
+
+Lo mejor de Streamlit es compartir.
+
+1.  Sube tu código a **GitHub**.
+2.  Ve a [share.streamlit.io](https://share.streamlit.io).
+3.  Conecta tu repo y ¡listo! Tienes una URL pública (ej: `mi-app-futbol.streamlit.app`) para enviar al entrenador o publicar en LinkedIn.
+
+***
+
+## 🏆 Mini-Proyecto: Tu Dashboard Personal
+
+(Para realizar en tu ordenador local)
+
+**Objetivo:** Crear una app `scouting.py` que:
+1.  Cargue el dataset `atletas.csv`.
+2.  Tenga un selector en la sidebar para elegir un jugador específico.
+3.  Muestre sus métricas clave (Metric Card) con `st.metric(label="VO2max", value=60)`.
+4.  Muestre un gráfico comparando al jugador seleccionado con el promedio del equipo.
+
+**Estructura sugerida:**
+
+```python
+# Pista
+jugador_seleccionado = st.sidebar.selectbox("Elegir Jugador", df['Nombre'])
+datos_jugador = df[df['Nombre'] == jugador_seleccionado].iloc[0]
+
+col1, col2 = st.columns(2)
+col1.metric("Velocidad Máx", f"{datos_jugador['VelocidadMax_kmh']} km/h")
+col2.metric("VO2max", datos_jugador['VO2max'])
+```

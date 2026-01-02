@@ -1,0 +1,531 @@
+# Simulación de Partidos: Predicción y Aleatoriedad
+
+Este capítulo explora cómo simular resultados de partidos de fútbol usando distribuciones de probabilidad. Entenderemos el papel fundamental de la **aleatoriedad** en el fútbol y cómo las simulaciones nos ayudan a predecir resultados.
+
+## 1. La Aleatoriedad en el Fútbol
+
+El fútbol es uno de los deportes con mayor variabilidad en resultados. Un equipo "mejor" no siempre gana.
+
+> [!IMPORTANT]
+> En una liga de 38 partidos, un equipo con 60% de probabilidad de ganar cada partido puede terminar desde campeón hasta fuera de Champions.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+from scipy.stats import poisson
+
+np.random.seed(42)
+
+# ============================================
+# DATOS DE EQUIPOS PARA SIMULACIÓN
+# ============================================
+
+# Parámetros de ataque y defensa (basados en datos históricos simulados)
+equipos = pd.DataFrame({
+    'Equipo': ['Barcelona', 'Real Madrid', 'Atlético', 'Sevilla', 'Valencia', 
+               'Villarreal', 'Athletic', 'Real Sociedad', 'Betis', 'Celta'],
+    'Ataque': [2.1, 2.0, 1.5, 1.4, 1.3, 1.3, 1.2, 1.4, 1.3, 1.1],      # Goles esperados por partido
+    'Defensa': [0.8, 0.9, 0.7, 1.1, 1.2, 1.1, 1.0, 1.1, 1.3, 1.4],     # Goles concedidos esperados
+    'Forma_Local': [1.3, 1.25, 1.35, 1.2, 1.15, 1.1, 1.25, 1.15, 1.2, 1.1]  # Multiplicador de localía
+})
+
+print("✅ Datos de equipos cargados")
+print(equipos.to_string(index=False))
+```
+
+***
+
+## 2. Modelo de Poisson para Goles
+
+Los goles de un equipo siguen aproximadamente una **distribución de Poisson**. Esto significa que si un equipo marca en promedio λ goles, la probabilidad de marcar exactamente k goles es:
+
+$$P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}$$
+
+### 2.1 Visualizar la Distribución de Poisson
+
+```{pyodide}
+# Ejemplo: Equipo que marca en promedio 1.5 goles
+lambda_goles = 1.5
+
+# Probabilidades para 0, 1, 2, ... goles
+goles_posibles = np.arange(0, 8)
+probabilidades = poisson.pmf(goles_posibles, lambda_goles)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+bars = ax.bar(goles_posibles, probabilidades * 100, color='steelblue', edgecolor='white')
+
+# Añadir valores
+for bar, prob in zip(bars, probabilidades):
+    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5, 
+            f'{prob*100:.1f}%', ha='center', fontsize=10)
+
+ax.set_xlabel('Número de Goles')
+ax.set_ylabel('Probabilidad (%)')
+ax.set_title(f'Distribución de Poisson (λ = {lambda_goles} goles esperados)')
+ax.set_xticks(goles_posibles)
+plt.tight_layout()
+plt.show()
+
+# Estadísticas
+print(f"📊 Estadísticas para λ = {lambda_goles}:")
+print(f"   P(0 goles) = {poisson.pmf(0, lambda_goles)*100:.1f}%")
+print(f"   P(1 gol)   = {poisson.pmf(1, lambda_goles)*100:.1f}%")
+print(f"   P(2 goles) = {poisson.pmf(2, lambda_goles)*100:.1f}%")
+print(f"   P(3+ goles) = {(1 - poisson.cdf(2, lambda_goles))*100:.1f}%")
+```
+
+### 2.2 Calcular Goles Esperados de un Partido
+
+```{pyodide}
+def calcular_goles_esperados(equipo_local, equipo_visitante, equipos_df, liga_media=1.3):
+    """
+    Calcula los goles esperados para ambos equipos en un partido.
+    Usa el modelo Dixon-Coles simplificado.
+    """
+    local = equipos_df[equipos_df['Equipo'] == equipo_local].iloc[0]
+    visitante = equipos_df[equipos_df['Equipo'] == equipo_visitante].iloc[0]
+    
+    # Goles esperados = Ataque propio * Defensa rival * Factor localía / Media liga
+    goles_local = local['Ataque'] * visitante['Defensa'] * local['Forma_Local'] / liga_media
+    goles_visitante = visitante['Ataque'] * local['Defensa'] / liga_media
+    
+    return goles_local, goles_visitante
+
+# Ejemplo: Barcelona vs Real Madrid
+goles_barca, goles_madrid = calcular_goles_esperados('Barcelona', 'Real Madrid', equipos)
+
+print("⚽ Barcelona vs Real Madrid:")
+print(f"   Goles esperados Barcelona: {goles_barca:.2f}")
+print(f"   Goles esperados Real Madrid: {goles_madrid:.2f}")
+```
+
+***
+
+## 3. Simular un Partido
+
+### 3.1 Generar un Resultado Aleatorio
+
+```{pyodide}
+def simular_partido(goles_esperados_local, goles_esperados_visitante):
+    """Simula un partido usando distribución de Poisson"""
+    goles_local = np.random.poisson(goles_esperados_local)
+    goles_visitante = np.random.poisson(goles_esperados_visitante)
+    return goles_local, goles_visitante
+
+# Simular el clásico 10 veces
+print("🎲 Simulaciones del Clásico (Barcelona vs Real Madrid):")
+print("-" * 40)
+
+for i in range(10):
+    g_barca, g_madrid = simular_partido(goles_barca, goles_madrid)
+    if g_barca > g_madrid:
+        resultado = "Barcelona gana"
+    elif g_barca < g_madrid:
+        resultado = "Real Madrid gana"
+    else:
+        resultado = "Empate"
+    print(f"   Simulación {i+1}: Barcelona {g_barca} - {g_madrid} Real Madrid → {resultado}")
+```
+
+### 3.2 Simular Muchas Veces (Monte Carlo)
+
+Para obtener probabilidades precisas, simulamos miles de partidos.
+
+```{pyodide}
+def simular_n_partidos(goles_local, goles_visitante, n_simulaciones=10000):
+    """
+    Simula n partidos y devuelve estadísticas.
+    """
+    victorias_local = 0
+    empates = 0
+    victorias_visitante = 0
+    goles_local_total = []
+    goles_visitante_total = []
+    
+    for _ in range(n_simulaciones):
+        g_l, g_v = simular_partido(goles_local, goles_visitante)
+        goles_local_total.append(g_l)
+        goles_visitante_total.append(g_v)
+        
+        if g_l > g_v:
+            victorias_local += 1
+        elif g_l < g_v:
+            victorias_visitante += 1
+        else:
+            empates += 1
+    
+    return {
+        'P_Local': victorias_local / n_simulaciones,
+        'P_Empate': empates / n_simulaciones,
+        'P_Visitante': victorias_visitante / n_simulaciones,
+        'Goles_Local_Media': np.mean(goles_local_total),
+        'Goles_Visitante_Media': np.mean(goles_visitante_total),
+        'Resultados': list(zip(goles_local_total, goles_visitante_total))
+    }
+
+# Simular 10,000 clásicos
+resultados_clasico = simular_n_partidos(goles_barca, goles_madrid, n_simulaciones=10000)
+
+print("📊 Resultados de 10,000 simulaciones (Barcelona vs Real Madrid):")
+print(f"   Victoria Barcelona: {resultados_clasico['P_Local']*100:.1f}%")
+print(f"   Empate:             {resultados_clasico['P_Empate']*100:.1f}%")
+print(f"   Victoria Real Madrid: {resultados_clasico['P_Visitante']*100:.1f}%")
+print(f"\n   Media goles Barcelona: {resultados_clasico['Goles_Local_Media']:.2f}")
+print(f"   Media goles Real Madrid: {resultados_clasico['Goles_Visitante_Media']:.2f}")
+```
+
+### 3.3 Matriz de Probabilidad de Resultados
+
+```{pyodide}
+def matriz_probabilidad_resultado(goles_local, goles_visitante, max_goles=6):
+    """
+    Calcula la probabilidad de cada marcador exacto.
+    """
+    matriz = np.zeros((max_goles, max_goles))
+    
+    for i in range(max_goles):
+        for j in range(max_goles):
+            prob_i = poisson.pmf(i, goles_local)
+            prob_j = poisson.pmf(j, goles_visitante)
+            matriz[i, j] = prob_i * prob_j
+    
+    return matriz
+
+# Calcular matriz para el clásico
+matriz_clasico = matriz_probabilidad_resultado(goles_barca, goles_madrid)
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(10, 8))
+
+im = ax.imshow(matriz_clasico, cmap='YlOrRd', origin='lower')
+
+for i in range(6):
+    for j in range(6):
+        color = 'white' if matriz_clasico[i, j] > 0.05 else 'black'
+        ax.text(j, i, f'{matriz_clasico[i, j]*100:.1f}%', ha='center', va='center', 
+                color=color, fontsize=9)
+
+ax.set_xlabel('Goles Real Madrid')
+ax.set_ylabel('Goles Barcelona')
+ax.set_title('Probabilidad de cada Marcador\n(Barcelona vs Real Madrid)')
+ax.set_xticks(range(6))
+ax.set_yticks(range(6))
+
+plt.colorbar(im, ax=ax, label='Probabilidad')
+plt.tight_layout()
+plt.show()
+
+# Marcadores más probables
+print("\n🎯 Top 5 Marcadores más Probables:")
+resultados_prob = []
+for i in range(6):
+    for j in range(6):
+        resultados_prob.append({'Barcelona': i, 'Real Madrid': j, 'Probabilidad': matriz_clasico[i, j]})
+
+top_5 = pd.DataFrame(resultados_prob).nlargest(5, 'Probabilidad')
+for _, row in top_5.iterrows():
+    print(f"   {int(row['Barcelona'])}-{int(row['Real Madrid'])}: {row['Probabilidad']*100:.1f}%")
+```
+
+***
+
+## 4. Simular una Liga Completa
+
+### 4.1 Generar Calendario
+
+```{pyodide}
+def generar_calendario(equipos_lista):
+    """Genera todos los partidos de una liga (ida y vuelta)"""
+    partidos = []
+    for local in equipos_lista:
+        for visitante in equipos_lista:
+            if local != visitante:
+                partidos.append({'Local': local, 'Visitante': visitante})
+    return pd.DataFrame(partidos)
+
+# Generar calendario
+calendario = generar_calendario(equipos['Equipo'].tolist())
+print(f"📅 Calendario generado: {len(calendario)} partidos")
+print(calendario.head(10))
+```
+
+### 4.2 Simular una Temporada
+
+```{pyodide}
+def simular_temporada(calendario_df, equipos_df):
+    """Simula una temporada completa y devuelve la tabla final"""
+    
+    # Inicializar tabla
+    tabla = pd.DataFrame({
+        'Equipo': equipos_df['Equipo'],
+        'Puntos': 0,
+        'PJ': 0,
+        'PG': 0,
+        'PE': 0,
+        'PP': 0,
+        'GF': 0,
+        'GC': 0
+    }).set_index('Equipo')
+    
+    # Simular cada partido
+    for _, partido in calendario_df.iterrows():
+        goles_esp_local, goles_esp_visitante = calcular_goles_esperados(
+            partido['Local'], partido['Visitante'], equipos_df
+        )
+        
+        gol_local, gol_visitante = simular_partido(goles_esp_local, goles_esp_visitante)
+        
+        # Actualizar tabla
+        tabla.loc[partido['Local'], 'PJ'] += 1
+        tabla.loc[partido['Visitante'], 'PJ'] += 1
+        tabla.loc[partido['Local'], 'GF'] += gol_local
+        tabla.loc[partido['Local'], 'GC'] += gol_visitante
+        tabla.loc[partido['Visitante'], 'GF'] += gol_visitante
+        tabla.loc[partido['Visitante'], 'GC'] += gol_local
+        
+        if gol_local > gol_visitante:
+            tabla.loc[partido['Local'], 'Puntos'] += 3
+            tabla.loc[partido['Local'], 'PG'] += 1
+            tabla.loc[partido['Visitante'], 'PP'] += 1
+        elif gol_local < gol_visitante:
+            tabla.loc[partido['Visitante'], 'Puntos'] += 3
+            tabla.loc[partido['Visitante'], 'PG'] += 1
+            tabla.loc[partido['Local'], 'PP'] += 1
+        else:
+            tabla.loc[partido['Local'], 'Puntos'] += 1
+            tabla.loc[partido['Visitante'], 'Puntos'] += 1
+            tabla.loc[partido['Local'], 'PE'] += 1
+            tabla.loc[partido['Visitante'], 'PE'] += 1
+    
+    tabla['DG'] = tabla['GF'] - tabla['GC']
+    return tabla.sort_values(['Puntos', 'DG'], ascending=False).reset_index()
+
+# Simular una temporada
+tabla_final = simular_temporada(calendario, equipos)
+print("🏆 Tabla Final - Temporada Simulada:")
+print(tabla_final.to_string(index=False))
+```
+
+### 4.3 Simular Múltiples Temporadas
+
+¿Cuántas veces gana cada equipo la liga en 1000 simulaciones?
+
+```{pyodide}
+def simular_n_temporadas(calendario_df, equipos_df, n_temporadas=1000):
+    """Simula múltiples temporadas y cuenta títulos"""
+    titulos = {equipo: 0 for equipo in equipos_df['Equipo']}
+    podiums = {equipo: 0 for equipo in equipos_df['Equipo']}
+    puntos_historial = {equipo: [] for equipo in equipos_df['Equipo']}
+    
+    for _ in range(n_temporadas):
+        tabla = simular_temporada(calendario_df, equipos_df)
+        
+        campeon = tabla.iloc[0]['Equipo']
+        titulos[campeon] += 1
+        
+        for i in range(min(3, len(tabla))):
+            podiums[tabla.iloc[i]['Equipo']] += 1
+            
+        for _, row in tabla.iterrows():
+            puntos_historial[row['Equipo']].append(row['Puntos'])
+    
+    return titulos, podiums, puntos_historial
+
+# Simular 500 temporadas (reducido para velocidad)
+print("⏳ Simulando 500 temporadas...")
+titulos, podiums, puntos_historial = simular_n_temporadas(calendario, equipos, n_temporadas=500)
+
+# Mostrar resultados
+print("\n🏆 Títulos de Liga (en 500 simulaciones):")
+titulos_df = pd.DataFrame({
+    'Equipo': titulos.keys(),
+    'Títulos': titulos.values(),
+    'Podiums': [podiums[e] for e in titulos.keys()],
+    'Puntos_Media': [np.mean(puntos_historial[e]) for e in titulos.keys()]
+}).sort_values('Títulos', ascending=False)
+
+print(titulos_df.to_string(index=False))
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(12, 5))
+titulos_df_sorted = titulos_df.sort_values('Títulos')
+bars = ax.barh(titulos_df_sorted['Equipo'], titulos_df_sorted['Títulos'], color='gold', edgecolor='black')
+ax.set_xlabel('Número de Títulos')
+ax.set_title('Distribución de Títulos de Liga (500 simulaciones)')
+plt.tight_layout()
+plt.show()
+```
+
+***
+
+## 5. Distribución de Puntos y Variabilidad
+
+### 5.1 Histograma de Puntos del Campeón
+
+```{pyodide}
+# Puntos del Barcelona en las 500 temporadas
+puntos_barca = puntos_historial['Barcelona']
+
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.hist(puntos_barca, bins=20, edgecolor='white', color='darkblue', alpha=0.7)
+
+# Estadísticas
+media = np.mean(puntos_barca)
+std = np.std(puntos_barca)
+ax.axvline(media, color='red', linestyle='--', linewidth=2, label=f'Media: {media:.1f}')
+ax.axvline(media + std, color='orange', linestyle=':', linewidth=1.5, label=f'+1 Std: {media+std:.1f}')
+ax.axvline(media - std, color='orange', linestyle=':', linewidth=1.5, label=f'-1 Std: {media-std:.1f}')
+
+ax.set_xlabel('Puntos')
+ax.set_ylabel('Frecuencia')
+ax.set_title('Distribución de Puntos del Barcelona (500 temporadas)')
+ax.legend()
+plt.tight_layout()
+plt.show()
+
+print(f"📊 Estadísticas Barcelona:")
+print(f"   Media: {media:.1f} puntos")
+print(f"   Desv. Std: {std:.1f} puntos")
+print(f"   Mínimo: {min(puntos_barca)} puntos")
+print(f"   Máximo: {max(puntos_barca)} puntos")
+```
+
+### 5.2 Comparar Variabilidad entre Equipos
+
+```{pyodide}
+# Boxplot de puntos por equipo
+fig, ax = plt.subplots(figsize=(14, 6))
+
+data_boxplot = [puntos_historial[e] for e in titulos_df.sort_values('Puntos_Media', ascending=False)['Equipo']]
+labels_boxplot = titulos_df.sort_values('Puntos_Media', ascending=False)['Equipo'].tolist()
+
+bp = ax.boxplot(data_boxplot, labels=labels_boxplot, patch_artist=True)
+
+# Colorear
+colors = plt.cm.RdYlGn(np.linspace(0.8, 0.2, len(labels_boxplot)))
+for patch, color in zip(bp['boxes'], colors):
+    patch.set_facecolor(color)
+
+ax.set_xticklabels(labels_boxplot, rotation=45, ha='right')
+ax.set_ylabel('Puntos')
+ax.set_title('Distribución de Puntos por Equipo (500 temporadas)')
+ax.axhline(75, color='gray', linestyle='--', alpha=0.5, label='Zona Champions (~75 pts)')
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+***
+
+## 🏆 Mini-Proyecto: Tu Simulador de Liga
+
+### Pregunta 1: Probabilidad de Descenso
+
+Simula 500 temporadas y calcula qué porcentaje de veces termina cada equipo en los últimos 3 puestos.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+def simular_descensos(calendario_df, equipos_df, n_temporadas=500):
+    descensos = {equipo: 0 for equipo in equipos_df['Equipo']}
+    
+    for _ in range(n_temporadas):
+        tabla = simular_temporada(calendario_df, equipos_df)
+        for i in range(-3, 0):  # Últimos 3
+            descensos[tabla.iloc[i]['Equipo']] += 1
+    
+    return {k: v/n_temporadas*100 for k, v in sorted(descensos.items(), key=lambda x: -x[1])}
+
+prob_descenso = simular_descensos(calendario, equipos, 500)
+print("⬇️ Probabilidad de Descenso:")
+for equipo, prob in prob_descenso.items():
+    print(f"   {equipo}: {prob:.1f}%")
+```
+:::
+
+### Pregunta 2: Ajustar Parámetros
+
+Si el Atlético mejora su Ataque de 1.5 a 1.8, ¿cuántos títulos más ganaría en 500 simulaciones?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Modificar parámetros del Atlético
+equipos_mejorado = equipos.copy()
+equipos_mejorado.loc[equipos_mejorado['Equipo'] == 'Atlético', 'Ataque'] = 1.8
+
+# Simular con mejora
+titulos_nuevo, _, _ = simular_n_temporadas(calendario, equipos_mejorado, 500)
+
+print("Títulos del Atlético:")
+print(f"   Original (Ataque=1.5): {titulos['Atlético']}")
+print(f"   Mejorado (Ataque=1.8): {titulos_nuevo['Atlético']}")
+print(f"   Diferencia: +{titulos_nuevo['Atlético'] - titulos['Atlético']}")
+```
+:::
+
+### Pregunta 3: Partido Clave
+
+Simula Barcelona vs Atlético 5000 veces con ambos equipos como locales alternativamente. ¿Quién tiene ventaja?
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Barcelona local
+gl_barca, gv_atleti = calcular_goles_esperados('Barcelona', 'Atlético', equipos)
+res_barca_local = simular_n_partidos(gl_barca, gv_atleti, 5000)
+
+# Atlético local
+gl_atleti, gv_barca = calcular_goles_esperados('Atlético', 'Barcelona', equipos)
+res_atleti_local = simular_n_partidos(gl_atleti, gv_barca, 5000)
+
+print("Barcelona como LOCAL:")
+print(f"   Victoria Barcelona: {res_barca_local['P_Local']*100:.1f}%")
+print(f"   Empate: {res_barca_local['P_Empate']*100:.1f}%")
+print(f"   Victoria Atlético: {res_barca_local['P_Visitante']*100:.1f}%")
+
+print("\nAtlético como LOCAL:")
+print(f"   Victoria Atlético: {res_atleti_local['P_Local']*100:.1f}%")
+print(f"   Empate: {res_atleti_local['P_Empate']*100:.1f}%")
+print(f"   Victoria Barcelona: {res_atleti_local['P_Visitante']*100:.1f}%")
+```
+:::
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Distribución Poisson** | Modela el número de goles en un partido |
+| **Monte Carlo** | Simular miles de veces para obtener probabilidades |
+| **Matriz de resultados** | Probabilidad de cada marcador exacto |
+| **Variabilidad** | El mejor equipo no siempre gana la liga |
+| **Localía** | Factor que aumenta los goles esperados del local |
+
+> [!TIP]
+> Las simulaciones son fundamentales para:
+> - Casas de apuestas (calcular cuotas)
+> - Analistas de clubes (planificar temporadas)
+> - Periodistas (contextualizar resultados)
+> - Fantasy managers (predecir rendimiento)

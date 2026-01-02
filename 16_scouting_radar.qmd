@@ -1,0 +1,250 @@
+# Scouting Estadístico: Radar Plots
+
+Este capítulo introduce el **scouting estadístico** inspirado en Soccermatics. Aprenderás a crear **Radar Plots** (gráficos de araña) para comparar jugadores usando percentiles.
+
+## 1. El Problema del Scouting Tradicional
+
+Las estadísticas básicas (goles, pases completados, etc.) no dicen mucho por sí solas. Necesitamos:
+
+1. **Contexto**: ¿Son pases fáciles o difíciles?
+2. **Comparación**: ¿Cómo se compara con otros jugadores de su posición?
+3. **Normalización**: ¿Ajustamos por minutos jugados o posesión del equipo?
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from math import pi
+
+# ============================================
+# DATOS DE JUGADORES PARA SCOUTING
+# ============================================
+np.random.seed(42)
+
+# Simulamos estadísticas de 50 delanteros de una liga
+n_jugadores = 50
+delanteros = pd.DataFrame({
+    'Nombre': [f'Delantero_{i}' for i in range(1, n_jugadores + 1)],
+    'Equipo': np.random.choice(['TeamA', 'TeamB', 'TeamC', 'TeamD', 'TeamE'], n_jugadores),
+    'Minutos': np.random.randint(500, 3000, n_jugadores),
+    'Goles': np.random.randint(0, 25, n_jugadores),
+    'xG': np.random.uniform(0.5, 20, n_jugadores),
+    'Asistencias': np.random.randint(0, 12, n_jugadores),
+    'Pases_Final_Tercio': np.random.randint(20, 200, n_jugadores),
+    'Regates_Exitosos': np.random.randint(5, 80, n_jugadores),
+    'Toques_Area': np.random.randint(10, 150, n_jugadores),
+    'Presiones': np.random.randint(50, 400, n_jugadores)
+})
+
+# Normalizar por 90 minutos
+for col in ['Goles', 'xG', 'Asistencias', 'Pases_Final_Tercio', 'Regates_Exitosos', 'Toques_Area', 'Presiones']:
+    delanteros[f'{col}_p90'] = delanteros[col] / (delanteros['Minutos'] / 90)
+
+# Añadir un jugador "estrella" para destacar
+delanteros.loc[0, 'Nombre'] = 'Estrella FC'
+delanteros.loc[0, 'Goles_p90'] = 0.85
+delanteros.loc[0, 'xG_p90'] = 0.75
+delanteros.loc[0, 'Asistencias_p90'] = 0.35
+delanteros.loc[0, 'Pases_Final_Tercio_p90'] = 4.5
+delanteros.loc[0, 'Regates_Exitosos_p90'] = 2.8
+delanteros.loc[0, 'Toques_Area_p90'] = 5.2
+
+print("✅ Datos de delanteros cargados:", delanteros.shape)
+print(delanteros[['Nombre', 'Goles_p90', 'xG_p90', 'Asistencias_p90']].head(3))
+```
+
+***
+
+## 2. Calcular Percentiles
+
+El percentil nos dice qué porcentaje de jugadores está **por debajo** de un valor dado.
+
+```{pyodide}
+# Métricas para el radar
+metricas_radar = ['Goles_p90', 'xG_p90', 'Asistencias_p90', 'Pases_Final_Tercio_p90', 
+                  'Regates_Exitosos_p90', 'Toques_Area_p90']
+
+# Calcular percentiles (0-100) para cada métrica
+def calcular_percentiles(df, columnas):
+    """Convierte valores absolutos a percentiles (0-100)"""
+    df_percentiles = df.copy()
+    for col in columnas:
+        df_percentiles[f'{col}_pct'] = df[col].rank(pct=True) * 100
+    return df_percentiles
+
+delanteros = calcular_percentiles(delanteros, metricas_radar)
+
+# Ver percentiles de "Estrella FC"
+estrella = delanteros[delanteros['Nombre'] == 'Estrella FC'].iloc[0]
+print("\n📊 Percentiles de 'Estrella FC':")
+for m in metricas_radar:
+    print(f"  {m}: {estrella[f'{m}_pct']:.1f}%")
+```
+
+> [!TIP]
+> Un percentil del 90% significa que el jugador está en el **top 10%** de esa métrica.
+
+***
+
+## 3. Crear el Radar Plot
+
+Ahora creamos el gráfico de radar. Este tipo de visualización se ha popularizado gracias a StatsBomb y FBRef.
+
+```{pyodide}
+def crear_radar(jugador_data, metricas, etiquetas=None, titulo="Radar de Jugador"):
+    """
+    Crea un radar plot para un jugador.
+    jugador_data: Serie de pandas con los valores de percentiles
+    metricas: Lista de columnas de percentiles a usar
+    """
+    if etiquetas is None:
+        etiquetas = [m.replace('_p90_pct', '').replace('_', ' ') for m in metricas]
+    
+    N = len(metricas)
+    valores = [jugador_data[m] for m in metricas]
+    valores += valores[:1]  # Cerrar el polígono
+    
+    # Calcular ángulos
+    angulos = [n / float(N) * 2 * pi for n in range(N)]
+    angulos += angulos[:1]
+    
+    # Crear figura
+    fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+    
+    # Dibujar radar
+    ax.plot(angulos, valores, 'o-', linewidth=2, color='#1f77b4', markersize=8)
+    ax.fill(angulos, valores, alpha=0.25, color='#1f77b4')
+    
+    # Líneas de percentiles de referencia
+    for pct in [20, 40, 60, 80]:
+        ax.plot(angulos, [pct] * (N + 1), '--', color='gray', alpha=0.3, linewidth=0.5)
+    
+    # Configurar ejes
+    ax.set_xticks(angulos[:-1])
+    ax.set_xticklabels(etiquetas, size=10)
+    ax.set_ylim(0, 100)
+    ax.set_yticks([20, 40, 60, 80])
+    ax.set_yticklabels(['20', '40', '60', '80'], color='gray', size=8)
+    
+    plt.title(titulo, size=14, fontweight='bold', y=1.08)
+    plt.tight_layout()
+    return fig
+
+# Crear radar para "Estrella FC"
+metricas_pct = [f'{m}_pct' for m in metricas_radar]
+etiquetas_bonitas = ['Goles', 'xG', 'Asistencias', 'Pases F.Tercio', 'Regates', 'Toques Área']
+
+fig = crear_radar(estrella, metricas_pct, etiquetas_bonitas, titulo="Radar: Estrella FC")
+plt.show()
+```
+
+***
+
+## 4. Comparar Múltiples Jugadores
+
+Podemos superponer varios jugadores para compararlos visualmente.
+
+```{pyodide}
+def comparar_jugadores(df, nombres, metricas, etiquetas=None, titulo="Comparación"):
+    """Superpone radares de múltiples jugadores"""
+    if etiquetas is None:
+        etiquetas = [m.replace('_p90_pct', '').replace('_', ' ') for m in metricas]
+    
+    N = len(metricas)
+    angulos = [n / float(N) * 2 * pi for n in range(N)]
+    angulos += angulos[:1]
+    
+    fig, ax = plt.subplots(figsize=(9, 9), subplot_kw=dict(polar=True))
+    colores = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
+    
+    for i, nombre in enumerate(nombres):
+        jugador = df[df['Nombre'] == nombre].iloc[0]
+        valores = [jugador[m] for m in metricas] + [jugador[metricas[0]]]
+        ax.plot(angulos, valores, 'o-', linewidth=2, label=nombre, color=colores[i % len(colores)])
+        ax.fill(angulos, valores, alpha=0.1, color=colores[i % len(colores)])
+    
+    ax.set_xticks(angulos[:-1])
+    ax.set_xticklabels(etiquetas, size=10)
+    ax.set_ylim(0, 100)
+    ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.0))
+    plt.title(titulo, size=14, fontweight='bold', y=1.08)
+    plt.tight_layout()
+    return fig
+
+# Comparar 3 delanteros
+jugadores_comparar = ['Estrella FC', 'Delantero_5', 'Delantero_10']
+fig = comparar_jugadores(delanteros, jugadores_comparar, metricas_pct, etiquetas_bonitas, 
+                         titulo="Comparación de Delanteros")
+plt.show()
+```
+
+***
+
+## 🏆 Mini-Proyecto: Tu Informe de Scouting
+
+### Pregunta 1: Ranking por Goles
+¿Cuáles son los 5 delanteros con más goles por 90 minutos? Muestra su nombre y valor.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    delanteros
+    .nlargest(5, 'Goles_p90')
+    [['Nombre', 'Goles_p90', 'xG_p90']]
+)
+```
+:::
+
+### Pregunta 2: Filtrar por Percentil
+Encuentra todos los delanteros que están en el **top 20%** (percentil >= 80) en AMBAS métricas: Goles y xG.
+
+```{pyodide}
+# Pista: .query("col1 >= 80 and col2 >= 80")
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+delanteros.query("Goles_p90_pct >= 80 and xG_p90_pct >= 80")[['Nombre', 'Goles_p90_pct', 'xG_p90_pct']]
+```
+:::
+
+### Pregunta 3: Crea tu Propio Radar
+Elige otro delantero del dataset y crea su radar plot.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+jugador_elegido = delanteros[delanteros['Nombre'] == 'Delantero_15'].iloc[0]
+crear_radar(jugador_elegido, metricas_pct, etiquetas_bonitas, titulo="Radar: Delantero 15")
+plt.show()
+```
+:::
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Percentil** | Posición relativa (0-100) respecto a otros jugadores |
+| **Normalización p90** | Estadísticas ajustadas por 90 minutos jugados |
+| **Radar Plot** | Visualización multidimensional para comparar perfiles |
+| **Contexto** | Comparar con jugadores de la misma posición y liga |

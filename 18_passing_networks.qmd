@@ -1,0 +1,286 @@
+# Redes de Pases: Passing Networks
+
+Las **Passing Networks** (redes de pases) visualizan cómo fluye el balón entre jugadores. Son una de las visualizaciones más icónicas del análisis de fútbol moderno.
+
+## 1. ¿Qué es una Passing Network?
+
+Una red de pases muestra:
+- **Nodos**: Jugadores, posicionados según su posición media en el campo
+- **Aristas (líneas)**: Conexiones de pase entre jugadores
+- **Grosor**: Frecuencia de pases entre esa pareja
+- **Tamaño del nodo**: Participación del jugador (pases dados + recibidos)
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ============================================
+# SIMULAR DATOS DE PASES DE UN PARTIDO
+# ============================================
+np.random.seed(42)
+
+# 11 jugadores con sus posiciones medias típicas (4-3-3)
+jugadores = pd.DataFrame({
+    'JugadorID': range(1, 12),
+    'Nombre': ['GK', 'LB', 'CB1', 'CB2', 'RB', 'CM1', 'CM2', 'CM3', 'LW', 'ST', 'RW'],
+    'Posicion_X': [10, 25, 25, 25, 25, 45, 50, 45, 70, 85, 70],  # Posición media X
+    'Posicion_Y': [34, 10, 28, 40, 58, 20, 34, 48, 10, 34, 58]   # Posición media Y
+})
+
+# Simular 300 pases
+n_pases = 300
+pases = pd.DataFrame({
+    'Pase_ID': range(n_pases),
+    'De_JugadorID': np.random.choice(range(1, 12), n_pases),
+    'A_JugadorID': np.random.choice(range(1, 12), n_pases),
+    'Exitoso': np.random.choice([True, False], n_pases, p=[0.85, 0.15])
+})
+
+# Eliminar pases a uno mismo
+pases = pases[pases['De_JugadorID'] != pases['A_JugadorID']]
+pases = pases[pases['Exitoso']]  # Solo pases exitosos
+
+print(f"✅ Datos cargados: {len(pases)} pases exitosos entre 11 jugadores")
+```
+
+***
+
+## 2. Calcular la Matriz de Pases
+
+Creamos una matriz que cuenta cuántos pases hay entre cada par de jugadores.
+
+```{pyodide}
+# Crear matriz de adyacencia (pases entre jugadores)
+matriz_pases = (
+    pases
+    .groupby(['De_JugadorID', 'A_JugadorID'])
+    .size()
+    .unstack(fill_value=0)
+)
+
+# Asegurar que la matriz tiene todos los jugadores
+for j in range(1, 12):
+    if j not in matriz_pases.columns:
+        matriz_pases[j] = 0
+    if j not in matriz_pases.index:
+        matriz_pases.loc[j] = 0
+
+matriz_pases = matriz_pases.sort_index(axis=0).sort_index(axis=1)
+
+print("Matriz de pases (primeros 5 jugadores):")
+print(matriz_pases.iloc[:5, :5])
+```
+
+***
+
+## 3. Calcular Participación de Cada Jugador
+
+El tamaño de cada nodo refleja la participación total (pases dados + recibidos).
+
+```{pyodide}
+# Pases dados y recibidos
+pases_dados = pases.groupby('De_JugadorID').size()
+pases_recibidos = pases.groupby('A_JugadorID').size()
+
+# Unir con info de jugadores
+jugadores['Pases_Dados'] = jugadores['JugadorID'].map(pases_dados).fillna(0)
+jugadores['Pases_Recibidos'] = jugadores['JugadorID'].map(pases_recibidos).fillna(0)
+jugadores['Participacion'] = jugadores['Pases_Dados'] + jugadores['Pases_Recibidos']
+
+print("Participación de cada jugador:")
+print(jugadores[['Nombre', 'Pases_Dados', 'Pases_Recibidos', 'Participacion']].sort_values('Participacion', ascending=False))
+```
+
+***
+
+## 4. Dibujar la Passing Network
+
+Ahora visualizamos la red sobre un campo de fútbol simplificado.
+
+```{pyodide}
+def dibujar_campo(ax):
+    """Dibuja un campo de fútbol simplificado"""
+    # Campo
+    ax.plot([0, 0, 105, 105, 0], [0, 68, 68, 0, 0], color='white', linewidth=2)
+    # Línea central
+    ax.plot([52.5, 52.5], [0, 68], color='white', linewidth=1)
+    # Círculo central
+    circle = plt.Circle((52.5, 34), 9.15, fill=False, color='white', linewidth=1)
+    ax.add_patch(circle)
+    # Áreas
+    ax.plot([0, 16.5, 16.5, 0], [13.84, 13.84, 54.16, 54.16], color='white', linewidth=1)
+    ax.plot([105, 88.5, 88.5, 105], [13.84, 13.84, 54.16, 54.16], color='white', linewidth=1)
+    ax.set_facecolor('#1a472a')
+    ax.set_xlim(-5, 110)
+    ax.set_ylim(-5, 73)
+    ax.set_aspect('equal')
+    ax.axis('off')
+
+def dibujar_passing_network(jugadores_df, matriz_pases, umbral_pases=3, titulo="Passing Network"):
+    """
+    Dibuja la red de pases sobre el campo.
+    umbral_pases: mínimo de pases para dibujar una conexión
+    """
+    fig, ax = plt.subplots(figsize=(12, 8))
+    dibujar_campo(ax)
+    
+    # Dibujar aristas (conexiones de pases)
+    for i in matriz_pases.index:
+        for j in matriz_pases.columns:
+            if i < j:  # Evitar duplicados
+                total_pases = matriz_pases.loc[i, j] + matriz_pases.loc[j, i]
+                if total_pases >= umbral_pases:
+                    j1 = jugadores_df[jugadores_df['JugadorID'] == i].iloc[0]
+                    j2 = jugadores_df[jugadores_df['JugadorID'] == j].iloc[0]
+                    ax.plot([j1['Posicion_X'], j2['Posicion_X']], 
+                            [j1['Posicion_Y'], j2['Posicion_Y']],
+                            color='white', alpha=0.7, linewidth=total_pases/3)
+    
+    # Dibujar nodos (jugadores)
+    scatter = ax.scatter(jugadores_df['Posicion_X'], jugadores_df['Posicion_Y'],
+                         s=jugadores_df['Participacion'] * 10,
+                         c='#ff4444', edgecolors='white', linewidth=2, zorder=5)
+    
+    # Añadir nombres
+    for _, j in jugadores_df.iterrows():
+        ax.annotate(j['Nombre'], (j['Posicion_X'], j['Posicion_Y'] + 4),
+                    ha='center', fontsize=9, color='white', fontweight='bold')
+    
+    ax.set_title(titulo, fontsize=14, color='white', fontweight='bold', pad=10)
+    plt.tight_layout()
+    return fig
+
+# Dibujar la red
+fig = dibujar_passing_network(jugadores, matriz_pases, umbral_pases=4, 
+                               titulo="Passing Network - Equipo Local")
+plt.show()
+```
+
+***
+
+## 5. Métricas de Centralidad
+
+¿Quién es el jugador más "central" en la red? Podemos calcular métricas de grafo.
+
+```{pyodide}
+# Grado de cada nodo (conexiones totales)
+jugadores['Grado'] = 0
+for idx, row in jugadores.iterrows():
+    j_id = row['JugadorID']
+    conexiones = sum(1 for i in range(1, 12) if i != j_id and 
+                     (matriz_pases.loc[j_id, i] + matriz_pases.loc[i, j_id]) > 2)
+    jugadores.loc[idx, 'Grado'] = conexiones
+
+# Jugador más conectado
+print("🔗 Top 5 jugadores más conectados (mayor grado):")
+print(jugadores.nlargest(5, 'Grado')[['Nombre', 'Grado', 'Participacion']])
+```
+
+***
+
+## 🏆 Mini-Proyecto: Análisis de Red
+
+### Pregunta 1: Las Conexiones Más Fuertes
+¿Cuál es la pareja de jugadores con más pases entre ellos? Muestra la dirección.
+
+```{pyodide}
+# Pista: Usa pases.groupby(['De_JugadorID', 'A_JugadorID']).size()
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+top_conexiones = (
+    pases
+    .groupby(['De_JugadorID', 'A_JugadorID'])
+    .size()
+    .nlargest(5)
+    .reset_index(name='Pases')
+)
+
+# Añadir nombres
+top_conexiones = top_conexiones.merge(
+    jugadores[['JugadorID', 'Nombre']], left_on='De_JugadorID', right_on='JugadorID'
+).merge(
+    jugadores[['JugadorID', 'Nombre']], left_on='A_JugadorID', right_on='JugadorID', suffixes=('_De', '_A')
+)
+print(top_conexiones[['Nombre_De', 'Nombre_A', 'Pases']])
+```
+:::
+
+### Pregunta 2: Distribución de Pases del Portero
+¿A qué jugadores pasó más el portero (GK)? Visualízalo con un bar chart.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pases_gk = pases[pases['De_JugadorID'] == 1]  # GK tiene ID 1
+distribucion = pases_gk.groupby('A_JugadorID').size()
+
+# Añadir nombres
+distribucion.index = distribucion.index.map(dict(zip(jugadores['JugadorID'], jugadores['Nombre'])))
+
+distribucion.sort_values().plot(kind='barh', color='steelblue')
+plt.xlabel('Pases del GK')
+plt.title('Distribución de Pases del Portero')
+plt.show()
+```
+:::
+
+### Pregunta 3: Red sin el Jugador Clave
+¿Cómo cambiaría la red si eliminamos al jugador más participativo? Crea la visualización.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+# Encontrar jugador más participativo
+mas_participativo = jugadores.nlargest(1, 'Participacion')['JugadorID'].values[0]
+print(f"Eliminando al jugador ID {mas_participativo}")
+
+# Filtrar pases sin ese jugador
+pases_sin = pases[(pases['De_JugadorID'] != mas_participativo) & 
+                   (pases['A_JugadorID'] != mas_participativo)]
+
+# Recalcular matriz
+nueva_matriz = pases_sin.groupby(['De_JugadorID', 'A_JugadorID']).size().unstack(fill_value=0)
+
+# Recalcular participación
+jugadores_copia = jugadores.copy()
+jugadores_copia['Participacion'] = (
+    pases_sin.groupby('De_JugadorID').size().reindex(jugadores_copia['JugadorID']).fillna(0).values +
+    pases_sin.groupby('A_JugadorID').size().reindex(jugadores_copia['JugadorID']).fillna(0).values
+)
+
+# Dibujar (simplificado)
+print("La red ahora tendría menos conexiones por el centro del campo.")
+```
+:::
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Nodo** | Jugador en la red |
+| **Arista** | Conexión de pases entre dos jugadores |
+| **Grado** | Número de conexiones de un jugador |
+| **Centralidad** | Importancia de un jugador en la red |
+| **Umbral** | Mínimo de pases para mostrar una conexión |

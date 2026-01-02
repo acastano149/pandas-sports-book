@@ -1,0 +1,343 @@
+# El Flujo de Trabajo Profesional: Method Chaining
+
+El "Method Chaining" transforma código imperativo en pipelines declarativos, como el pipe `%>%` del Tidyverse.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+
+# ============================================
+# DATOS GPS ENRIQUECIDOS
+# ============================================
+gps = pd.DataFrame({
+    'JugadorID': ['ATL_001', 'ATL_002', 'ATL_001', 'ATL_003', 'ATL_002', 
+                 'ATL_001', 'ATL_003', 'ATL_002', 'ATL_001', 'ATL_004'] * 3,
+    'Nombre': ['García', 'López', 'García', 'Martínez', 'López',
+               'García', 'Martínez', 'López', 'García', 'Sánchez'] * 3,
+    'TipoSesion': ['Entrenamiento', 'Partido', 'Partido', 'Entrenamiento', 'Entrenamiento',
+                  'Entrenamiento', 'Partido', 'Partido', 'Partido', 'Entrenamiento'] * 3,
+    'Distancia_Total_m': [4500, 10200, 9800, 3200, 4100, 5600, 11500, 10800, 11000, 3000] * 3,
+    'HSR_m': [150, 800, 750, 50, 120, 300, 950, 880, 900, 20] * 3,
+    'Sprint_m': [45, 280, 250, 15, 35, 90, 320, 300, 310, 5] * 3,
+    'RPE': [3, 8, 9, 2, 4, 5, 10, 8, 9, 2] * 3,
+    'Duracion_min': [60, 95, 95, 45, 60, 75, 98, 96, 95, 40] * 3,
+    'Fecha': pd.date_range(start='2024-01-01', periods=30).strftime('%Y-%m-%d').tolist()
+})
+
+print("✅ Datos GPS cargados:", gps.shape)
+```
+
+***
+
+## 1. El Problema del Código Imperativo
+
+### Ejemplo 1.1: El Estilo "Novato" - ❌ NO HACER
+
+**En R (anti-patrón):**
+```r
+df_temp <- filter(gps, TipoSesion == 'Partido')
+df_temp <- arrange(df_temp, desc(Distancia_Total_m))
+result <- select(df_temp, Nombre, Distancia_Total_m)
+```
+
+**En Pandas (igual de malo):**
+```{pyodide}
+# ❌ Variables intermedias innecesarias
+df_temp = gps[gps['TipoSesion'] == 'Partido']
+df_temp = df_temp.sort_values('Distancia_Total_m', ascending=False)
+result = df_temp[['Nombre', 'Distancia_Total_m']]
+result.head()
+```
+
+**¿Por qué es malo?**
+
+- Crea múltiples variables que ocupan memoria
+- Difícil saber el estado en cada paso
+- No se lee como una "receta" secuencial
+
+---
+
+### Ejemplo 1.2: El Estilo Profesional - ✅ RECOMENDADO
+
+**En R (Tidyverse):**
+```r
+gps %>%
+  filter(TipoSesion == 'Partido') %>%
+  arrange(desc(Distancia_Total_m)) %>%
+  select(Nombre, Distancia_Total_m) %>%
+  head(5)
+```
+
+**En Pandas (Method Chaining):**
+```{pyodide}
+# ✅ Una sola expresión, sin variables intermedias
+resultado = (
+    gps
+    .query("TipoSesion == 'Partido'")
+    .sort_values('Distancia_Total_m', ascending=False)
+    .head(5)
+    [['Nombre', 'Distancia_Total_m']]
+)
+resultado
+```
+
+**¿Por qué es mejor?** Una sola asignación, lectura secuencial, paréntesis permiten saltos de línea.
+
+---
+
+### 🧠 Práctica 1.1: Tu primer Chain
+
+Convierte este código imperativo en un chain profesional:
+```python
+df_1 = gps[gps['RPE'] > 6]
+df_2 = df_1.groupby('Nombre').mean(numeric_only=True)
+df_final = df_2[['HSR_m']]
+```
+
+```{pyodide}
+# Pista 1: Envuelve todo en paréntesis ()
+# Pista 2: .query("RPE > 6") para filtrar
+# Pista 3: Encadena .groupby().mean()[['columna']]
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+resultado = (
+    gps
+    .query("RPE > 6")
+    .groupby('Nombre')
+    .mean(numeric_only=True)
+    [['HSR_m']]
+)
+print(resultado)
+```
+:::
+
+***
+
+## 2. Creación de Columnas con `.assign()`
+
+### Ejemplo 2.1: Cálculos con lambda
+
+**En R (Tidyverse):**
+```r
+gps %>%
+  filter(Distancia_Total_m > 0) %>%
+  mutate(Intensidad = HSR_m / Distancia_Total_m)
+```
+
+**En Pandas:**
+```{pyodide}
+(
+    gps
+    .query("Distancia_Total_m > 0")
+    .assign(Intensidad = lambda x: x['HSR_m'] / x['Distancia_Total_m'])
+    [['Nombre', 'Distancia_Total_m', 'HSR_m', 'Intensidad']]
+    .head()
+)
+```
+
+**¿Por qué `lambda x`?** `x` representa el DataFrame en ese punto del chain. Es como `.` en magrittr.
+
+---
+
+### 🧠 Práctica 2.1: Creando columnas
+
+Filtra sesiones donde `Duracion_min > 0`, crea `Metros_por_Minuto`, muestra las primeras 5 filas.
+
+```{pyodide}
+# Pista 1: .query("Duracion_min > 0")
+# Pista 2: .assign(Col = lambda x: x['A'] / x['B'])
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    gps
+    .query("Duracion_min > 0")
+    .assign(Metros_por_Minuto = lambda x: x['Distancia_Total_m'] / x['Duracion_min'])
+    [['Nombre', 'Distancia_Total_m', 'Duracion_min', 'Metros_por_Minuto']]
+    .head()
+)
+```
+:::
+
+---
+
+### Ejemplo 2.2: Lógica condicional con np.where
+
+**En R:** `if_else()` → **En Pandas:** `np.where()`
+
+```{pyodide}
+(
+    gps
+    .assign(
+        Categoria = lambda x: np.where(x['RPE'] >= 8, 'Alta Intensidad', 'Normal')
+    )
+    [['Nombre', 'TipoSesion', 'RPE', 'Categoria']]
+    .head()
+)
+```
+
+***
+
+## 3. Depuración con `.pipe()`
+
+### Ejemplo 3.1: Función de inspección
+
+```{pyodide}
+def ver_estado(df, mensaje):
+    print(f"[{mensaje}] Filas: {len(df)}")
+    return df  # ¡Crucial devolver el df!
+
+(
+    gps
+    .pipe(ver_estado, mensaje="Inicio")
+    .query("TipoSesion == 'Partido'")
+    .pipe(ver_estado, mensaje="Después del filtro")
+    .head(3)
+)
+```
+
+---
+
+### 🧠 Práctica 3.1: Tu función de inspección
+
+Crea una función `mostrar_columnas(df)` que imprima las columnas y devuelva el df.
+
+```{pyodide}
+# Pista 1: df.columns.tolist() lista las columnas
+# Pista 2: Recuerda return df
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+def mostrar_columnas(df):
+    print("Columnas:", df.columns.tolist())
+    return df
+
+gps.pipe(mostrar_columnas).head()
+```
+:::
+
+***
+
+## 🏆 Mini-Proyecto: Pipeline de Análisis de Carga
+
+### Pregunta 1: Ratio de Intensidad
+Crea un pipeline que filtre Partidos, calcule HSR/Distancia*100 y muestre el top 5.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    gps
+    .query("TipoSesion == 'Partido'")
+    .assign(Intensidad_Pct = lambda x: x['HSR_m'] / x['Distancia_Total_m'] * 100)
+    .nlargest(5, 'Intensidad_Pct')
+    [['Nombre', 'Distancia_Total_m', 'HSR_m', 'Intensidad_Pct']]
+)
+```
+:::
+
+### Pregunta 2: Carga de Entrenamiento (RPE × Duración)
+Calcula la Carga (RPE × Duracion_min) y encuentra la sesión con mayor carga.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    gps
+    .assign(Carga = lambda x: x['RPE'] * x['Duracion_min'])
+    .nlargest(1, 'Carga')
+    [['Nombre', 'TipoSesion', 'RPE', 'Duracion_min', 'Carga']]
+)
+```
+:::
+
+### Pregunta 3: Promedio por Jugador (sesiones de alta carga)
+Filtra sesiones con RPE >= 7, agrupa por jugador, calcula media de distancia.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+(
+    gps
+    .query("RPE >= 7")
+    .groupby('Nombre')['Distancia_Total_m']
+    .mean()
+    .sort_values(ascending=False)
+)
+```
+:::
+
+### Pregunta 4: Pipeline Completo con Debugging
+Usa `.pipe()` para mostrar el número de filas en cada paso del pipeline anterior.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+def debug(df, paso):
+    print(f"Paso '{paso}': {len(df)} filas")
+    return df
+
+(
+    gps
+    .pipe(debug, "Inicial")
+    .query("RPE >= 7")
+    .pipe(debug, "Filtrado RPE>=7")
+    .groupby('Nombre')['Distancia_Total_m']
+    .mean()
+)
+```
+:::
+
+---
+
+## Resumen
+
+| Concepto | R (Tidyverse) | Python (Pandas) |
+|----------|---------------|-----------------|
+| Pipe | `df %>% verb()` | `df.verb()` |
+| Crear columna | `mutate(col = expr)` | `.assign(col = lambda x: expr)` |
+| If-else | `if_else()` | `np.where()` |
+| Debug | romper el pipe | `.pipe(funcion)` |

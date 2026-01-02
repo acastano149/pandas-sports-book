@@ -1,0 +1,255 @@
+# Valoración de Acciones: Expected Threat (xT)
+
+El **Expected Goals (xG)** solo mide el valor de los tiros. Pero, ¿cómo valoramos un pase brillante que no termina en disparo? El **Expected Threat (xT)** resuelve este problema.
+
+## 1. ¿Qué es Expected Threat?
+
+xT responde a la pregunta:
+
+> "¿Cuánto aumenta o disminuye la probabilidad de marcar gol como resultado de una acción?"
+
+Un pase desde el centro del campo hacia el área aumenta el xT. Un pase hacia atrás lo disminuye.
+
+```{pyodide}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ============================================
+# MATRIZ DE xT (Simplificada 12x8)
+# ============================================
+# Esta matriz representa la probabilidad de marcar gol
+# desde cada zona del campo. Basada en datos reales de ligas europeas.
+
+# Crear una matriz xT simplificada (valores inspirados en modelos reales)
+# Filas: Y (0=banda, 7=centro), Columnas: X (0=defensa propia, 11=portería rival)
+xT_matrix = np.array([
+    [0.001, 0.002, 0.003, 0.004, 0.005, 0.007, 0.010, 0.015, 0.020, 0.030, 0.050, 0.070],
+    [0.001, 0.002, 0.003, 0.005, 0.007, 0.010, 0.015, 0.025, 0.040, 0.060, 0.100, 0.150],
+    [0.001, 0.002, 0.004, 0.006, 0.010, 0.015, 0.025, 0.040, 0.070, 0.120, 0.200, 0.300],
+    [0.001, 0.003, 0.005, 0.008, 0.012, 0.020, 0.035, 0.060, 0.100, 0.180, 0.300, 0.380],
+    [0.001, 0.003, 0.005, 0.008, 0.012, 0.020, 0.035, 0.060, 0.100, 0.180, 0.300, 0.380],
+    [0.001, 0.002, 0.004, 0.006, 0.010, 0.015, 0.025, 0.040, 0.070, 0.120, 0.200, 0.300],
+    [0.001, 0.002, 0.003, 0.005, 0.007, 0.010, 0.015, 0.025, 0.040, 0.060, 0.100, 0.150],
+    [0.001, 0.002, 0.003, 0.004, 0.005, 0.007, 0.010, 0.015, 0.020, 0.030, 0.050, 0.070]
+])
+
+print("✅ Matriz xT cargada:", xT_matrix.shape)
+print(f"xT máximo (frente a portería): {xT_matrix.max():.3f}")
+print(f"xT mínimo (defensa propia): {xT_matrix.min():.4f}")
+```
+
+***
+
+## 2. Visualizar la Matriz xT
+
+Esta visualización muestra el "valor" de tener el balón en cada zona del campo.
+
+```{pyodide}
+fig, ax = plt.subplots(figsize=(12, 6))
+
+# Crear heatmap
+im = ax.imshow(xT_matrix, cmap='RdYlGn', origin='lower', aspect='auto')
+
+# Configurar ejes
+ax.set_xlabel('Posición X (→ Portería rival)', fontsize=12)
+ax.set_ylabel('Posición Y (↑ Centro del campo)', fontsize=12)
+ax.set_title('Matriz de Expected Threat (xT)', fontsize=14, fontweight='bold')
+
+# Añadir barra de color
+cbar = plt.colorbar(im, ax=ax)
+cbar.set_label('Probabilidad de marcar gol', fontsize=10)
+
+# Añadir valores en cada celda
+for i in range(xT_matrix.shape[0]):
+    for j in range(xT_matrix.shape[1]):
+        text = ax.text(j, i, f'{xT_matrix[i, j]:.2f}', ha='center', va='center', 
+                       color='black' if xT_matrix[i, j] < 0.2 else 'white', fontsize=7)
+
+plt.tight_layout()
+plt.show()
+```
+
+***
+
+## 3. Calcular el xT de una Acción
+
+El valor de una acción (pase, regate) es la **diferencia** entre el xT de la posición final y la inicial.
+
+```{pyodide}
+def obtener_xT(x, y, xT_matrix):
+    """
+    Obtiene el valor xT de una posición en el campo.
+    x: 0-105 (metros), y: 0-68 (metros)
+    """
+    # Convertir coordenadas reales a índices de la matriz
+    x_idx = min(int(x / 105 * 12), 11)
+    y_idx = min(int(y / 68 * 8), 7)
+    return xT_matrix[y_idx, x_idx]
+
+def calcular_xT_accion(x_inicio, y_inicio, x_fin, y_fin, xT_matrix):
+    """Calcula el xT añadido por una acción (pase, regate)"""
+    xT_inicio = obtener_xT(x_inicio, y_inicio, xT_matrix)
+    xT_fin = obtener_xT(x_fin, y_fin, xT_matrix)
+    return xT_fin - xT_inicio
+
+# Ejemplo: Un pase desde el centro del campo hacia el área
+pase_ejemplo = {
+    'x_inicio': 52.5,  # Centro del campo
+    'y_inicio': 34,    # Centro
+    'x_fin': 90,       # Cerca del área
+    'y_fin': 34        # Centro
+}
+
+xT_pase = calcular_xT_accion(**pase_ejemplo, xT_matrix=xT_matrix)
+print(f"Pase desde ({pase_ejemplo['x_inicio']}, {pase_ejemplo['y_inicio']}) "
+      f"hacia ({pase_ejemplo['x_fin']}, {pase_ejemplo['y_fin']})")
+print(f"xT Añadido: {xT_pase:.4f}")
+```
+
+***
+
+## 4. Aplicar xT a Datos de Eventos
+
+Calculamos el xT para cada pase en un dataset de eventos.
+
+```{pyodide}
+# Simular 100 pases de un partido
+np.random.seed(42)
+n_pases = 100
+
+pases = pd.DataFrame({
+    'PaseID': range(1, n_pases + 1),
+    'Jugador': np.random.choice(['García', 'López', 'Martínez', 'Sánchez'], n_pases),
+    'Minuto': np.random.randint(1, 91, n_pases),
+    'X_Inicio': np.random.uniform(10, 80, n_pases),
+    'Y_Inicio': np.random.uniform(5, 63, n_pases),
+    'X_Fin': np.random.uniform(20, 100, n_pases),
+    'Y_Fin': np.random.uniform(5, 63, n_pases),
+    'Exitoso': np.random.choice([True, False], n_pases, p=[0.8, 0.2])
+})
+
+# Calcular xT para cada pase
+pases['xT_Inicio'] = pases.apply(lambda r: obtener_xT(r['X_Inicio'], r['Y_Inicio'], xT_matrix), axis=1)
+pases['xT_Fin'] = pases.apply(lambda r: obtener_xT(r['X_Fin'], r['Y_Fin'], xT_matrix), axis=1)
+pases['xT_Añadido'] = pases['xT_Fin'] - pases['xT_Inicio']
+
+# Solo contar xT de pases exitosos
+pases['xT_Efectivo'] = pases['xT_Añadido'] * pases['Exitoso'].astype(int)
+
+print("Primeros pases con xT calculado:")
+print(pases[['Jugador', 'X_Inicio', 'X_Fin', 'xT_Añadido', 'Exitoso', 'xT_Efectivo']].head())
+```
+
+***
+
+## 5. Ranking de Jugadores por xT
+
+¿Quién añade más amenaza con sus pases?
+
+```{pyodide}
+# Agrupar por jugador
+ranking_xT = (
+    pases
+    .groupby('Jugador')
+    .agg(
+        Pases_Totales=('PaseID', 'count'),
+        Pases_Exitosos=('Exitoso', 'sum'),
+        xT_Total=('xT_Efectivo', 'sum'),
+        xT_Medio=('xT_Añadido', 'mean')
+    )
+    .sort_values('xT_Total', ascending=False)
+)
+
+print("🏆 Ranking de Jugadores por xT Total:")
+print(ranking_xT)
+
+# Visualizar
+fig, ax = plt.subplots(figsize=(8, 5))
+ranking_xT['xT_Total'].plot(kind='barh', color='steelblue', edgecolor='white', ax=ax)
+ax.set_xlabel('xT Total Añadido')
+ax.set_title('Contribución Ofensiva por xT')
+plt.tight_layout()
+plt.show()
+```
+
+***
+
+## 🏆 Mini-Proyecto: Analista de Pases
+
+### Pregunta 1: Los Mejores Pases
+¿Cuáles son los 5 pases con mayor xT añadido del partido? Muestra jugador, posiciones y valor.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pases.nlargest(5, 'xT_Añadido')[['Jugador', 'Minuto', 'X_Inicio', 'X_Fin', 'xT_Añadido']]
+```
+:::
+
+### Pregunta 2: xT por Zona del Campo
+Divide el campo en 3 zonas (Defensa: X<35, Medio: 35-70, Ataque: >70). ¿Desde qué zona se generan pases con mayor xT medio?
+
+```{pyodide}
+# Pista: Usa pd.cut() para crear categorías
+# pases['Zona'] = pd.cut(pases['X_Inicio'], bins=[0, 35, 70, 105], labels=['Defensa', 'Medio', 'Ataque'])
+
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+pases['Zona'] = pd.cut(pases['X_Inicio'], bins=[0, 35, 70, 105], labels=['Defensa', 'Medio', 'Ataque'])
+pases.groupby('Zona')['xT_Añadido'].mean().sort_values(ascending=False)
+```
+:::
+
+### Pregunta 3: Visualizar Pases de Alto xT
+Crea un scatter plot de todos los pases, coloreando los de xT > 0.05 de rojo.
+
+```{pyodide}
+# Escribe tu código aquí:
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Ver solución
+```python
+fig, ax = plt.subplots(figsize=(12, 8))
+
+# Pases normales
+normales = pases[pases['xT_Añadido'] <= 0.05]
+ax.scatter(normales['X_Inicio'], normales['Y_Inicio'], c='gray', alpha=0.3, s=20, label='Normal')
+
+# Pases de alto xT
+alto_xT = pases[pases['xT_Añadido'] > 0.05]
+ax.scatter(alto_xT['X_Inicio'], alto_xT['Y_Inicio'], c='red', s=50, label='Alto xT (>0.05)')
+
+ax.set_xlim(0, 105)
+ax.set_ylim(0, 68)
+ax.legend()
+ax.set_title('Origen de Pases por xT')
+plt.show()
+```
+:::
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **xG** | Probabilidad de marcar un tiro |
+| **xT** | Probabilidad de marcar desde una zona del campo |
+| **xT añadido** | Diferencia de xT entre posición final e inicial de una acción |
+| **Matriz xT** | Grid que asigna valor a cada zona del campo |
