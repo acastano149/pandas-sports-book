@@ -363,6 +363,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#pregunta-4-pipeline-completo-con-debugging" id="toc-pregunta-4-pipeline-completo-con-debugging" class="nav-link" data-scroll-target="#pregunta-4-pipeline-completo-con-debugging"><span class="header-section-number">2.4.4</span> Pregunta 4: Pipeline Completo con Debugging</a></li>
   </ul></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">2.5</span> Resumen</a></li>
+  <li><a href="#test-de-conocimientos" id="toc-test-de-conocimientos" class="nav-link" data-scroll-target="#test-de-conocimientos"><span class="header-section-number">2.6</span> 📝 Test de Conocimientos</a>
+  <ul class="collapse">
+  <li><a href="#pregunta-1" id="toc-pregunta-1" class="nav-link" data-scroll-target="#pregunta-1"><span class="header-section-number">2.6.1</span> Pregunta 1</a></li>
+  <li><a href="#pregunta-2" id="toc-pregunta-2" class="nav-link" data-scroll-target="#pregunta-2"><span class="header-section-number">2.6.2</span> Pregunta 2</a></li>
+  <li><a href="#pregunta-3" id="toc-pregunta-3" class="nav-link" data-scroll-target="#pregunta-3"><span class="header-section-number">2.6.3</span> Pregunta 3</a></li>
+  <li><a href="#pregunta-4" id="toc-pregunta-4" class="nav-link" data-scroll-target="#pregunta-4"><span class="header-section-number">2.6.4</span> Pregunta 4</a></li>
+  <li><a href="#pregunta-5" id="toc-pregunta-5" class="nav-link" data-scroll-target="#pregunta-5"><span class="header-section-number">2.6.5</span> Pregunta 5</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -505,13 +513,13 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiKFxuICAgIGdwc1xuICAgIC5x
 </section>
 <section id="práctica-2.1-creando-columnas" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="práctica-2.1-creando-columnas"><span class="header-section-number">2.2.2</span> 🧠 Práctica 2.1: Creando columnas</h3>
-<p>Filtra sesiones donde <code>Duracion_min &gt; 0</code>, crea <code>Metros_por_Minuto</code>, muestra las primeras 5 filas.</p>
+<p>Filtra sesiones donde <code>Duracion_min &gt; 0</code>, crea <code>Metros_por_Minuto</code>, redondea a 2 decimales, ordena de mayor a menor, y muestra los 10 primeros con nombre, fecha y la nueva columna.</p>
 <div>
 <div id="pyodide-6" class="exercise-cell">
 
 </div>
 <script type="pyodide-6-contents">
-eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YSAxOiAucXVlcnkoXCJEdXJhY2lvbl9taW4gPiAwXCIpXG4jIFBpc3RhIDI6IC5hc3NpZ24oQ29sID0gbGFtYmRhIHg6IHhbJ0EnXSAvIHhbJ0InXSlcblxuIyBFc2NyaWJlIHR1IGPDs2RpZ28gYXF1w606XG4ifQ==
+eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YSAxOiAucXVlcnkoXCJEdXJhY2lvbl9taW4gPiAwXCIpIHBhcmEgZmlsdHJhclxuIyBQaXN0YSAyOiAuYXNzaWduKENvbCA9IGxhbWJkYSB4OiB4WydBJ10gLyB4WydCJ10pIHBhcmEgY3JlYXIgY29sdW1uYVxuIyBQaXN0YSAzOiAucm91bmQoMikgcGFyYSByZWRvbmRlYXJcbiMgUGlzdGEgNDogLnNvcnRfdmFsdWVzKCdjb2wnLCBhc2NlbmRpbmc9RmFsc2UpIHBhcmEgb3JkZW5hclxuIyBQaXN0YSA1OiAuaGVhZCgxMCkgcGFyYSBsaW1pdGFyIGZpbGFzXG4jIFBpc3RhIDY6IFtbJ2NvbDEnLCAnY29sMiddXSBwYXJhIHNlbGVjY2lvbmFyIGNvbHVtbmFzXG5cbiMgRXNjcmliZSB0dSBjw7NkaWdvIGFxdcOtOlxuIn0=
 </script>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -526,13 +534,25 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YSAxOiAucXVlcnko
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> (</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    gps</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .query(<span class="st">"Duracion_min &gt; 0"</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    .assign(Metros_por_Minuto <span class="op">=</span> <span class="kw">lambda</span> x: x[<span class="st">'Distancia_Total_m'</span>] <span class="op">/</span> x[<span class="st">'Duracion_min'</span>])</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    [[<span class="st">'Nombre'</span>, <span class="st">'Distancia_Total_m'</span>, <span class="st">'Duracion_min'</span>, <span class="st">'Metros_por_Minuto'</span>]]</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    .head()</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">"Metros_por_Minuto"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    .head(<span class="dv">10</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    [[<span class="st">'Nombre'</span>, <span class="st">'Fecha'</span>, <span class="st">'Metros_por_Minuto'</span>]]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(resultado)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>¿Qué hace cada paso?</strong></p>
+<ol type="1">
+<li><code>.query()</code> → Filtra condición</li>
+<li><code>.assign()</code> → Crea nueva columna</li>
+<li><code>.round(2)</code> → Redondea todas las numéricas a 2 decimales</li>
+<li><code>.sort_values()</code> → Ordena descendente</li>
+<li><code>.head(10)</code> → Limita a 10 filas</li>
+<li><code>[[...]]</code> → Selecciona columnas finales</li>
+</ol>
 </div>
 </div>
 </div>
@@ -782,6 +802,189 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2Rp
 </tr>
 </tbody>
 </table>
+<hr>
+</section>
+<section id="test-de-conocimientos" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="test-de-conocimientos"><span class="header-section-number">2.6</span> 📝 Test de Conocimientos</h2>
+<section id="pregunta-1" class="level3" data-number="2.6.1">
+<h3 data-number="2.6.1" class="anchored" data-anchor-id="pregunta-1"><span class="header-section-number">2.6.1</span> Pregunta 1</h3>
+<p>¿Cuál es la ventaja principal del method chaining sobre usar variables intermedias?</p>
+<ul>
+<li><ol type="A">
+<li>Es más rápido computacionalmente</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Una sola expresión, lectura secuencial y sin variables intermedias que ocupan memoria</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Produce resultados diferentes</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Es obligatorio en Pandas</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) Una sola expresión, lectura secuencial y sin variables intermedias que ocupan memoria</strong></p>
+<p>El method chaining mejora la legibilidad (se lee como una receta) y evita crear múltiples variables temporales.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-2" class="level3" data-number="2.6.2">
+<h3 data-number="2.6.2" class="anchored" data-anchor-id="pregunta-2"><span class="header-section-number">2.6.2</span> Pregunta 2</h3>
+<p>En <code>.assign()</code>, ¿por qué usamos <code>lambda x: x['col']</code> en lugar de acceder directamente a la columna?</p>
+<ul>
+<li><ol type="A">
+<li>Porque es más rápido</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Porque <code>x</code> representa el DataFrame en ese punto del chain, permitiendo encadenar operaciones</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Porque Pandas no permite acceso directo</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Es solo por estética</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) Porque <code>x</code> representa el DataFrame en ese punto del chain, permitiendo encadenar operaciones</strong></p>
+<p>La lambda captura el estado actual del DataFrame después de las transformaciones previas, similar a <code>.</code> en magrittr de R.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-3" class="level3" data-number="2.6.3">
+<h3 data-number="2.6.3" class="anchored" data-anchor-id="pregunta-3"><span class="header-section-number">2.6.3</span> Pregunta 3</h3>
+<p>¿Cuál es el equivalente de <code>if_else()</code> de R en Pandas?</p>
+<ul>
+<li><ol type="A">
+<li><code>pd.ifelse()</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df.where()</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>np.where()</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li><code>if...else</code> de Python</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>C) <code>np.where()</code></strong></p>
+<p><code>np.where(condicion, valor_si_true, valor_si_false)</code> es vectorizado y funciona con columnas completas.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-4" class="level3" data-number="2.6.4">
+<h3 data-number="2.6.4" class="anchored" data-anchor-id="pregunta-4"><span class="header-section-number">2.6.4</span> Pregunta 4</h3>
+<p>¿Para qué sirve el método <code>.pipe()</code> en un chain?</p>
+<ul>
+<li><ol type="A">
+<li>Para ordenar los datos</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Para aplicar una función personalizada al DataFrame (útil para debugging)</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Para filtrar filas</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Para crear columnas</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) Para aplicar una función personalizada al DataFrame (útil para debugging)</strong></p>
+<p><code>.pipe(funcion)</code> te permite insertar funciones de inspección en medio del chain sin romperlo.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-5" class="level3" data-number="2.6.5">
+<h3 data-number="2.6.5" class="anchored" data-anchor-id="pregunta-5"><span class="header-section-number">2.6.5</span> Pregunta 5</h3>
+<p>¿Qué es lo que hace los paréntesis en un method chain de múltiples líneas?</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="op">=</span> (</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    df</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(...)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    .sort_values(...)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><ol type="A">
+<li>Mejoran el rendimiento</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Permiten saltos de línea sin usar backslash</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Son opcionales</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Crean una copia del DataFrame</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) Permiten saltos de línea sin usar backslash</strong></p>
+<p>Los paréntesis permiten dividir una expresión larga en múltiples líneas para mejor legibilidad.</p>
+</div>
+</div>
+</div>
 
 
 <script type="pyodide-data">
@@ -815,6 +1018,7 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
 </section>
 
 </main> <!-- /main -->

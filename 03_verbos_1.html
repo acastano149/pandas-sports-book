@@ -364,6 +364,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#pregunta-4-top-5-en-test-yoyo" id="toc-pregunta-4-top-5-en-test-yoyo" class="nav-link" data-scroll-target="#pregunta-4-top-5-en-test-yoyo"><span class="header-section-number">3.4.4</span> Pregunta 4: Top 5 en Test YoYo</a></li>
   </ul></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">3.5</span> Resumen</a></li>
+  <li><a href="#test-de-conocimientos" id="toc-test-de-conocimientos" class="nav-link" data-scroll-target="#test-de-conocimientos"><span class="header-section-number">3.6</span> 📝 Test de Conocimientos</a>
+  <ul class="collapse">
+  <li><a href="#pregunta-1" id="toc-pregunta-1" class="nav-link" data-scroll-target="#pregunta-1"><span class="header-section-number">3.6.1</span> Pregunta 1</a></li>
+  <li><a href="#pregunta-2" id="toc-pregunta-2" class="nav-link" data-scroll-target="#pregunta-2"><span class="header-section-number">3.6.2</span> Pregunta 2</a></li>
+  <li><a href="#pregunta-3" id="toc-pregunta-3" class="nav-link" data-scroll-target="#pregunta-3"><span class="header-section-number">3.6.3</span> Pregunta 3</a></li>
+  <li><a href="#pregunta-4" id="toc-pregunta-4" class="nav-link" data-scroll-target="#pregunta-4"><span class="header-section-number">3.6.4</span> Pregunta 4</a></li>
+  <li><a href="#pregunta-5" id="toc-pregunta-5" class="nav-link" data-scroll-target="#pregunta-5"><span class="header-section-number">3.6.5</span> Pregunta 5</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -737,6 +745,184 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBFc2NyaWJlIHR1IGPDs2Rp
 </tr>
 </tbody>
 </table>
+<hr>
+</section>
+<section id="test-de-conocimientos" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="test-de-conocimientos"><span class="header-section-number">3.6</span> 📝 Test de Conocimientos</h2>
+<section id="pregunta-1" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="pregunta-1"><span class="header-section-number">3.6.1</span> Pregunta 1</h3>
+<p>¿Cuál es la sintaxis correcta para filtrar jugadores mayores de 25 años y delanteros con <code>.query()</code>?</p>
+<ul>
+<li><ol type="A">
+<li><code>df.query("Edad &gt; 25 AND Posicion = 'Delantero'")</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df.query("Edad &gt; 25 and Posicion == 'Delantero'")</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>df.filter("Edad &gt; 25")</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li><code>df.query(Edad &gt; 25)</code></li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) <code>df.query("Edad &gt; 25 and Posicion == 'Delantero'")</code></strong></p>
+<p>En <code>.query()</code> usamos <code>and</code>/<code>or</code> (minúsculas), <code>==</code> para igualdad, y strings entre comillas simples.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-2" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="pregunta-2"><span class="header-section-number">3.6.2</span> Pregunta 2</h3>
+<p>¿Por qué usamos doble corchete <code>df[['col1', 'col2']]</code> para seleccionar múltiples columnas?</p>
+<ul>
+<li><ol type="A">
+<li>Por estética</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Porque el corchete interior crea una lista de nombres de columnas</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Porque es más rápido</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Es opcional, también funciona con un solo corchete</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) Porque el corchete interior crea una lista de nombres de columnas</strong></p>
+<p><code>df[lista_columnas]</code> espera una lista. <code>['col1', 'col2']</code> es la lista, y los corchetes exteriores son el operador de acceso.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-3" class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="pregunta-3"><span class="header-section-number">3.6.3</span> Pregunta 3</h3>
+<p>¿Qué método usarías para obtener los 5 jugadores con mayor velocidad?</p>
+<ul>
+<li><ol type="A">
+<li><code>df.sort_values('Velocidad').head(5)</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df.nlargest(5, 'Velocidad')</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>df.top(5, 'Velocidad')</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Opciones A y B son correctas</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>D) Opciones A y B son correctas</strong></p>
+<p>Pero <code>.nlargest()</code> es más eficiente para datasets grandes porque no ordena todo el DataFrame.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-4" class="level3" data-number="3.6.4">
+<h3 data-number="3.6.4" class="anchored" data-anchor-id="pregunta-4"><span class="header-section-number">3.6.4</span> Pregunta 4</h3>
+<p>¿Cuál es la diferencia entre <code>.sort_values()</code> y <code>.nlargest()</code>?</p>
+<ul>
+<li><ol type="A">
+<li><code>.sort_values()</code> ordena todo, <code>.nlargest()</code> solo obtiene los N mayores de forma eficiente</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>Son idénticos</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>.nlargest()</code> es más lento</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li><code>.sort_values()</code> solo funciona con números</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>A) <code>.sort_values()</code> ordena todo, <code>.nlargest()</code> solo obtiene los N mayores de forma eficiente</strong></p>
+<p>Para obtener top N, <code>.nlargest()</code> es más eficiente porque usa un algoritmo parcial.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-5" class="level3" data-number="3.6.5">
+<h3 data-number="3.6.5" class="anchored" data-anchor-id="pregunta-5"><span class="header-section-number">3.6.5</span> Pregunta 5</h3>
+<p>¿Cómo filtrarías jugadores cuya posición está en una lista <code>['Portero', 'Defensa']</code>?</p>
+<ul>
+<li><ol type="A">
+<li><code>df.query("Posicion == 'Portero' or Posicion == 'Defensa'")</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df.query("Posicion in ['Portero', 'Defensa']")</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>df[df['Posicion'].isin(['Portero', 'Defensa'])]</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Todas las anteriores son correctas</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>D) Todas las anteriores son correctas</strong></p>
+<p>La opción B (<code>.query()</code> con <code>in</code>) y C (<code>.isin()</code>) son las más elegantes para listas largas.</p>
+</div>
+</div>
+</div>
 
 
 <script type="pyodide-data">
@@ -770,6 +956,7 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
 </section>
 
 </main> <!-- /main -->

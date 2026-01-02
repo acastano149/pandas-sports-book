@@ -361,6 +361,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#pregunta-4-perfil-de-rendimiento-aeróbico" id="toc-pregunta-4-perfil-de-rendimiento-aeróbico" class="nav-link" data-scroll-target="#pregunta-4-perfil-de-rendimiento-aeróbico"><span class="header-section-number">4.4.4</span> Pregunta 4: Perfil de Rendimiento Aeróbico</a></li>
   </ul></li>
   <li><a href="#resumen" id="toc-resumen" class="nav-link" data-scroll-target="#resumen"><span class="header-section-number">4.5</span> Resumen</a></li>
+  <li><a href="#test-de-conocimientos" id="toc-test-de-conocimientos" class="nav-link" data-scroll-target="#test-de-conocimientos"><span class="header-section-number">4.6</span> 📝 Test de Conocimientos</a>
+  <ul class="collapse">
+  <li><a href="#pregunta-1" id="toc-pregunta-1" class="nav-link" data-scroll-target="#pregunta-1"><span class="header-section-number">4.6.1</span> Pregunta 1</a></li>
+  <li><a href="#pregunta-2" id="toc-pregunta-2" class="nav-link" data-scroll-target="#pregunta-2"><span class="header-section-number">4.6.2</span> Pregunta 2</a></li>
+  <li><a href="#pregunta-3" id="toc-pregunta-3" class="nav-link" data-scroll-target="#pregunta-3"><span class="header-section-number">4.6.3</span> Pregunta 3</a></li>
+  <li><a href="#pregunta-4" id="toc-pregunta-4" class="nav-link" data-scroll-target="#pregunta-4"><span class="header-section-number">4.6.4</span> Pregunta 4</a></li>
+  <li><a href="#pregunta-5" id="toc-pregunta-5" class="nav-link" data-scroll-target="#pregunta-5"><span class="header-section-number">4.6.5</span> Pregunta 5</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -694,6 +702,184 @@ eyJhdHRyIjp7ImVkaXQiOnRydWUsImV2YWwiOnRydWV9LCJjb2RlIjoiIyBQaXN0YTogQ3JlYSBjb25k
 </tr>
 </tbody>
 </table>
+<hr>
+</section>
+<section id="test-de-conocimientos" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="test-de-conocimientos"><span class="header-section-number">4.6</span> 📝 Test de Conocimientos</h2>
+<section id="pregunta-1" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="pregunta-1"><span class="header-section-number">4.6.1</span> Pregunta 1</h3>
+<p>¿Cuál es el equivalente de <code>case_when()</code> de dplyr en Pandas/NumPy?</p>
+<ul>
+<li><ol type="A">
+<li><code>np.case()</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>np.select([condiciones], [valores])</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>df.case_when()</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li><code>if...elif...else</code></li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) <code>np.select([condiciones], [valores])</code></strong></p>
+<p><code>np.select()</code> evalúa una lista de condiciones y devuelve el valor correspondiente a la primera condición verdadera.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-2" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="pregunta-2"><span class="header-section-number">4.6.2</span> Pregunta 2</h3>
+<p>Para acceder a métodos de texto en una columna de Pandas, ¿qué se usa?</p>
+<ul>
+<li><ol type="A">
+<li><code>df['col'].text.upper()</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df['col'].str.upper()</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>upper(df['col'])</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li><code>df['col'].upper()</code></li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) <code>df['col'].str.upper()</code></strong></p>
+<p>El accessor <code>.str</code> da acceso a todos los métodos de texto vectorizados.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-3" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="pregunta-3"><span class="header-section-number">4.6.3</span> Pregunta 3</h3>
+<p>En <code>np.where(condicion, A, B)</code>, ¿qué devuelve cuando la condición es False?</p>
+<ul>
+<li><ol type="A">
+<li>A</li>
+</ol></li>
+<li><ol start="2" type="A">
+<li>B</li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>NaN</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Error</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) B</strong></p>
+<p><code>np.where(cond, A, B)</code> devuelve A cuando la condición es True, y B cuando es False.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-4" class="level3" data-number="4.6.4">
+<h3 data-number="4.6.4" class="anchored" data-anchor-id="pregunta-4"><span class="header-section-number">4.6.4</span> Pregunta 4</h3>
+<p>¿Cuál es la forma correcta de calcular el IMC en un method chain?</p>
+<ul>
+<li><ol type="A">
+<li><code>df.assign(IMC = df['Peso'] / (df['Altura']/100)**2)</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df.assign(IMC = lambda x: x['Peso'] / (x['Altura']/100)**2)</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li>Ambas son correctas</li>
+</ol></li>
+<li><ol start="4" type="A">
+<li>Ninguna es correcta</li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) <code>df.assign(IMC = lambda x: x['Peso'] / (x['Altura']/100)**2)</code></strong></p>
+<p>La opción A funcionaría, pero no es segura en un chain porque <code>df</code> podría no reflejar transformaciones previas. Lambda con <code>x</code> siempre usa el estado actual.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pregunta-5" class="level3" data-number="4.6.5">
+<h3 data-number="4.6.5" class="anchored" data-anchor-id="pregunta-5"><span class="header-section-number">4.6.5</span> Pregunta 5</h3>
+<p>¿Cómo extraerías el primer carácter del nombre de cada jugador?</p>
+<ul>
+<li><ol type="A">
+<li><code>df['Nombre'][0]</code></li>
+</ol></li>
+<li><ol start="2" type="A">
+<li><code>df['Nombre'].str[0]</code></li>
+</ol></li>
+<li><ol start="3" type="A">
+<li><code>df['Nombre'].first()</code></li>
+</ol></li>
+<li><ol start="4" type="A">
+<li><code>df['Nombre'].substring(0,1)</code></li>
+</ol></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ver respuesta
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>B) <code>df['Nombre'].str[0]</code></strong></p>
+<p>El accessor <code>.str</code> permite slicing como si fuera un string normal, pero aplicado a toda la columna.</p>
+</div>
+</div>
+</div>
 
 
 <script type="pyodide-data">
@@ -727,6 +913,7 @@ eyJjb250ZW50cyI6W119
 <script type="vfs-file">
 W10=
 </script>
+</section>
 </section>
 
 </main> <!-- /main -->

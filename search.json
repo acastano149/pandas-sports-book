@@ -136,11 +136,22 @@
     ]
   },
   {
+    "objectID": "01_intro.html#conceptos-clave-para-el-análisis",
+    "href": "01_intro.html#conceptos-clave-para-el-análisis",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.6 6. Conceptos Clave para el Análisis",
+    "text": "1.6 6. Conceptos Clave para el Análisis\nAntes de pasar a los ejercicios, asegurémonos de entender los métodos que utilizarás:\n\n1.6.1 6.1 El atributo .shape\n\n\n\n\n\n\nNote💡 Entendiendo .shape\n\n\n\n.shape es un atributo (no una función, por eso no lleva paréntesis) que devuelve una tupla con las dimensiones del DataFrame: (filas, columnas).\n\ndf.shape[0] → número de filas (eje vertical, Axis 0)\ndf.shape[1] → número de columnas (eje horizontal, Axis 1)\n\nEs la misma convención que en álgebra lineal: una matriz \\(A_{m \\times n}\\) tiene \\(m\\) filas y \\(n\\) columnas.\n\n\n\n\n\n\n\n\n\n\n1.6.2 6.2 Encontrar máximos y mínimos con .idxmax() / .idxmin()\n\n\n\n\n\n\nNote💡 Diferencia entre .max() e .idxmax()\n\n\n\n\n.max() devuelve el valor máximo de una columna\n.idxmax() devuelve el índice (posición de fila) donde está ese máximo\n\nEsto es muy útil cuando quieres saber quién tiene el valor máximo, no solo cuál es el valor.\n\n\n\n\n\n\n\n\n\n\n1.6.3 6.3 Conteo de frecuencias con .value_counts()\n\n\n\n\n\n\nNote💡 Cuántas veces aparece cada valor\n\n\n\n.value_counts() cuenta cuántas veces aparece cada valor único en una columna. Es el equivalente a count() o table() en R.\nPor defecto ordena de mayor a menor frecuencia.\n\n\n\n\n\n\n\n\n\n\n1.6.4 6.4 Operadores lógicos en Pandas\n\n\n\n\n\n\nWarning⚠️ Cuidado: & vs and\n\n\n\nEn Python normal usamos and y or. Pero en operaciones vectorizadas de Pandas debemos usar:\n\n& en lugar de and\n| en lugar de or\n~ en lugar de not\n\nAdemás, cada condición debe ir entre paréntesis:\n# ✅ Correcto\ndf[(df['Edad'] &gt;= 25) & (df['Edad'] &lt;= 29)]\n\n# ❌ Incorrecto (dará error)\ndf[df['Edad'] &gt;= 25 and df['Edad'] &lt;= 29]",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
     "objectID": "01_intro.html#mini-proyecto-perfil-del-plantel",
     "href": "01_intro.html#mini-proyecto-perfil-del-plantel",
     "title": "1  Introducción: De Tibbles a DataFrames",
-    "section": "1.6 🏆 Mini-Proyecto: Perfil del Plantel",
-    "text": "1.6 🏆 Mini-Proyecto: Perfil del Plantel\nAhora que conoces las estructuras básicas, responde estas preguntas de análisis del plantel:\n\n1.6.1 Pregunta 1: Dimensiones del Dataset\n¿Cuántos atletas hay en total y cuántas métricas físicas se han registrado?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(f\"Atletas: {atletas.shape[0]}\")\nprint(f\"Métricas registradas: {atletas.shape[1]} variables\")\nprint(f\"\\nVariables disponibles:\\n{atletas.columns.tolist()}\")\n\n\n\n\n\n1.6.2 Pregunta 2: ¿Quién es el atleta más rápido del plantel?\nEncuentra el jugador con mayor velocidad máxima y muestra su nombre, posición y velocidad.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nidx_max = atletas['VelocidadMax_kmh'].idxmax()\nprint(f\"Atleta más rápido: {atletas.loc[idx_max, 'Nombre']}\")\nprint(f\"Posición: {atletas.loc[idx_max, 'Posicion']}\")\nprint(f\"Velocidad máxima: {atletas.loc[idx_max, 'VelocidadMax_kmh']} km/h\")\n\n\n\n\n\n1.6.3 Pregunta 3: Reserva de Frecuencia Cardíaca\nLa reserva de FC = FC_Max - FC_Reposo. ¿Cuál es la reserva media del plantel?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nreserva_fc = atletas['FC_Max'] - atletas['FC_Reposo']\nprint(f\"Reserva FC media: {reserva_fc.mean():.1f} ppm\")\nprint(f\"Rango: {reserva_fc.min()} - {reserva_fc.max()} ppm\")\n\n\n\n\n\n1.6.4 Pregunta 4: Perfil por Posición\n¿Cuántos jugadores hay en cada posición? ¿Qué posición es más común?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(\"Distribución por posición:\")\nprint(atletas['Posicion'].value_counts())\nprint(f\"\\nPosición más común: {atletas['Posicion'].value_counts().index[0]}\")\n\n\n\n\n\n1.6.5 Pregunta 5: Atletas en su Prime (25-29 años)\n¿Cuántos atletas están en su “prime” (entre 25 y 29 años)?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprime = atletas[(atletas['Edad'] &gt;= 25) & (atletas['Edad'] &lt;= 29)]\nprint(f\"Atletas en prime (25-29 años): {len(prime)}\")\nprint(prime[['Nombre', 'Edad', 'Posicion']])",
+    "section": "1.7 🏆 Mini-Proyecto: Perfil del Plantel",
+    "text": "1.7 🏆 Mini-Proyecto: Perfil del Plantel\nAhora que conoces las estructuras básicas, responde estas preguntas de análisis del plantel:\n\n1.7.1 Pregunta 1: Dimensiones del Dataset\n¿Cuántos atletas hay en total y cuántas métricas físicas se han registrado?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(f\"Atletas: {atletas.shape[0]}\")\nprint(f\"Métricas registradas: {atletas.shape[1]} variables\")\nprint(f\"\\nVariables disponibles:\\n{atletas.columns.tolist()}\")\n\n\n\n\n\n1.7.2 Pregunta 2: ¿Quién es el atleta más rápido del plantel?\nEncuentra el jugador con mayor velocidad máxima y muestra su nombre, posición y velocidad.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nidx_max = atletas['VelocidadMax_kmh'].idxmax()\nprint(f\"Atleta más rápido: {atletas.loc[idx_max, 'Nombre']}\")\nprint(f\"Posición: {atletas.loc[idx_max, 'Posicion']}\")\nprint(f\"Velocidad máxima: {atletas.loc[idx_max, 'VelocidadMax_kmh']} km/h\")\n\n\n\n\n\n1.7.3 Pregunta 3: Reserva de Frecuencia Cardíaca\nLa reserva de FC = FC_Max - FC_Reposo. ¿Cuál es la reserva media del plantel?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nreserva_fc = atletas['FC_Max'] - atletas['FC_Reposo']\nprint(f\"Reserva FC media: {reserva_fc.mean():.1f} ppm\")\nprint(f\"Rango: {reserva_fc.min()} - {reserva_fc.max()} ppm\")\n\n\n\n\n\n1.7.4 Pregunta 4: Perfil por Posición\n¿Cuántos jugadores hay en cada posición? ¿Qué posición es más común?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprint(\"Distribución por posición:\")\nprint(atletas['Posicion'].value_counts())\nprint(f\"\\nPosición más común: {atletas['Posicion'].value_counts().index[0]}\")\n\n\n\n\n\n1.7.5 Pregunta 5: Atletas en su Prime (25-29 años)\n¿Cuántos atletas están en su “prime” (entre 25 y 29 años)?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nprime = atletas[(atletas['Edad'] &gt;= 25) & (atletas['Edad'] &lt;= 29)]\nprint(f\"Atletas en prime (25-29 años): {len(prime)}\")\nprint(prime[['Nombre', 'Edad', 'Posicion']])",
     "crumbs": [
       "Fundamentos",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
@@ -150,8 +161,19 @@
     "objectID": "01_intro.html#resumen-tabla-de-equivalencias",
     "href": "01_intro.html#resumen-tabla-de-equivalencias",
     "title": "1  Introducción: De Tibbles a DataFrames",
-    "section": "1.7 Resumen: Tabla de Equivalencias",
-    "text": "1.7 Resumen: Tabla de Equivalencias\n\n\n\nConcepto\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nVector\nc(1, 2, 3)\npd.Series([1, 2, 3])\n\n\nDataFrame\ntibble(...)\npd.DataFrame({...})\n\n\nVer estructura\ndf %&gt;% glimpse()\ndf.info()\n\n\nEstadísticas\ndf %&gt;% summary()\ndf.describe()\n\n\nConteo\ndf %&gt;% count(col)\ndf['col'].value_counts()",
+    "section": "1.8 Resumen: Tabla de Equivalencias",
+    "text": "1.8 Resumen: Tabla de Equivalencias\n\n\n\nConcepto\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nVector\nc(1, 2, 3)\npd.Series([1, 2, 3])\n\n\nDataFrame\ntibble(...)\npd.DataFrame({...})\n\n\nVer estructura\ndf %&gt;% glimpse()\ndf.info()\n\n\nEstadísticas\ndf %&gt;% summary()\ndf.describe()\n\n\nConteo\ndf %&gt;% count(col)\ndf['col'].value_counts()",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
+    ]
+  },
+  {
+    "objectID": "01_intro.html#test-de-conocimientos",
+    "href": "01_intro.html#test-de-conocimientos",
+    "title": "1  Introducción: De Tibbles a DataFrames",
+    "section": "1.9 📝 Test de Conocimientos",
+    "text": "1.9 📝 Test de Conocimientos\n\n1.9.1 Pregunta 1\n¿Cuál es la diferencia principal entre una Series y un DataFrame en Pandas?\n\n\nSeries puede contener strings, DataFrame solo números\n\n\nSeries es unidimensional (una columna), DataFrame es bidimensional (múltiples columnas)\n\n\nSeries es más rápido que DataFrame\n\n\nNo hay diferencia, son sinónimos\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Series es unidimensional (una columna), DataFrame es bidimensional (múltiples columnas)\nUna Series es como un vector con índice, mientras que un DataFrame es una colección de Series que comparten el mismo índice.\n\n\n\n\n\n1.9.2 Pregunta 2\n¿Qué devuelve df.shape[0]?\n\n\nEl número de columnas\n\n\nEl número de filas\n\n\nUna lista con los nombres de columnas\n\n\nEl tipo de datos del DataFrame\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) El número de filas\n.shape devuelve una tupla (filas, columnas). Por lo tanto df.shape[0] = filas y df.shape[1] = columnas.\n\n\n\n\n\n1.9.3 Pregunta 3\n¿Cuál es la diferencia entre df['Columna'] y df[['Columna']]?\n\n\nNo hay diferencia\n\n\nEl primero devuelve Series, el segundo devuelve DataFrame\n\n\nEl primero es más lento\n\n\nEl segundo devuelve un error\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) El primero devuelve Series, el segundo devuelve DataFrame\n\ndf['col'] → Series (una sola columna)\ndf[['col']] → DataFrame de una columna\n\n\n\n\n\n\n1.9.4 Pregunta 4\nEn Pandas, al combinar condiciones con corchetes, ¿qué operador debes usar en lugar de and?\n\n\n&&\n\n\nAND\n\n\n&\n\n\n+\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nC) &\nEn operaciones vectorizadas debemos usar & (en lugar de and), | (en lugar de or), y cada condición debe ir entre paréntesis.\n\n\n\n\n\n1.9.5 Pregunta 5\n¿Qué método devuelve el índice (posición de fila) donde está el valor máximo de una columna?\n\n\n.max()\n\n\n.idxmax()\n\n\n.argmax()\n\n\n.posmax()\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) .idxmax()\n\n.max() devuelve el valor máximo\n.idxmax() devuelve el índice donde está ese máximo",
     "crumbs": [
       "Fundamentos",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introducción: De Tibbles a DataFrames</span>"
@@ -184,7 +206,7 @@
     "href": "02_flujo_trabajo.html#creación-de-columnas-con-.assign",
     "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
     "section": "2.2 2. Creación de Columnas con .assign()",
-    "text": "2.2 2. Creación de Columnas con .assign()\n\n2.2.1 Ejemplo 2.1: Cálculos con lambda\nEn R (Tidyverse):\ngps %&gt;%\n  filter(Distancia_Total_m &gt; 0) %&gt;%\n  mutate(Intensidad = HSR_m / Distancia_Total_m)\nEn Pandas:\n\n\n\n\n\n\n¿Por qué lambda x? x representa el DataFrame en ese punto del chain. Es como . en magrittr.\n\n\n\n2.2.2 🧠 Práctica 2.1: Creando columnas\nFiltra sesiones donde Duracion_min &gt; 0, crea Metros_por_Minuto, muestra las primeras 5 filas.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"Duracion_min &gt; 0\")\n    .assign(Metros_por_Minuto = lambda x: x['Distancia_Total_m'] / x['Duracion_min'])\n    [['Nombre', 'Distancia_Total_m', 'Duracion_min', 'Metros_por_Minuto']]\n    .head()\n)\n\n\n\n\n\n\n2.2.3 Ejemplo 2.2: Lógica condicional con np.where\nEn R: if_else() → En Pandas: np.where()",
+    "text": "2.2 2. Creación de Columnas con .assign()\n\n2.2.1 Ejemplo 2.1: Cálculos con lambda\nEn R (Tidyverse):\ngps %&gt;%\n  filter(Distancia_Total_m &gt; 0) %&gt;%\n  mutate(Intensidad = HSR_m / Distancia_Total_m)\nEn Pandas:\n\n\n\n\n\n\n¿Por qué lambda x? x representa el DataFrame en ese punto del chain. Es como . en magrittr.\n\n\n\n2.2.2 🧠 Práctica 2.1: Creando columnas\nFiltra sesiones donde Duracion_min &gt; 0, crea Metros_por_Minuto, redondea a 2 decimales, ordena de mayor a menor, y muestra los 10 primeros con nombre, fecha y la nueva columna.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresultado = (\n    gps\n    .query(\"Duracion_min &gt; 0\")\n    .assign(Metros_por_Minuto = lambda x: x['Distancia_Total_m'] / x['Duracion_min'])\n    .round(2)\n    .sort_values(\"Metros_por_Minuto\", ascending=False)\n    .head(10)\n    [['Nombre', 'Fecha', 'Metros_por_Minuto']]\n)\nprint(resultado)\n¿Qué hace cada paso?\n\n.query() → Filtra condición\n.assign() → Crea nueva columna\n.round(2) → Redondea todas las numéricas a 2 decimales\n.sort_values() → Ordena descendente\n.head(10) → Limita a 10 filas\n[[...]] → Selecciona columnas finales\n\n\n\n\n\n\n\n2.2.3 Ejemplo 2.2: Lógica condicional con np.where\nEn R: if_else() → En Pandas: np.where()",
     "crumbs": [
       "Fundamentos",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
@@ -218,6 +240,17 @@
     "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
     "section": "2.5 Resumen",
     "text": "2.5 Resumen\n\n\n\n\n\n\n\n\nConcepto\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nPipe\ndf %&gt;% verb()\ndf.verb()\n\n\nCrear columna\nmutate(col = expr)\n.assign(col = lambda x: expr)\n\n\nIf-else\nif_else()\nnp.where()\n\n\nDebug\nromper el pipe\n.pipe(funcion)",
+    "crumbs": [
+      "Fundamentos",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
+    ]
+  },
+  {
+    "objectID": "02_flujo_trabajo.html#test-de-conocimientos",
+    "href": "02_flujo_trabajo.html#test-de-conocimientos",
+    "title": "2  El Flujo de Trabajo Profesional: Method Chaining",
+    "section": "2.6 📝 Test de Conocimientos",
+    "text": "2.6 📝 Test de Conocimientos\n\n2.6.1 Pregunta 1\n¿Cuál es la ventaja principal del method chaining sobre usar variables intermedias?\n\n\nEs más rápido computacionalmente\n\n\nUna sola expresión, lectura secuencial y sin variables intermedias que ocupan memoria\n\n\nProduce resultados diferentes\n\n\nEs obligatorio en Pandas\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Una sola expresión, lectura secuencial y sin variables intermedias que ocupan memoria\nEl method chaining mejora la legibilidad (se lee como una receta) y evita crear múltiples variables temporales.\n\n\n\n\n\n2.6.2 Pregunta 2\nEn .assign(), ¿por qué usamos lambda x: x['col'] en lugar de acceder directamente a la columna?\n\n\nPorque es más rápido\n\n\nPorque x representa el DataFrame en ese punto del chain, permitiendo encadenar operaciones\n\n\nPorque Pandas no permite acceso directo\n\n\nEs solo por estética\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Porque x representa el DataFrame en ese punto del chain, permitiendo encadenar operaciones\nLa lambda captura el estado actual del DataFrame después de las transformaciones previas, similar a . en magrittr de R.\n\n\n\n\n\n2.6.3 Pregunta 3\n¿Cuál es el equivalente de if_else() de R en Pandas?\n\n\npd.ifelse()\n\n\ndf.where()\n\n\nnp.where()\n\n\nif...else de Python\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nC) np.where()\nnp.where(condicion, valor_si_true, valor_si_false) es vectorizado y funciona con columnas completas.\n\n\n\n\n\n2.6.4 Pregunta 4\n¿Para qué sirve el método .pipe() en un chain?\n\n\nPara ordenar los datos\n\n\nPara aplicar una función personalizada al DataFrame (útil para debugging)\n\n\nPara filtrar filas\n\n\nPara crear columnas\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Para aplicar una función personalizada al DataFrame (útil para debugging)\n.pipe(funcion) te permite insertar funciones de inspección en medio del chain sin romperlo.\n\n\n\n\n\n2.6.5 Pregunta 5\n¿Qué es lo que hace los paréntesis en un method chain de múltiples líneas?\nresultado = (\n    df\n    .filter(...)\n    .sort_values(...)\n)\n\n\nMejoran el rendimiento\n\n\nPermiten saltos de línea sin usar backslash\n\n\nSon opcionales\n\n\nCrean una copia del DataFrame\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Permiten saltos de línea sin usar backslash\nLos paréntesis permiten dividir una expresión larga en múltiples líneas para mejor legibilidad.",
     "crumbs": [
       "Fundamentos",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>El Flujo de Trabajo Profesional: Method Chaining</span>"
@@ -290,6 +323,17 @@
     ]
   },
   {
+    "objectID": "03_verbos_1.html#test-de-conocimientos",
+    "href": "03_verbos_1.html#test-de-conocimientos",
+    "title": "3  Verbos Básicos I: Selección, Filtrado y Ordenación",
+    "section": "3.6 📝 Test de Conocimientos",
+    "text": "3.6 📝 Test de Conocimientos\n\n3.6.1 Pregunta 1\n¿Cuál es la sintaxis correcta para filtrar jugadores mayores de 25 años y delanteros con .query()?\n\n\ndf.query(\"Edad &gt; 25 AND Posicion = 'Delantero'\")\n\n\ndf.query(\"Edad &gt; 25 and Posicion == 'Delantero'\")\n\n\ndf.filter(\"Edad &gt; 25\")\n\n\ndf.query(Edad &gt; 25)\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df.query(\"Edad &gt; 25 and Posicion == 'Delantero'\")\nEn .query() usamos and/or (minúsculas), == para igualdad, y strings entre comillas simples.\n\n\n\n\n\n3.6.2 Pregunta 2\n¿Por qué usamos doble corchete df[['col1', 'col2']] para seleccionar múltiples columnas?\n\n\nPor estética\n\n\nPorque el corchete interior crea una lista de nombres de columnas\n\n\nPorque es más rápido\n\n\nEs opcional, también funciona con un solo corchete\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Porque el corchete interior crea una lista de nombres de columnas\ndf[lista_columnas] espera una lista. ['col1', 'col2'] es la lista, y los corchetes exteriores son el operador de acceso.\n\n\n\n\n\n3.6.3 Pregunta 3\n¿Qué método usarías para obtener los 5 jugadores con mayor velocidad?\n\n\ndf.sort_values('Velocidad').head(5)\n\n\ndf.nlargest(5, 'Velocidad')\n\n\ndf.top(5, 'Velocidad')\n\n\nOpciones A y B son correctas\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nD) Opciones A y B son correctas\nPero .nlargest() es más eficiente para datasets grandes porque no ordena todo el DataFrame.\n\n\n\n\n\n3.6.4 Pregunta 4\n¿Cuál es la diferencia entre .sort_values() y .nlargest()?\n\n\n.sort_values() ordena todo, .nlargest() solo obtiene los N mayores de forma eficiente\n\n\nSon idénticos\n\n\n.nlargest() es más lento\n\n\n.sort_values() solo funciona con números\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nA) .sort_values() ordena todo, .nlargest() solo obtiene los N mayores de forma eficiente\nPara obtener top N, .nlargest() es más eficiente porque usa un algoritmo parcial.\n\n\n\n\n\n3.6.5 Pregunta 5\n¿Cómo filtrarías jugadores cuya posición está en una lista ['Portero', 'Defensa']?\n\n\ndf.query(\"Posicion == 'Portero' or Posicion == 'Defensa'\")\n\n\ndf.query(\"Posicion in ['Portero', 'Defensa']\")\n\n\ndf[df['Posicion'].isin(['Portero', 'Defensa'])]\n\n\nTodas las anteriores son correctas\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nD) Todas las anteriores son correctas\nLa opción B (.query() con in) y C (.isin()) son las más elegantes para listas largas.",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Verbos Básicos I: Selección, Filtrado y Ordenación</span>"
+    ]
+  },
+  {
     "objectID": "04_verbos_2.html",
     "href": "04_verbos_2.html",
     "title": "4  Verbos Básicos II: Transformación de Datos",
@@ -356,6 +400,17 @@
     ]
   },
   {
+    "objectID": "04_verbos_2.html#test-de-conocimientos",
+    "href": "04_verbos_2.html#test-de-conocimientos",
+    "title": "4  Verbos Básicos II: Transformación de Datos",
+    "section": "4.6 📝 Test de Conocimientos",
+    "text": "4.6 📝 Test de Conocimientos\n\n4.6.1 Pregunta 1\n¿Cuál es el equivalente de case_when() de dplyr en Pandas/NumPy?\n\n\nnp.case()\n\n\nnp.select([condiciones], [valores])\n\n\ndf.case_when()\n\n\nif...elif...else\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) np.select([condiciones], [valores])\nnp.select() evalúa una lista de condiciones y devuelve el valor correspondiente a la primera condición verdadera.\n\n\n\n\n\n4.6.2 Pregunta 2\nPara acceder a métodos de texto en una columna de Pandas, ¿qué se usa?\n\n\ndf['col'].text.upper()\n\n\ndf['col'].str.upper()\n\n\nupper(df['col'])\n\n\ndf['col'].upper()\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df['col'].str.upper()\nEl accessor .str da acceso a todos los métodos de texto vectorizados.\n\n\n\n\n\n4.6.3 Pregunta 3\nEn np.where(condicion, A, B), ¿qué devuelve cuando la condición es False?\n\n\nA\n\n\nB\n\n\nNaN\n\n\nError\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) B\nnp.where(cond, A, B) devuelve A cuando la condición es True, y B cuando es False.\n\n\n\n\n\n4.6.4 Pregunta 4\n¿Cuál es la forma correcta de calcular el IMC en un method chain?\n\n\ndf.assign(IMC = df['Peso'] / (df['Altura']/100)**2)\n\n\ndf.assign(IMC = lambda x: x['Peso'] / (x['Altura']/100)**2)\n\n\nAmbas son correctas\n\n\nNinguna es correcta\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df.assign(IMC = lambda x: x['Peso'] / (x['Altura']/100)**2)\nLa opción A funcionaría, pero no es segura en un chain porque df podría no reflejar transformaciones previas. Lambda con x siempre usa el estado actual.\n\n\n\n\n\n4.6.5 Pregunta 5\n¿Cómo extraerías el primer carácter del nombre de cada jugador?\n\n\ndf['Nombre'][0]\n\n\ndf['Nombre'].str[0]\n\n\ndf['Nombre'].first()\n\n\ndf['Nombre'].substring(0,1)\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df['Nombre'].str[0]\nEl accessor .str permite slicing como si fuera un string normal, pero aplicado a toda la columna.",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Verbos Básicos II: Transformación de Datos</span>"
+    ]
+  },
+  {
     "objectID": "05_agregacion.html",
     "href": "05_agregacion.html",
     "title": "5  Agregación y Window Functions",
@@ -389,11 +444,22 @@
     ]
   },
   {
+    "objectID": "05_agregacion.html#conceptos-clave-para-la-agregación",
+    "href": "05_agregacion.html#conceptos-clave-para-la-agregación",
+    "title": "5  Agregación y Window Functions",
+    "section": "5.3 3. Conceptos Clave para la Agregación",
+    "text": "5.3 3. Conceptos Clave para la Agregación\nAntes de los ejercicios, asegurémonos de entender los métodos que utilizarás:\n\n\n\n\n\n\nNote💡 El patrón split-apply-combine\n\n\n\nLa agregación en Pandas sigue el patrón split-apply-combine:\n\nSplit (.groupby()): Divide el DataFrame en grupos basados en una columna\nApply: Aplica una función a cada grupo (.mean(), .sum(), .agg())\nCombine: Combina los resultados en un nuevo DataFrame\n\n# Estructura básica\ndf.groupby('columna_grupos')['columna_valores'].funcion()\n\n\n\n\n\n\n\n\nNote💡 .agg() - Múltiples agregaciones\n\n\n\n.agg() permite aplicar varias funciones a la vez con nombres personalizados:\ndf.groupby('col').agg(\n    Nombre_resultado = ('columna_origen', 'funcion')\n)\nFunciones disponibles: 'mean', 'sum', 'count', 'min', 'max', 'std', etc.\n\n\n\n\n\n\n\n\nNote💡 .transform() - Agregar sin colapsar\n\n\n\nA diferencia de .agg() que colapsa el DataFrame, .transform() devuelve un valor para cada fila original. Es como añadir una columna con la media del grupo a cada fila.\n# Añade la media del grupo a cada fila\ndf['Media_Grupo'] = df.groupby('Grupo')['Valor'].transform('mean')\n\n\n\n\n\n\n\n\nNote💡 .rolling() - Ventanas deslizantes\n\n\n\n.rolling(window=n) calcula estadísticas sobre una ventana móvil de n observaciones. Muy útil para detectar tendencias y suavizar series temporales.\ndf['Media_Movil_7dias'] = df['Valor'].rolling(window=7).mean()\nLas primeras n-1 observaciones serán NaN porque no hay suficientes datos previos.\n\n\n\n\n\n\n\n\nNote💡 .shift() - Acceder a valores anteriores/posteriores\n\n\n\n.shift(n) desplaza los valores n posiciones. Es el equivalente a lag() en R.\n\n.shift(1) → valor anterior (lag)\n.shift(-1) → valor siguiente (lead)\n\ndf['Dist_Ayer'] = df['Distancia'].shift(1)\ndf['Cambio'] = df['Distancia'] - df['Dist_Ayer']",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
     "objectID": "05_agregacion.html#mini-proyecto-monitorización-de-carga-de-entrenamiento",
     "href": "05_agregacion.html#mini-proyecto-monitorización-de-carga-de-entrenamiento",
     "title": "5  Agregación y Window Functions",
-    "section": "5.3 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento",
-    "text": "5.3 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento\n\n5.3.1 Pregunta 1: Carga Acumulada por Jugador\n¿Qué jugador ha acumulado más metros en sprint? Muestra el top 3.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps.groupby('Nombre')['Sprint_m'].sum().nlargest(3)\n\n\n\n\n\n5.3.2 Pregunta 2: Perfil de Carga por Posición\n¿Cuál es la distancia media en partidos para cada posición? ¿Quién corre más?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .groupby('Posicion')['Distancia_Total_m']\n    .mean()\n    .sort_values(ascending=False)\n)\n\n\n\n\n\n5.3.3 Pregunta 3: Media Móvil de Carga Semanal\nCalcula la media móvil de 3 días del RPE para el jugador García. Esto ayuda a detectar fatiga acumulada.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngarcia = gps.query(\"Nombre == 'García'\").sort_values('Fecha').copy()\ngarcia['RPE_Rolling_3'] = garcia['RPE'].rolling(window=3).mean()\ngarcia[['Fecha', 'TipoSesion', 'RPE', 'RPE_Rolling_3']]\n\n\n\n\n\n5.3.4 Pregunta 4: Comparar Rendimiento Individual vs Grupo\nPara cada sesión, calcula cuánto difiere la distancia del jugador respecto a la media del grupo ese día.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_copy = gps.copy()\ngps_copy['Media_Dia'] = gps_copy.groupby('Fecha')['Distancia_Total_m'].transform('mean')\ngps_copy['Diff_vs_Grupo'] = gps_copy['Distancia_Total_m'] - gps_copy['Media_Dia']\ngps_copy[['Nombre', 'Fecha', 'Distancia_Total_m', 'Media_Dia', 'Diff_vs_Grupo']].head(10)",
+    "section": "5.4 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento",
+    "text": "5.4 🏆 Mini-Proyecto: Monitorización de Carga de Entrenamiento\n\n5.4.1 Pregunta 1: Carga Acumulada por Jugador\n¿Qué jugador ha acumulado más metros en sprint? Muestra el top 3.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps.groupby('Nombre')['Sprint_m'].sum().nlargest(3)\n\n\n\n\n\n5.4.2 Pregunta 2: Perfil de Carga por Posición\n¿Cuál es la distancia media en partidos para cada posición? ¿Quién corre más?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .groupby('Posicion')['Distancia_Total_m']\n    .mean()\n    .sort_values(ascending=False)\n)\n\n\n\n\n\n5.4.3 Pregunta 3: Media Móvil de Carga Semanal\nCalcula la media móvil de 3 días del RPE para el jugador García. Esto ayuda a detectar fatiga acumulada.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngarcia = gps.query(\"Nombre == 'García'\").sort_values('Fecha').copy()\ngarcia['RPE_Rolling_3'] = garcia['RPE'].rolling(window=3).mean()\ngarcia[['Fecha', 'TipoSesion', 'RPE', 'RPE_Rolling_3']]\n\n\n\n\n\n5.4.4 Pregunta 4: Comparar Rendimiento Individual vs Grupo\nPara cada sesión, calcula cuánto difiere la distancia del jugador respecto a la media del grupo ese día.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_copy = gps.copy()\ngps_copy['Media_Dia'] = gps_copy.groupby('Fecha')['Distancia_Total_m'].transform('mean')\ngps_copy['Diff_vs_Grupo'] = gps_copy['Distancia_Total_m'] - gps_copy['Media_Dia']\ngps_copy[['Nombre', 'Fecha', 'Distancia_Total_m', 'Media_Dia', 'Diff_vs_Grupo']].head(10)",
     "crumbs": [
       "Manipulación de Datos",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
@@ -403,8 +469,19 @@
     "objectID": "05_agregacion.html#resumen",
     "href": "05_agregacion.html#resumen",
     "title": "5  Agregación y Window Functions",
-    "section": "5.4 Resumen",
-    "text": "5.4 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nAgrupar + resumir\ngroup_by() %&gt;% summarise()\n.groupby().agg()\n\n\nMedia móvil\nslide_dbl(..., mean)\n.rolling(n).mean()\n\n\nLag\nlag(x)\n.shift(1)\n\n\nAgregar sin colapsar\nmutate() en group_by\n.transform()",
+    "section": "5.5 Resumen",
+    "text": "5.5 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nAgrupar + resumir\ngroup_by() %&gt;% summarise()\n.groupby().agg()\n\n\nMedia móvil\nslide_dbl(..., mean)\n.rolling(n).mean()\n\n\nLag\nlag(x)\n.shift(1)\n\n\nAgregar sin colapsar\nmutate() en group_by\n.transform()",
+    "crumbs": [
+      "Manipulación de Datos",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
+    ]
+  },
+  {
+    "objectID": "05_agregacion.html#test-de-conocimientos",
+    "href": "05_agregacion.html#test-de-conocimientos",
+    "title": "5  Agregación y Window Functions",
+    "section": "5.6 📝 Test de Conocimientos",
+    "text": "5.6 📝 Test de Conocimientos\n\n5.6.1 Pregunta 1\n¿Cuál es la diferencia principal entre .agg() y .transform()?\n\n\n.agg() es más rápido\n\n\n.agg() colapsa las filas en un resumen, .transform() devuelve el mismo número de filas\n\n\n.transform() solo funciona con sumas\n\n\nNo hay diferencia\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) .agg() colapsa las filas en un resumen, .transform() devuelve el mismo número de filas\n.transform() es útil para añadir estadísticas del grupo a cada fila original.\n\n\n\n\n\n5.6.2 Pregunta 2\n¿Qué hace .rolling(window=7).mean()?\n\n\nCalcula la media de las 7 primeras filas\n\n\nCalcula la media móvil de las últimas 7 observaciones para cada punto\n\n\nDivide los datos en 7 grupos y calcula la media\n\n\nRedondea a 7 decimales\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Calcula la media móvil de las últimas 7 observaciones para cada punto\nLas primeras 6 observaciones serán NaN porque no hay suficientes datos previos.\n\n\n\n\n\n5.6.3 Pregunta 3\n¿Cuál es el equivalente de lag(x) de R en Pandas?\n\n\n.lag(1)\n\n\n.shift(1)\n\n\n.previous()\n\n\n.delay(1)\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) .shift(1)\n.shift(1) desplaza los valores una posición hacia abajo (lag), .shift(-1) los desplaza hacia arriba (lead).\n\n\n\n\n\n5.6.4 Pregunta 4\n¿Cuál es la sintaxis correcta para hacer múltiples agregaciones con nombres personalizados?\n\n\ndf.groupby('col').agg({'col1': 'mean', 'col2': 'sum'})\n\n\ndf.groupby('col').agg(Nombre1 = ('col1', 'mean'), Nombre2 = ('col2', 'sum'))\n\n\nAmbas son correctas\n\n\nNinguna es correcta\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nC) Ambas son correctas\nLa opción B (named aggregation) es más legible y te permite nombrar las columnas resultantes.\n\n\n\n\n\n5.6.5 Pregunta 5\nSi usas .groupby('Jugador')['Distancia'].transform('mean'), ¿qué obtienes?\n\n\nUn solo número con la media global\n\n\nUn DataFrame con una fila por jugador\n\n\nUna Serie con la media del grupo repetida para cada fila original\n\n\nUn error\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nC) Una Serie con la media del grupo repetida para cada fila original\nTransform es útil para comparar cada observación con la media de su grupo.",
     "crumbs": [
       "Manipulación de Datos",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Agregación y Window Functions</span>"
@@ -444,11 +521,22 @@
     ]
   },
   {
+    "objectID": "06_reshaping.html#conceptos-clave-para-reshaping",
+    "href": "06_reshaping.html#conceptos-clave-para-reshaping",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "6.3 3. Conceptos Clave para Reshaping",
+    "text": "6.3 3. Conceptos Clave para Reshaping\nAntes de los ejercicios, asegurémonos de entender los conceptos fundamentales:\n\n\n\n\n\n\nNote💡 Formato Wide vs Long\n\n\n\n\nWide (ancho): Una fila por observación, múltiples columnas para mediciones. Típico en hojas de cálculo.\nJugador | Semana1 | Semana2 | Semana3\nLong (largo): Una fila por medición, columnas para identificadores y valores. Ideal para análisis y gráficos.\nJugador | Semana  | Distancia\n\nPandas y ggplot2 prefieren formato long para análisis.\n\n\n\n\n\n\n\n\nNote💡 pd.melt() - De Wide a Long\n\n\n\n“Derrite” columnas anchas en filas largas. Argumentos clave:\n\nid_vars: Columnas que se mantienen fijas (identificadores)\nvar_name: Nombre para la nueva columna de “nombres de columnas”\nvalue_name: Nombre para la nueva columna de valores\n\npd.melt(df, \n        id_vars=['Jugador'],\n        var_name='Semana', \n        value_name='Distancia')\n\n\n\n\n\n\n\n\nNote💡 pd.pivot_table() - De Long a Wide\n\n\n\nTransforma de largo a ancho, puede agregar valores duplicados:\n\nvalues: Columna con los valores\nindex: Columna(s) para las filas\ncolumns: Columna(s) para las nuevas columnas\naggfunc: Función para combinar duplicados ('mean', 'sum', 'count')\n\npd.pivot_table(df, values='Distancia', \n               index='Jugador', columns='Semana',\n               aggfunc='mean')\n\n\n\n\n\n\n\n\nTip🎯 ¿Cuándo usar cada formato?\n\n\n\n\nWide: Para reportes y visualización en tablas\nLong: Para gráficos (ggplot, seaborn), modelos estadísticos, y análisis con groupby",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
     "objectID": "06_reshaping.html#mini-proyecto-análisis-de-carga-semanal",
     "href": "06_reshaping.html#mini-proyecto-análisis-de-carga-semanal",
     "title": "6  Reshaping: Transformar la Forma de los Datos",
-    "section": "6.3 🏆 Mini-Proyecto: Análisis de Carga Semanal",
-    "text": "6.3 🏆 Mini-Proyecto: Análisis de Carga Semanal\nUsando datos_wide:\n\n6.3.1 Pregunta 1\nConvierte los datos a formato largo. ¿Cuántas observaciones hay en total?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')\nprint(f\"Observaciones: {len(largo)}\")\n\n\n\n\n\n6.3.2 Pregunta 2\nEn formato largo, ¿cuál es la distancia media por semana?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')\nlargo.groupby('Semana')['Dist'].mean()\n\n\n\n\n\n6.3.3 Pregunta 3\n¿Qué jugador tuvo la mayor distancia en la Semana_3?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndatos_wide.nlargest(1, 'Semana_3')[['JugadorID', 'Semana_3']]\n\n\n\n\n\n6.3.4 Pregunta 4\nCalcula la distancia TOTAL de cada jugador (suma de todas las semanas).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID'], var_name='Semana', value_name='Dist')\nlargo.groupby('JugadorID')['Dist'].sum()",
+    "section": "6.4 🏆 Mini-Proyecto: Análisis de Carga Semanal",
+    "text": "6.4 🏆 Mini-Proyecto: Análisis de Carga Semanal\nUsando datos_wide:\n\n6.4.1 Pregunta 1\nConvierte los datos a formato largo. ¿Cuántas observaciones hay en total?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')\nprint(f\"Observaciones: {len(largo)}\")\n\n\n\n\n\n6.4.2 Pregunta 2\nEn formato largo, ¿cuál es la distancia media por semana?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID', 'Posicion'], var_name='Semana', value_name='Dist')\nlargo.groupby('Semana')['Dist'].mean()\n\n\n\n\n\n6.4.3 Pregunta 3\n¿Qué jugador tuvo la mayor distancia en la Semana_3?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ndatos_wide.nlargest(1, 'Semana_3')[['JugadorID', 'Semana_3']]\n\n\n\n\n\n6.4.4 Pregunta 4\nCalcula la distancia TOTAL de cada jugador (suma de todas las semanas).\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlargo = pd.melt(datos_wide, id_vars=['JugadorID'], var_name='Semana', value_name='Dist')\nlargo.groupby('JugadorID')['Dist'].sum()",
     "crumbs": [
       "Transformación y Combinación",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
@@ -458,8 +546,19 @@
     "objectID": "06_reshaping.html#resumen",
     "href": "06_reshaping.html#resumen",
     "title": "6  Reshaping: Transformar la Forma de los Datos",
-    "section": "6.4 Resumen",
-    "text": "6.4 Resumen\n\n\n\nOperación\nR (tidyr)\nPython (Pandas)\n\n\n\n\nAncho → Largo\npivot_longer()\npd.melt()\n\n\nLargo → Ancho\npivot_wider()\npd.pivot_table()\n\n\nTabla conteos\ncount() %&gt;% pivot_wider()\npd.crosstab()",
+    "section": "6.5 Resumen",
+    "text": "6.5 Resumen\n\n\n\nOperación\nR (tidyr)\nPython (Pandas)\n\n\n\n\nAncho → Largo\npivot_longer()\npd.melt()\n\n\nLargo → Ancho\npivot_wider()\npd.pivot_table()\n\n\nTabla conteos\ncount() %&gt;% pivot_wider()\npd.crosstab()",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
+    ]
+  },
+  {
+    "objectID": "06_reshaping.html#test-de-conocimientos",
+    "href": "06_reshaping.html#test-de-conocimientos",
+    "title": "6  Reshaping: Transformar la Forma de los Datos",
+    "section": "6.6 📝 Test de Conocimientos",
+    "text": "6.6 📝 Test de Conocimientos\n\n6.6.1 Pregunta 1\n¿Qué función convierte datos de formato ancho a largo?\n\n\npd.pivot_table() B) pd.melt() C) df.transpose() D) pd.reshape()\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) pd.melt()\n\n\n\n\n\n6.6.2 Pregunta 2\nEn pd.melt(), ¿qué especifica id_vars?\n\n\nColumnas a derretir B) Columnas fijas C) Nombre de columna D) Tipo\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Columnas fijas\n\n\n\n\n\n6.6.3 Pregunta 3\n¿Cuándo es preferible formato “long”?\n\n\nPara reportes B) Para groupby y gráficos C) Siempre D) Nunca\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Para groupby y gráficos\n\n\n\n\n\n6.6.4 Pregunta 4\n¿Qué hace pd.crosstab()?\n\n\nUne DataFrames B) Tabla de conteos cruzados C) Filtra D) Correlación\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Tabla de conteos cruzados\n\n\n\n\n\n6.6.5 Pregunta 5\nEn pd.pivot_table(), ¿qué es aggfunc?\n\n\nColumna índice B) Función para agregar duplicados C) Formato D) Tipo\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Función para agregar duplicados",
     "crumbs": [
       "Transformación y Combinación",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Reshaping: Transformar la Forma de los Datos</span>"
@@ -499,11 +598,22 @@
     ]
   },
   {
+    "objectID": "07_joins.html#conceptos-clave-para-joins",
+    "href": "07_joins.html#conceptos-clave-para-joins",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "7.3 3. Conceptos Clave para Joins",
+    "text": "7.3 3. Conceptos Clave para Joins\nAntes de los ejercicios, asegurémonos de entender los tipos de joins:\n\n\n\n\n\n\nNote💡 ¿Qué es un Join?\n\n\n\nUn join combina dos tablas basándose en una columna común (la “clave”). Es fundamental cuando tus datos están en múltiples tablas (muy común en bases de datos).\ndf1.merge(df2, on='columna_clave', how='tipo_join')\n\n\n\n\n\n\n\n\nNote💡 Los 4 tipos de Join\n\n\n\n\n\n\n\n\n\n\n\nTipo\nComportamiento\nCuándo usar\n\n\n\n\ninner\nSolo filas que existen en AMBAS tablas\nDatos completos, sin NaN\n\n\nleft\nTODAS las filas de la izquierda\nMantener todos los registros principales\n\n\nright\nTODAS las filas de la derecha\n(Menos común, usa left intercambiando tablas)\n\n\nouter\nTODAS las filas de AMBAS tablas\nAnálisis de cobertura, identificar faltantes\n\n\n\n\n\n\n\n\n\n\n\nWarning⚠️ Cuidado con duplicados\n\n\n\nSi la clave tiene duplicados, el join puede multiplicar las filas. Por ejemplo, si un jugador tiene 5 sesiones y 3 registros de bienestar, el resultado puede tener hasta 15 filas para ese jugador.\nSolución: Especifica todas las columnas clave necesarias (on=['JugadorID', 'Fecha']).\n\n\n\n\n\n\n\n\nNote💡 pd.concat() - Apilar DataFrames\n\n\n\nNo es un join, sino una concatenación:\n\nVertical (axis=0): Apilar filas (como bind_rows en R)\nHorizontal (axis=1): Añadir columnas lado a lado\n\npd.concat([df1, df2], ignore_index=True)  # vertical",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
     "objectID": "07_joins.html#mini-proyecto-integración-de-datos-multi-fuente",
     "href": "07_joins.html#mini-proyecto-integración-de-datos-multi-fuente",
     "title": "7  Joins: Combinando Múltiples Tablas",
-    "section": "7.3 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente",
-    "text": "7.3 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente\n\n7.3.1 Pregunta 1: Jugadores Sin Actividad GPS\n¿Cuántos jugadores del plantel NO tienen ninguna sesión GPS registrada?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmerged = atletas.merge(sesiones, on='JugadorID', how='left')\nsin_sesiones = merged[merged['Distancia_m'].isna()]['JugadorID'].unique()\nprint(f\"Jugadores sin sesiones: {len(sin_sesiones)}\")\nprint(sin_sesiones)\n\n\n\n\n\n7.3.2 Pregunta 2: Combinar GPS + Bienestar\nUne las sesiones GPS con los datos de bienestar del mismo día. ¿Cuántas sesiones tienen datos de bienestar?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='left')\ncon_wellness = gps_wellness['Sueno_Calidad'].notna().sum()\nprint(f\"Sesiones con datos de bienestar: {con_wellness} de {len(gps_wellness)}\")\ngps_wellness.head()\n\n\n\n\n\n7.3.3 Pregunta 3: Informe Completo por Jugador\nCrea un informe con: Nombre, Posición, Edad, Distancia total, Número de sesiones.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresumen_sesiones = (\n    sesiones\n    .groupby('JugadorID')\n    .agg(Distancia_Total=('Distancia_m', 'sum'), N_Sesiones=('Distancia_m', 'count'))\n    .reset_index()\n)\n\ninforme = atletas.merge(resumen_sesiones, on='JugadorID', how='left')\ninforme[['Nombre', 'Posicion', 'Edad', 'Distancia_Total', 'N_Sesiones']].fillna(0)\n\n\n\n\n\n7.3.4 Pregunta 4: ¿Afecta el Sueño al Rendimiento?\nPara las sesiones con datos de bienestar, ¿hay diferencia en distancia entre los que durmieron bien (Sueno &gt;= 4) vs mal (&lt; 4)?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='inner')\ngps_wellness['Durmio_Bien'] = gps_wellness['Sueno_Calidad'] &gt;= 4\n\nprint(\"Distancia media según calidad de sueño:\")\nprint(gps_wellness.groupby('Durmio_Bien')['Distancia_m'].mean())",
+    "section": "7.4 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente",
+    "text": "7.4 🏆 Mini-Proyecto: Integración de Datos Multi-Fuente\n\n7.4.1 Pregunta 1: Jugadores Sin Actividad GPS\n¿Cuántos jugadores del plantel NO tienen ninguna sesión GPS registrada?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmerged = atletas.merge(sesiones, on='JugadorID', how='left')\nsin_sesiones = merged[merged['Distancia_m'].isna()]['JugadorID'].unique()\nprint(f\"Jugadores sin sesiones: {len(sin_sesiones)}\")\nprint(sin_sesiones)\n\n\n\n\n\n7.4.2 Pregunta 2: Combinar GPS + Bienestar\nUne las sesiones GPS con los datos de bienestar del mismo día. ¿Cuántas sesiones tienen datos de bienestar?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='left')\ncon_wellness = gps_wellness['Sueno_Calidad'].notna().sum()\nprint(f\"Sesiones con datos de bienestar: {con_wellness} de {len(gps_wellness)}\")\ngps_wellness.head()\n\n\n\n\n\n7.4.3 Pregunta 3: Informe Completo por Jugador\nCrea un informe con: Nombre, Posición, Edad, Distancia total, Número de sesiones.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresumen_sesiones = (\n    sesiones\n    .groupby('JugadorID')\n    .agg(Distancia_Total=('Distancia_m', 'sum'), N_Sesiones=('Distancia_m', 'count'))\n    .reset_index()\n)\n\ninforme = atletas.merge(resumen_sesiones, on='JugadorID', how='left')\ninforme[['Nombre', 'Posicion', 'Edad', 'Distancia_Total', 'N_Sesiones']].fillna(0)\n\n\n\n\n\n7.4.4 Pregunta 4: ¿Afecta el Sueño al Rendimiento?\nPara las sesiones con datos de bienestar, ¿hay diferencia en distancia entre los que durmieron bien (Sueno &gt;= 4) vs mal (&lt; 4)?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\ngps_wellness = sesiones.merge(bienestar, on=['JugadorID', 'Fecha'], how='inner')\ngps_wellness['Durmio_Bien'] = gps_wellness['Sueno_Calidad'] &gt;= 4\n\nprint(\"Distancia media según calidad de sueño:\")\nprint(gps_wellness.groupby('Durmio_Bien')['Distancia_m'].mean())",
     "crumbs": [
       "Transformación y Combinación",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
@@ -513,8 +623,19 @@
     "objectID": "07_joins.html#resumen",
     "href": "07_joins.html#resumen",
     "title": "7  Joins: Combinando Múltiples Tablas",
-    "section": "7.4 Resumen",
-    "text": "7.4 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nLeft join\nleft_join(df1, df2, by=\"key\")\ndf1.merge(df2, on='key', how='left')\n\n\nInner join\ninner_join(...)\n...how='inner'\n\n\nOuter join\nfull_join(...)\n...how='outer'\n\n\nApilar\nbind_rows()\npd.concat([...])",
+    "section": "7.5 Resumen",
+    "text": "7.5 Resumen\n\n\n\n\n\n\n\n\nOperación\nR (Tidyverse)\nPython (Pandas)\n\n\n\n\nLeft join\nleft_join(df1, df2, by=\"key\")\ndf1.merge(df2, on='key', how='left')\n\n\nInner join\ninner_join(...)\n...how='inner'\n\n\nOuter join\nfull_join(...)\n...how='outer'\n\n\nApilar\nbind_rows()\npd.concat([...])",
+    "crumbs": [
+      "Transformación y Combinación",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
+    ]
+  },
+  {
+    "objectID": "07_joins.html#test-de-conocimientos",
+    "href": "07_joins.html#test-de-conocimientos",
+    "title": "7  Joins: Combinando Múltiples Tablas",
+    "section": "7.6 📝 Test de Conocimientos",
+    "text": "7.6 📝 Test de Conocimientos\n\n7.6.1 Pregunta 1\nSi quieres mantener TODAS las filas de la tabla principal aunque no tengan coincidencia, ¿qué tipo de join usarías?\n\n\nInner join\n\n\nLeft join\n\n\nCross join\n\n\nRight join\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Left join\nLeft join mantiene todas las filas de la tabla izquierda, rellenando con NaN donde no hay coincidencia.\n\n\n\n\n\n7.6.2 Pregunta 2\n¿Qué sucede en un inner join cuando una fila de la tabla izquierda no tiene coincidencia en la derecha?\n\n\nSe mantiene con NaN\n\n\nSe elimina del resultado\n\n\nGenera un error\n\n\nSe duplica\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Se elimina del resultado\nInner join solo devuelve filas con coincidencia en AMBAS tablas.\n\n\n\n\n\n7.6.3 Pregunta 3\n¿Cómo harías un join por múltiples columnas (ej: JugadorID y Fecha)?\n\n\ndf1.merge(df2, on='JugadorID', on='Fecha')\n\n\ndf1.merge(df2, on=['JugadorID', 'Fecha'])\n\n\ndf1.merge(df2, on='JugadorID+Fecha')\n\n\nNo es posible\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df1.merge(df2, on=['JugadorID', 'Fecha'])\nPasas una lista de columnas al argumento on.\n\n\n\n\n\n7.6.4 Pregunta 4\n¿Qué función usarías para apilar dos DataFrames verticalmente (añadir filas)?\n\n\ndf1.merge(df2)\n\n\ndf1.append(df2)\n\n\npd.concat([df1, df2])\n\n\ndf1 + df2\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nC) pd.concat([df1, df2])\npd.concat() con axis=0 (default) apila filas. Con ignore_index=True renumera el índice.\n\n\n\n\n\n7.6.5 Pregunta 5\n¿Qué problema puede ocurrir si la columna clave tiene duplicados en ambas tablas?\n\n\nError de sintaxis\n\n\nEl resultado puede tener más filas de lo esperado (producto cartesiano)\n\n\nSe eliminan los duplicados automáticamente\n\n\nNo hay problema\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) El resultado puede tener más filas de lo esperado (producto cartesiano)\nSi hay 3 filas con ID=1 en tabla A y 2 en tabla B, el join producirá 6 filas para ID=1.",
     "crumbs": [
       "Transformación y Combinación",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Joins: Combinando Múltiples Tablas</span>"
@@ -554,11 +675,22 @@
     ]
   },
   {
+    "objectID": "08_visualizacion.html#conceptos-clave-de-visualización",
+    "href": "08_visualizacion.html#conceptos-clave-de-visualización",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "8.3 3. Conceptos Clave de Visualización",
+    "text": "8.3 3. Conceptos Clave de Visualización\nAntes de los ejercicios, asegurémonos de entender la estructura de matplotlib:\n\n\n\n\n\n\nNote💡 Anatomía de un gráfico en matplotlib\n\n\n\nMatplotlib tiene una jerarquía de objetos:\n\nFigure (fig): El “lienzo” completo, contiene todo\nAxes (ax): Un gráfico individual dentro del lienzo\nElementos: Títulos, ejes, leyendas, líneas, etc.\n\nfig, ax = plt.subplots()  # Crea figura + un eje\nax.plot(x, y)             # Dibuja en ese eje\nplt.show()                # Muestra el gráfico\n\n\n\n\n\n\n\n\nNote💡 Tipos de gráficos más comunes\n\n\n\n\n\n\nTipo\nMétodo\nUso\n\n\n\n\nHistograma\ndf['col'].hist()\nDistribución de una variable\n\n\nBarras\n.plot(kind='bar')\nComparar categorías\n\n\nScatter\nplt.scatter(x, y)\nRelación entre 2 variables\n\n\nLínea\nplt.plot(x, y)\nSeries temporales\n\n\nBarras horizontales\n.plot(kind='barh')\nRankings\n\n\n\n\n\n\n\n\n\n\n\nNote💡 Subplots - Múltiples gráficos\n\n\n\nPara crear múltiples gráficos en una figura:\nfig, axes = plt.subplots(nrows, ncols, figsize=(ancho, alto))\n\n# Acceder a cada gráfico por índice\naxes[0].hist(...)      # Primer gráfico\naxes[1].scatter(...)   # Segundo gráfico\nEl argumento figsize=(ancho, alto) controla el tamaño en pulgadas.\n\n\n\n\n\n\n\n\nTip🎯 Mejores prácticas\n\n\n\n\nSiempre añade títulos y etiquetas de ejes\nUsa plt.tight_layout() para evitar solapamientos\nElige colores con buen contraste\nAñade plt.grid(alpha=0.3) para facilitar la lectura",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
     "objectID": "08_visualizacion.html#mini-proyecto-perfil-visual-del-plantel",
     "href": "08_visualizacion.html#mini-proyecto-perfil-visual-del-plantel",
     "title": "8  Visualización de Datos con Matplotlib",
-    "section": "8.3 🏆 Mini-Proyecto: Perfil Visual del Plantel",
-    "text": "8.3 🏆 Mini-Proyecto: Perfil Visual del Plantel\n\n8.3.1 Pregunta 1: Relación Velocidad vs Potencia\nCrea un scatter plot de VelocidadMax_kmh vs Potencia_W. ¿Los más rápidos son los más potentes?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 6))\nplt.scatter(atletas['Potencia_W'], atletas['VelocidadMax_kmh'], \n            s=100, c='steelblue', alpha=0.7, edgecolors='white')\nplt.xlabel('Potencia (W)')\nplt.ylabel('Velocidad Máxima (km/h)')\nplt.title('Relación Potencia-Velocidad')\nplt.grid(True, alpha=0.3)\nplt.show()\n# No necesariamente: la potencia es fuerza, velocidad depende también de peso y técnica\n\n\n\n\n\n8.3.2 Pregunta 2: Ranking de Velocidad por Jugador\nCrea un gráfico de barras horizontal mostrando la velocidad máxima de cada atleta, ordenado de mayor a menor.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 7))\ndatos = atletas.sort_values('VelocidadMax_kmh')\ncolores = ['red' if v &gt; 33 else 'steelblue' for v in datos['VelocidadMax_kmh']]\nplt.barh(datos['Nombre'], datos['VelocidadMax_kmh'], color=colores, edgecolor='white')\nplt.xlabel('Velocidad Máxima (km/h)')\nplt.axvline(33, color='red', linestyle='--', alpha=0.5, label='Umbral sprint (33 km/h)')\nplt.legend()\nplt.title('Ranking de Velocidad del Plantel')\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n8.3.3 Pregunta 3: Dashboard de Perfil Físico por Posición\nCrea 2 subplots: (1) VO2max medio por posición, (2) Velocidad máxima media por posición.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nfig, axes = plt.subplots(1, 2, figsize=(14, 5))\n\n# Subplot 1: VO2max por posición\natletas.groupby('Posicion')['VO2max'].mean().sort_values().plot(\n    kind='barh', ax=axes[0], color='coral', edgecolor='white')\naxes[0].set_xlabel('VO2max medio')\naxes[0].set_title('Capacidad Aeróbica por Posición')\n\n# Subplot 2: Velocidad por posición\natletas.groupby('Posicion')['VelocidadMax_kmh'].mean().sort_values().plot(\n    kind='barh', ax=axes[1], color='teal', edgecolor='white')\naxes[1].set_xlabel('Velocidad máxima media (km/h)')\naxes[1].set_title('Velocidad por Posición')\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n8.3.4 Pregunta 4: Distribución de Salto CMJ con Percentiles\nCrea un histograma del salto CMJ con líneas verticales en los percentiles 25, 50 y 75.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 5))\natletas['SaltoCMJ_cm'].hist(bins=8, edgecolor='black', color='lightgreen', alpha=0.7)\n\n# Percentiles\np25, p50, p75 = atletas['SaltoCMJ_cm'].quantile([0.25, 0.5, 0.75])\nplt.axvline(p25, color='orange', linestyle='--', label=f'P25: {p25:.0f} cm')\nplt.axvline(p50, color='red', linestyle='-', label=f'P50: {p50:.0f} cm')\nplt.axvline(p75, color='green', linestyle='--', label=f'P75: {p75:.0f} cm')\n\nplt.xlabel('Salto CMJ (cm)')\nplt.ylabel('Frecuencia')\nplt.title('Distribución del Salto Vertical')\nplt.legend()\nplt.tight_layout()\nplt.show()",
+    "section": "8.4 🏆 Mini-Proyecto: Perfil Visual del Plantel",
+    "text": "8.4 🏆 Mini-Proyecto: Perfil Visual del Plantel\n\n8.4.1 Pregunta 1: Relación Velocidad vs Potencia\nCrea un scatter plot de VelocidadMax_kmh vs Potencia_W. ¿Los más rápidos son los más potentes?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 6))\nplt.scatter(atletas['Potencia_W'], atletas['VelocidadMax_kmh'], \n            s=100, c='steelblue', alpha=0.7, edgecolors='white')\nplt.xlabel('Potencia (W)')\nplt.ylabel('Velocidad Máxima (km/h)')\nplt.title('Relación Potencia-Velocidad')\nplt.grid(True, alpha=0.3)\nplt.show()\n# No necesariamente: la potencia es fuerza, velocidad depende también de peso y técnica\n\n\n\n\n\n8.4.2 Pregunta 2: Ranking de Velocidad por Jugador\nCrea un gráfico de barras horizontal mostrando la velocidad máxima de cada atleta, ordenado de mayor a menor.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 7))\ndatos = atletas.sort_values('VelocidadMax_kmh')\ncolores = ['red' if v &gt; 33 else 'steelblue' for v in datos['VelocidadMax_kmh']]\nplt.barh(datos['Nombre'], datos['VelocidadMax_kmh'], color=colores, edgecolor='white')\nplt.xlabel('Velocidad Máxima (km/h)')\nplt.axvline(33, color='red', linestyle='--', alpha=0.5, label='Umbral sprint (33 km/h)')\nplt.legend()\nplt.title('Ranking de Velocidad del Plantel')\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n8.4.3 Pregunta 3: Dashboard de Perfil Físico por Posición\nCrea 2 subplots: (1) VO2max medio por posición, (2) Velocidad máxima media por posición.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nfig, axes = plt.subplots(1, 2, figsize=(14, 5))\n\n# Subplot 1: VO2max por posición\natletas.groupby('Posicion')['VO2max'].mean().sort_values().plot(\n    kind='barh', ax=axes[0], color='coral', edgecolor='white')\naxes[0].set_xlabel('VO2max medio')\naxes[0].set_title('Capacidad Aeróbica por Posición')\n\n# Subplot 2: Velocidad por posición\natletas.groupby('Posicion')['VelocidadMax_kmh'].mean().sort_values().plot(\n    kind='barh', ax=axes[1], color='teal', edgecolor='white')\naxes[1].set_xlabel('Velocidad máxima media (km/h)')\naxes[1].set_title('Velocidad por Posición')\n\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n8.4.4 Pregunta 4: Distribución de Salto CMJ con Percentiles\nCrea un histograma del salto CMJ con líneas verticales en los percentiles 25, 50 y 75.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nplt.figure(figsize=(9, 5))\natletas['SaltoCMJ_cm'].hist(bins=8, edgecolor='black', color='lightgreen', alpha=0.7)\n\n# Percentiles\np25, p50, p75 = atletas['SaltoCMJ_cm'].quantile([0.25, 0.5, 0.75])\nplt.axvline(p25, color='orange', linestyle='--', label=f'P25: {p25:.0f} cm')\nplt.axvline(p50, color='red', linestyle='-', label=f'P50: {p50:.0f} cm')\nplt.axvline(p75, color='green', linestyle='--', label=f'P75: {p75:.0f} cm')\n\nplt.xlabel('Salto CMJ (cm)')\nplt.ylabel('Frecuencia')\nplt.title('Distribución del Salto Vertical')\nplt.legend()\nplt.tight_layout()\nplt.show()",
     "crumbs": [
       "Visualización y Producción",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
@@ -568,8 +700,19 @@
     "objectID": "08_visualizacion.html#resumen",
     "href": "08_visualizacion.html#resumen",
     "title": "8  Visualización de Datos con Matplotlib",
-    "section": "8.4 Resumen",
-    "text": "8.4 Resumen\n\n\n\nTipo\nR (ggplot2)\nPython (matplotlib)\n\n\n\n\nHistograma\ngeom_histogram()\ndf['col'].hist()\n\n\nBarras\ngeom_col()\n.plot(kind='bar')\n\n\nScatter\ngeom_point()\nplt.scatter()\n\n\nSubplots\npatchwork\nplt.subplots()",
+    "section": "8.5 Resumen",
+    "text": "8.5 Resumen\n\n\n\nTipo\nR (ggplot2)\nPython (matplotlib)\n\n\n\n\nHistograma\ngeom_histogram()\ndf['col'].hist()\n\n\nBarras\ngeom_col()\n.plot(kind='bar')\n\n\nScatter\ngeom_point()\nplt.scatter()\n\n\nSubplots\npatchwork\nplt.subplots()",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
+    ]
+  },
+  {
+    "objectID": "08_visualizacion.html#test-de-conocimientos",
+    "href": "08_visualizacion.html#test-de-conocimientos",
+    "title": "8  Visualización de Datos con Matplotlib",
+    "section": "8.6 📝 Test de Conocimientos",
+    "text": "8.6 📝 Test de Conocimientos\n\n8.6.1 Pregunta 1\n¿Cuál es el orden correcto para crear un gráfico con subplots?\n\n\nplt.show() → plt.subplots() → dibujar\n\n\nplt.subplots() → dibujar → plt.show()\n\n\ndibujar → plt.subplots() → plt.show()\n\n\nEl orden no importa\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) plt.subplots() → dibujar → plt.show()\n\n\n\n\n\n8.6.2 Pregunta 2\n¿Qué devuelve fig, axes = plt.subplots(1, 2)?\n\n\nUn solo gráfico\n\n\nFigura y un array de 2 ejes\n\n\nDos figuras separadas\n\n\nUn error\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Figura y un array de 2 ejes - axes[0] y axes[1] son cada subplot.\n\n\n\n\n\n8.6.3 Pregunta 3\n¿Qué hace plt.tight_layout()?\n\n\nAjusta automáticamente el espaciado para evitar solapamientos\n\n\nComprime el gráfico\n\n\nCambia colores\n\n\nNada\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nA) Ajusta automáticamente el espaciado para evitar solapamientos\n\n\n\n\n\n8.6.4 Pregunta 4\nPara crear un histograma de una columna, ¿qué usarías?\n\n\nplt.hist(df['col'])\n\n\ndf['col'].hist()\n\n\nAmbas son correctas\n\n\nNinguna\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nC) Ambas son correctas - son formas equivalentes.\n\n\n\n\n\n8.6.5 Pregunta 5\n¿Qué controla el argumento figsize=(10, 6)?\n\n\nResolución en píxeles\n\n\nTamaño en pulgadas (ancho, alto)\n\n\nNúmero de subplots\n\n\nPosición de la figura\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Tamaño en pulgadas (ancho, alto)",
     "crumbs": [
       "Visualización y Producción",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Visualización de Datos con Matplotlib</span>"
@@ -620,11 +763,22 @@
     ]
   },
   {
+    "objectID": "09_missing_data.html#conceptos-clave-sobre-datos-faltantes",
+    "href": "09_missing_data.html#conceptos-clave-sobre-datos-faltantes",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "9.4 4. Conceptos Clave sobre Datos Faltantes",
+    "text": "9.4 4. Conceptos Clave sobre Datos Faltantes\nAntes de los ejercicios, asegurémonos de entender cómo funcionan los valores faltantes:\n\n\n\n\n\n\nNote💡 ¿Qué es NaN?\n\n\n\nNaN (Not a Number) es la representación de Pandas para valores faltantes. Equivale a NA en R.\nimport numpy as np\nnp.nan  # Valor faltante\nOtros valores que pueden representar faltantes: None, \"\", \"NA\", \"-\", etc.\n\n\n\n\n\n\n\n\nNote💡 Métodos de detección\n\n\n\n\n\n\nMétodo\nDevuelve\nUso\n\n\n\n\n.isnull()\nDataFrame de True/False\nVer dónde hay NaN\n\n\n.notnull()\nDataFrame de True/False\nVer dónde NO hay NaN\n\n\n.isnull().sum()\nConteo por columna\nCuántos NaN hay\n\n\n.isnull().any(axis=1)\nBooleanos por fila\nFilas con algún NaN\n\n\n\n\n\n\n\n\n\n\n\nWarning⚠️ Estrategias de manejo\n\n\n\n\n\n\n\n\n\n\n\nEstrategia\nCuándo usar\nRiesgo\n\n\n\n\nEliminar (.dropna())\nPocos faltantes, datos abundantes\nPerder información\n\n\nImputar (.fillna())\nPatrón predecible, análisis requiere completitud\nIntroducir sesgo\n\n\nMarcar\nMantener registro de qué datos eran faltantes\nComplejidad\n\n\n\nLa elección depende del contexto. No hay solución universal.\n\n\n\n\n\n\n\n\nNote💡 Imputación común\n\n\n\n# Con valor fijo\ndf['col'].fillna(0)\n\n# Con estadístico\ndf['col'].fillna(df['col'].mean())    # Media\ndf['col'].fillna(df['col'].median())  # Mediana (robusto a outliers)\n\n# En Pandas, .mean() ignora NaN automáticamente",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
     "objectID": "09_missing_data.html#mini-proyecto-limpieza-de-datos",
     "href": "09_missing_data.html#mini-proyecto-limpieza-de-datos",
     "title": "9  Manejo de Datos Faltantes",
-    "section": "9.4 🏆 Mini-Proyecto: Limpieza de Datos",
-    "text": "9.4 🏆 Mini-Proyecto: Limpieza de Datos\n\n9.4.1 Pregunta 1\n¿Cuántos atletas tienen al menos un valor faltante?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlen(atletas[atletas.isnull().any(axis=1)])\n\n\n\n\n\n9.4.2 Pregunta 2\nSi eliminas todos los nulos, ¿cuántos atletas quedan?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlen(atletas.dropna())\n\n\n\n\n\n9.4.3 Pregunta 3\nImputa los valores faltantes de VO2max con la media. ¿Cuál es la nueva media?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmedia_original = atletas['VO2max'].mean()\nvo2_imputado = atletas['VO2max'].fillna(media_original)\nprint(f\"Media original: {media_original:.2f}\")\nprint(f\"Media después de imputar: {vo2_imputado.mean():.2f}\")\n\n\n\n\n\n9.4.4 Pregunta 4\n¿Qué atletas tienen nombre faltante? Muestra sus IDs.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas[atletas['Nombre'].isna()]['JugadorID'].tolist()",
+    "section": "9.5 🏆 Mini-Proyecto: Limpieza de Datos",
+    "text": "9.5 🏆 Mini-Proyecto: Limpieza de Datos\n\n9.5.1 Pregunta 1\n¿Cuántos atletas tienen al menos un valor faltante?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlen(atletas[atletas.isnull().any(axis=1)])\n\n\n\n\n\n9.5.2 Pregunta 2\nSi eliminas todos los nulos, ¿cuántos atletas quedan?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nlen(atletas.dropna())\n\n\n\n\n\n9.5.3 Pregunta 3\nImputa los valores faltantes de VO2max con la media. ¿Cuál es la nueva media?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmedia_original = atletas['VO2max'].mean()\nvo2_imputado = atletas['VO2max'].fillna(media_original)\nprint(f\"Media original: {media_original:.2f}\")\nprint(f\"Media después de imputar: {vo2_imputado.mean():.2f}\")\n\n\n\n\n\n9.5.4 Pregunta 4\n¿Qué atletas tienen nombre faltante? Muestra sus IDs.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\natletas[atletas['Nombre'].isna()]['JugadorID'].tolist()",
     "crumbs": [
       "Visualización y Producción",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
@@ -634,8 +788,19 @@
     "objectID": "09_missing_data.html#resumen",
     "href": "09_missing_data.html#resumen",
     "title": "9  Manejo de Datos Faltantes",
-    "section": "9.5 Resumen",
-    "text": "9.5 Resumen\n\n\n\nOperación\nR (tidyr)\nPython (Pandas)\n\n\n\n\nDetectar NA\nis.na(x)\n.isna()\n\n\nEliminar NA\ndrop_na()\n.dropna()\n\n\nReemplazar\nreplace_na(val)\n.fillna(val)\n\n\nMedia\nmean(x, na.rm=T)\n.mean() (ignora NA)",
+    "section": "9.6 Resumen",
+    "text": "9.6 Resumen\n\n\n\nOperación\nR (tidyr)\nPython (Pandas)\n\n\n\n\nDetectar NA\nis.na(x)\n.isna()\n\n\nEliminar NA\ndrop_na()\n.dropna()\n\n\nReemplazar\nreplace_na(val)\n.fillna(val)\n\n\nMedia\nmean(x, na.rm=T)\n.mean() (ignora NA)",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
+    ]
+  },
+  {
+    "objectID": "09_missing_data.html#test-de-conocimientos",
+    "href": "09_missing_data.html#test-de-conocimientos",
+    "title": "9  Manejo de Datos Faltantes",
+    "section": "9.7 📝 Test de Conocimientos",
+    "text": "9.7 📝 Test de Conocimientos\n\n9.7.1 Pregunta 1\n¿Qué método elimina filas con CUALQUIER valor NaN?\n\n\ndf.removenan() B) df.dropna() C) df.fillna(0) D) df.isna().drop()\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df.dropna()\n\n\n\n\n\n9.7.2 Pregunta 2\nSi imputas con mediana en lugar de media, es porque:\n\n\nLa mediana es más rápida B) Es más robusta ante outliers C) La media no funciona D) Es obligatorio\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Es más robusta ante outliers\n\n\n\n\n\n9.7.3 Pregunta 3\n¿Qué devuelve df['col'].isnull().sum()?\n\n\nTrue o False B) El número de valores NaN C) Lista de índices D) Error\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) El número de valores NaN\n\n\n\n\n\n9.7.4 Pregunta 4\n¿Cómo eliminar solo filas donde ‘Nombre’ sea NaN?\n\n\ndf.dropna() B) df.dropna(subset=['Nombre']) C) df[df['Nombre'].notna()] D) B y C\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nD) B y C son correctas\n\n\n\n\n\n9.7.5 Pregunta 5\n¿Qué hace .mean() con los NaN por defecto?\n\n\nLos incluye como 0 B) Los ignora C) Devuelve NaN D) Error\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Los ignora automáticamente",
     "crumbs": [
       "Visualización y Producción",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Manejo de Datos Faltantes</span>"
@@ -675,11 +840,22 @@
     ]
   },
   {
+    "objectID": "10_rendimiento.html#conceptos-clave-de-optimización",
+    "href": "10_rendimiento.html#conceptos-clave-de-optimización",
+    "title": "10  Rendimiento y Optimización",
+    "section": "10.3 3. Conceptos Clave de Optimización",
+    "text": "10.3 3. Conceptos Clave de Optimización\nAntes de los ejercicios, asegurémonos de entender por qué importa la eficiencia:\n\n\n\n\n\n\nNote💡 Por qué importa la optimización\n\n\n\nEn ciencia del deporte, trabajarás con: - Datos GPS: miles de registros por sesión - Tracking óptico: 25 frames/segundo por jugador - Datos históricos: múltiples temporadas\nUn código ineficiente puede tardar minutos en lugar de segundos.\n\n\n\n\n\n\n\n\nNote💡 Tipos de datos y memoria\n\n\n\n\n\n\nTipo\nMemoria\nCuándo usar\n\n\n\n\nint64\n8 bytes\nEnteros grandes (default)\n\n\nint32\n4 bytes\nEnteros &lt; 2 mil millones\n\n\nfloat64\n8 bytes\nDecimales (default)\n\n\ncategory\n~pocos bytes\nStrings repetitivos\n\n\nobject\nVariable\nStrings únicos\n\n\n\ndf['col'] = df['col'].astype('category')  # Cambia tipo\ndf.memory_usage(deep=True)                # Ver memoria\n\n\n\n\n\n\n\n\nWarning⚠️ Operaciones a evitar\n\n\n\n\n\n\n\n\n\n\n\n❌ Lento\n✅ Rápido\nPor qué\n\n\n\n\n.apply(lambda...)\nOperaciones vectorizadas\napply itera fila por fila\n\n\nFiltros con for\n.query()\nquery usa optimización interna\n\n\nMúltiples asignaciones\n.assign() encadenado\nMenos copias de memoria\n\n\n\n# ❌ Lento\ndf.apply(lambda row: row['a'] / row['b'], axis=1)\n\n# ✅ Rápido (vectorizado)\ndf['ratio'] = df['a'] / df['b']\n\n\n\n\n\n\n\n\nNote💡 .query() para filtros complejos\n\n\n\n.query() es más legible y eficiente para filtros con múltiples condiciones:\n# Más eficiente y legible\ndf.query(\"Posicion == 'Delantero' and Edad &gt; 25 and Velocidad &gt; 30\")",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
     "objectID": "10_rendimiento.html#mini-proyecto-optimización-de-un-pipeline-de-análisis",
     "href": "10_rendimiento.html#mini-proyecto-optimización-de-un-pipeline-de-análisis",
     "title": "10  Rendimiento y Optimización",
-    "section": "10.3 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis",
-    "text": "10.3 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis\n\n10.3.1 Pregunta 1: Ahorro de Memoria con Categories\n¿Cuánta memoria se ahorra al convertir TODAS las columnas de texto (object) a category?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmem_antes = gps.memory_usage(deep=True).sum() / 1024\n\ngps_opt = gps.copy()\nfor col in gps_opt.select_dtypes(include='object').columns:\n    gps_opt[col] = gps_opt[col].astype('category')\n\nmem_despues = gps_opt.memory_usage(deep=True).sum() / 1024\n\nprint(f\"Antes: {mem_antes:.1f} KB\")\nprint(f\"Después: {mem_despues:.1f} KB\")\nprint(f\"Ahorro: {(1 - mem_despues/mem_antes)*100:.1f}%\")\n\n\n\n\n\n10.3.2 Pregunta 2: Filtrado Eficiente con query()\nFiltra todas las sesiones de Partido con Distancia &gt; 10000 m, RPE &gt;= 8, y HR_Media &gt; 160.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresultado = gps.query(\"TipoSesion == 'Partido' and Distancia_m &gt; 10000 and RPE &gt;= 8 and HR_Media &gt; 160\")\nprint(f\"Sesiones de alta intensidad: {len(resultado)}\")\nresultado.head()\n\n\n\n\n\n10.3.3 Pregunta 3: Cálculo Vectorizado de Intensidad\nCalcula de forma vectorizada: Intensidad = HSR_m / Distancia_m × 100. Evita usar apply().\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Vectorizado (rápido)\ngps['Intensidad_Pct'] = (gps['HSR_m'] / gps['Distancia_m']) * 100\n\n# Ver resultado\ngps[['JugadorID', 'HSR_m', 'Distancia_m', 'Intensidad_Pct']].head()\n\n\n\n\n\n10.3.4 Pregunta 4: Top Jugadores con Pipeline Eficiente\nEncuentra los 5 jugadores con mayor distancia total en Partidos. Usa un pipeline completo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .groupby('JugadorID')['Distancia_m']\n    .sum()\n    .nlargest(5)\n)",
+    "section": "10.4 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis",
+    "text": "10.4 🏆 Mini-Proyecto: Optimización de un Pipeline de Análisis\n\n10.4.1 Pregunta 1: Ahorro de Memoria con Categories\n¿Cuánta memoria se ahorra al convertir TODAS las columnas de texto (object) a category?\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nmem_antes = gps.memory_usage(deep=True).sum() / 1024\n\ngps_opt = gps.copy()\nfor col in gps_opt.select_dtypes(include='object').columns:\n    gps_opt[col] = gps_opt[col].astype('category')\n\nmem_despues = gps_opt.memory_usage(deep=True).sum() / 1024\n\nprint(f\"Antes: {mem_antes:.1f} KB\")\nprint(f\"Después: {mem_despues:.1f} KB\")\nprint(f\"Ahorro: {(1 - mem_despues/mem_antes)*100:.1f}%\")\n\n\n\n\n\n10.4.2 Pregunta 2: Filtrado Eficiente con query()\nFiltra todas las sesiones de Partido con Distancia &gt; 10000 m, RPE &gt;= 8, y HR_Media &gt; 160.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\nresultado = gps.query(\"TipoSesion == 'Partido' and Distancia_m &gt; 10000 and RPE &gt;= 8 and HR_Media &gt; 160\")\nprint(f\"Sesiones de alta intensidad: {len(resultado)}\")\nresultado.head()\n\n\n\n\n\n10.4.3 Pregunta 3: Cálculo Vectorizado de Intensidad\nCalcula de forma vectorizada: Intensidad = HSR_m / Distancia_m × 100. Evita usar apply().\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n# Vectorizado (rápido)\ngps['Intensidad_Pct'] = (gps['HSR_m'] / gps['Distancia_m']) * 100\n\n# Ver resultado\ngps[['JugadorID', 'HSR_m', 'Distancia_m', 'Intensidad_Pct']].head()\n\n\n\n\n\n10.4.4 Pregunta 4: Top Jugadores con Pipeline Eficiente\nEncuentra los 5 jugadores con mayor distancia total en Partidos. Usa un pipeline completo.\n\n\n\n\n\n\n\n\n\n\n\n\nTipVer solución\n\n\n\n\n\n(\n    gps\n    .query(\"TipoSesion == 'Partido'\")\n    .groupby('JugadorID')['Distancia_m']\n    .sum()\n    .nlargest(5)\n)",
     "crumbs": [
       "Visualización y Producción",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
@@ -689,8 +865,19 @@
     "objectID": "10_rendimiento.html#resumen",
     "href": "10_rendimiento.html#resumen",
     "title": "10  Rendimiento y Optimización",
-    "section": "10.4 Resumen",
-    "text": "10.4 Resumen\n\n\n\nProblema\nSolución\n\n\n\n\nColumnas de texto repetitivas\n.astype('category')\n\n\nFiltros complejos lentos\n.query()\n\n\napply() lento\nOperaciones vectorizadas\n\n\nCargar CSV grande\nusecols=, dtype=, nrows=\n\n\n\n\n¡Felicidades! 🎉 Has completado la Parte 3. Continúa con la Parte 4: Análisis Avanzado para aprender visualización de fútbol, estadísticas aplicadas y uso de APIs profesionales.",
+    "section": "10.5 Resumen",
+    "text": "10.5 Resumen\n\n\n\nProblema\nSolución\n\n\n\n\nColumnas de texto repetitivas\n.astype('category')\n\n\nFiltros complejos lentos\n.query()\n\n\napply() lento\nOperaciones vectorizadas\n\n\nCargar CSV grande\nusecols=, dtype=, nrows=",
+    "crumbs": [
+      "Visualización y Producción",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
+    ]
+  },
+  {
+    "objectID": "10_rendimiento.html#test-de-conocimientos",
+    "href": "10_rendimiento.html#test-de-conocimientos",
+    "title": "10  Rendimiento y Optimización",
+    "section": "10.6 📝 Test de Conocimientos",
+    "text": "10.6 📝 Test de Conocimientos\n\n10.6.1 Pregunta 1\n¿Por qué se recomienda evitar .apply(lambda row: ..., axis=1)?\n\n\nDevuelve resultados incorrectos\n\n\nItera fila por fila y es 10-100x más lento que operaciones vectorizadas\n\n\nNo funciona con DataFrames grandes\n\n\nConsume más memoria\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Itera fila por fila y es 10-100x más lento que operaciones vectorizadas\n\n\n\n\n\n10.6.2 Pregunta 2\n¿Cuándo es recomendable convertir a tipo category?\n\n\nSiempre\n\n\nCuando hay pocos valores únicos que se repiten mucho\n\n\nSolo para números\n\n\nPara ordenar\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) Cuando hay pocos valores únicos que se repiten mucho - ahorra memoria significativamente.\n\n\n\n\n\n10.6.3 Pregunta 3\n¿Cuál es la forma vectorizada (rápida) de calcular Ratio = A / B?\n\n\ndf.apply(lambda row: row['A'] / row['B'], axis=1)\n\n\ndf['Ratio'] = df['A'] / df['B']\n\n\nfor i in range(len(df)): df.loc[i, 'Ratio'] = df.loc[i, 'A'] / df.loc[i, 'B']\n\n\nTodas son igual de rápidas\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df['Ratio'] = df['A'] / df['B'] - usa vectorización de NumPy.\n\n\n\n\n\n10.6.4 Pregunta 4\n¿Qué método usarías para ver cuánta memoria usa un DataFrame?\n\n\ndf.size()\n\n\ndf.memory_usage(deep=True)\n\n\nlen(df)\n\n\ndf.info()\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nB) df.memory_usage(deep=True) - deep=True es importante para strings.\n\n\n\n\n\n10.6.5 Pregunta 5\n¿Por qué .query() es preferible a filtros con corchetes para condiciones complejas?\n\n\nEs más rápido en datasets grandes y más legible\n\n\nEs el único método que funciona\n\n\nDevuelve resultados diferentes\n\n\nNo hay diferencia\n\n\n\n\n\n\n\n\nTipVer respuesta\n\n\n\n\n\nA) Es más rápido en datasets grandes y más legible\n\n\n\n\n¡Felicidades! 🎉 Has completado la Parte 3. Continúa con la Parte 4: Análisis Avanzado para aprender visualización de fútbol, estadísticas aplicadas y uso de APIs profesionales.",
     "crumbs": [
       "Visualización y Producción",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Rendimiento y Optimización</span>"
