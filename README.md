@@ -1,4 +1,6 @@
 # Instrucciones de Compilación y Uso
+## 0. Inicializar el Libro
+https://acastano149.github.io/pandas-sports-book/
 
 ## 1. Renderizar el Libro (Estático)
 
