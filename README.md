@@ -5,7 +5,6 @@ https://acastano149.github.io/pandas-sports-book/
 ## 1. Renderizar el Libro (Estático)
 
 Para generar la web "normal" (HTML estático), abre una terminal en esta carpeta (`pandas_for_tidyverse_sports`) y ejecuta:
-
 ```bash
 quarto render
 ```
@@ -25,10 +24,4 @@ Ejecuta esto en tu terminal (te pedirá confirmación, di "Yes"):
 quarto add r-wasm/quarto-live
 ```
 
-### Paso B: Configurar
-Avísame si has instalado la extensión y yo puedo:
-1. Modificar `_quarto.yml` para activar el filtro `live`.
-2. Convertir los bloques de código de `{python}` a `{pyodide-python}`.
-3. Añadir ejercicios interactivos con feedback.
 
-Esto permitirá que tu estudiante de doctorado practique directamente en la web que le envíes, ¡incluso desde el móvil!
